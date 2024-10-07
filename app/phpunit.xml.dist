@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+        bootstrap="vendor/autoload.php"
+        colors="true"
+        verbose="true"
+        beStrictAboutTestsThatDoNotTestAnything="true"
+        beStrictAboutOutputDuringTests="true"
+        beStrictAboutChangesToGlobalState="true"
+        failOnWarning="true"
+        failOnRisky="true">
+
+    <testsuites>
+        <testsuite name="unit_test">
+            <directory>./tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+    </filter>
+
+    <php>
+        <ini name="error_reporting" value="-1" />
+        <ini name="display_errors" value="1" />
+    </php>
+
+    <logging>
+        <log type="junit" target="tests/logs/junit.xml" />
+        <log type="coverage-html" target="tests/logs/coverage/" />
+        <log type="coverage-clover" target="tests/logs/coverage.xml" />
+    </logging>
+</phpunit>

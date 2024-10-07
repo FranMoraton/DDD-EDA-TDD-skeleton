@@ -1,0 +1,68 @@
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+      target: local
+    volumes:
+      - ./app/public:/var/www/public
+    environment:
+      PHP_HOST: php
+    ports:
+      - 8080:80
+    depends_on:
+      - php
+    networks:
+      - bridge
+
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+      target: development
+    volumes:
+      - ./app:/var/www
+      - ./.git:/var/www/.git
+      - ~/.composer:/.composer
+    networks:
+      - bridge
+
+  db:
+    image: percona:5.7
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./opt/db:/docker-entrypoint-initdb.d
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: lotr
+    healthcheck:
+      test: "/usr/bin/mysql --user=root --password=root --execute \"SHOW DATABASES;\""
+      interval: 3s
+      timeout: 1s
+      retries: 5
+    networks:
+      - bridge
+
+#  amqp:
+#    build:
+#      context: .
+#      dockerfile: docker/rabbitmq/Dockerfile
+#    ports:
+#      - 5672:5672
+#      - 15672:15672
+#    volumes:
+#      - amqp-data:/var/lib/rabbitmq
+#    environment:
+#      RABBITMQ_DEFAULT_USER: guest
+#      RABBITMQ_DEFAULT_PASS: guest
+#      RABBITMQ_DEFAULT_VHOST: app
+#    networks:
+#      - bridge
+
+networks:
+  bridge:
+
+volumes:
+  mysql_data:

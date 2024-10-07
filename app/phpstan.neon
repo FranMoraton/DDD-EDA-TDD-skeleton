@@ -1,0 +1,17 @@
+includes:
+  - vendor/phpstan/phpstan-symfony/extension.neon
+parameters:
+  level: max
+  customRulesetUsed: true
+  paths:
+    - src
+  ignoreErrors:
+    - '#missingType\.iterableValue#'
+  checkBenevolentUnionTypes: true
+  excludePaths:
+    - %rootDir%/../../../tests/*
+    - %rootDir%/../../../public/*
+    - %rootDir%/../../../config/*
+    - %rootDir%/../../../src/System/Infrastructure/DBALRepository.php
+  symfony:
+    container_xml_path: null
