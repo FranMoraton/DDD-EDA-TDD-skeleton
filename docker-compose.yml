@@ -37,6 +37,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: lotr
+      MYSQL_PASSWORD: guest
+      MYSQL_USER: guest
     healthcheck:
       test: "/usr/bin/mysql --user=root --password=root --execute \"SHOW DATABASES;\""
       interval: 3s

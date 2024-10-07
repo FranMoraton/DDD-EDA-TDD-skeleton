@@ -1,4 +1,4 @@
 index:
-  path: /
-  controller: App\System\Infrastructure\Adapter\RestApi\DefaultController::index
-  methods: [GET]
+    path: /
+    controller: App\System\Infrastructure\Adapter\RestApi\DefaultController::index
+    methods: [GET]

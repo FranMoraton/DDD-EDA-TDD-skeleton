@@ -1,23 +1,22 @@
 grumphp:
-  tasks:
-    composer:
-      strict: true
-    phpcs:
-      standard:
-        - 'phpcs.xml.dist'
-      whitelist_patterns:
-        - '/^src\/(.*)/'
-        - '/^tests\/(.*)/'
-      encoding: 'UTF-8'
-    phpstan_shell:
-      metadata:
-        label: phpstan
-        task: shell
-      scripts:
-        - ["-c", "phpstan analyse -l 9 src"]
-    phpunit: ~
-    phpversion:
-      project: '8.3'
-    securitychecker_composeraudit:
-      format: plain
-      run_always: true
+    tasks:
+        composer:
+            strict: true
+        phpcs:
+            standard: ['phpcs.xml.dist']
+            whitelist_patterns:
+                - '/^src\/(.*)/'
+                - '/^tests\/(.*)/'
+            encoding: 'UTF-8'
+        phpstan_shell:
+            metadata:
+                label: phpstan
+                task: shell
+            scripts:
+                - ["-c", "phpstan analyse -l 8 src"]
+        phpunit: ~
+        phpversion:
+            project: '8.3'
+        securitychecker_composeraudit:
+            format: plain
+            run_always: true

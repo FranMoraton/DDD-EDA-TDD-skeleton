@@ -1,0 +1,17 @@
+services:
+    connection.dbal:
+        class: Doctrine\DBAL\Connection
+        factory: 'Doctrine\DBAL\DriverManager::getConnection'
+        arguments:
+            $params:
+                driver: 'pdo_mysql'
+                server_version: '5.7'
+                charset: utf8mb4
+                default_table_options:
+                    charset: utf8mb4
+                    collate: utf8mb4_unicode_ci
+                url: '%write_db%'
+            $config: '@connection.dbal.configuration'
+
+    connection.dbal.configuration:
+        class: Doctrine\DBAL\Configuration

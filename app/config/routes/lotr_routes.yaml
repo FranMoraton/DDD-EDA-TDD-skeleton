@@ -1,0 +1,9 @@
+factions_create:
+    path: /v1/factions
+    controller: \App\Lotr\Infrastructure\Adapter\RestApi\FactionsController::create
+    methods: [POST]
+
+factions_by_id:
+    path: /v1/factions/{id}
+    controller: \App\Lotr\Infrastructure\Adapter\RestApi\FactionsController::byId
+    methods: [GET]
