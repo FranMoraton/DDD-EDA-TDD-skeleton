@@ -6,7 +6,7 @@ parameters:
   paths:
     - src
   ignoreErrors:
-    - '#missingType\.iterableValue#'
+    - identifier: missingType.iterableValue
   checkBenevolentUnionTypes: true
   excludePaths:
     - %rootDir%/../../../tests/*
