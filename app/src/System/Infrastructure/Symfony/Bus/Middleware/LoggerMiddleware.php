@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\System\Infrastructure\Symfony\Bus\Middleware;
 
+use App\System\Domain\Exception\DomainException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
 use Symfony\Component\Messenger\Middleware\StackInterface;
-use Symfony\Component\Messenger\Stamp\RedeliveryStamp;
 
 final class LoggerMiddleware implements MiddlewareInterface
 {
@@ -22,6 +22,21 @@ final class LoggerMiddleware implements MiddlewareInterface
     {
         try {
             $result = $stack->next()->handle($envelope, $stack);
+        } catch (DomainException $e) {
+            $context = [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTrace(),
+                'message' => $e->getMessage(),
+                'status' => $e->getCode(),
+                'data' => $e->payload()
+            ];
+            $this->logger->error(
+                'command_failed',
+                $context
+            );
+
+            throw $e;
         } catch (\Throwable $e) {
             $context = [
                 'file' => $e->getFile(),
@@ -29,7 +44,6 @@ final class LoggerMiddleware implements MiddlewareInterface
                 'trace' => $e->getTrace(),
                 'message' => $e->getMessage(),
                 'status' => $e->getCode(),
-                'data' => \json_decode(\json_encode($e), true)
             ];
             $this->logger->error(
                 'command_failed',

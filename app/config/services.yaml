@@ -45,6 +45,10 @@ services:
         tags:
             - { name: messenger.message_handler, bus: messenger_query.bus }
 
+    App\System\Infrastructure\Symfony\Listener\ExceptionListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+
 imports:
     - { resource: commands.yaml }
     - { resource: connections.yaml }
