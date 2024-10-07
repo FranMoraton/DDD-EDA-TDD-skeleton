@@ -12,7 +12,7 @@
     "php": "^8.3",
     "ext-json": "*",
     "ext-pdo": "*",
-    "doctrine/orm": "^2.19",
+    "doctrine/orm": "^3.2",
     "nelmio/cors-bundle": "^2.5",
     "symfony/amqp-messenger": "^6.0",
     "symfony/console": "^6.0",
