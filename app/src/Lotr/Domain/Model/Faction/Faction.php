@@ -69,4 +69,13 @@ class Faction extends Aggregate
     {
         return $this->description;
     }
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'id' => $this->id(),
+            'name' => $this->name(),
+            'description' => $this->description(),
+        ];
+    }
 }

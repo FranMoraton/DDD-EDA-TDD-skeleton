@@ -3,9 +3,10 @@
 namespace App\System\Domain\Model;
 
 use App\System\Domain\Event\DomainEvent;
+use JsonSerializable;
 
 #[\AllowDynamicProperties]
-abstract class Aggregate
+abstract class Aggregate implements JsonSerializable
 {
     private array $events;
 

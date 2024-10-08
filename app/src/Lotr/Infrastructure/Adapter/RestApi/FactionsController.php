@@ -35,10 +35,10 @@ final class FactionsController extends BusController
     {
         $id = $request->attributes->get('id');
 
-        $this->publishQuery(new GetByIdQuery($id));
+        $result = $this->publishQuery(new GetByIdQuery($id));
 
         return new JsonResponse(
-            null,
+            $result,
             Response::HTTP_OK
         );
     }
