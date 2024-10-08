@@ -1,6 +1,3 @@
---- > publish de eventos/comandos
-  ---> sync se estan marchando por el publish y el transport y no devuelve handle
-
 --- > migrations
 --- > tests
 
@@ -11,3 +8,6 @@
 
 ---> behat
 ---> documentacion
+
+---> k8s
+---> ci/cd
