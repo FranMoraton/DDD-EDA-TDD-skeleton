@@ -45,6 +45,14 @@ services:
         tags:
             - { name: messenger.message_handler, bus: messenger_query.bus }
 
+    App\Lotr\Infrastructure\Adapter\Amqp\:
+        resource: '../src/Lotr/Infrastructure/Adapter/Amqp/*'
+        autowire: true
+        autoconfigure: false
+        tags:
+            - { name: messenger.message_handler, bus: messenger_event.bus }
+
+
     App\System\Infrastructure\Symfony\Listener\ExceptionListener:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
@@ -58,6 +66,11 @@ services:
         autowire: true
         arguments:
             $publishCommandBus: '@publish_command.bus'
+
+    App\System\Infrastructure\Symfony\Bus\Middleware\SimpleMessagePublisherMiddleware:
+        class: App\System\Infrastructure\Symfony\Bus\Middleware\SimpleMessagePublisherMiddleware
+        arguments:
+            $asyncCommandBus: '@publish_command.bus'
 
     Symfony\Component\Serializer\Normalizer\ObjectNormalizer: ~
 

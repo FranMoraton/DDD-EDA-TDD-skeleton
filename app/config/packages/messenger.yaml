@@ -21,6 +21,12 @@ framework:
                 default_middleware: allow_no_handlers
                 middleware:
                     - App\System\Infrastructure\Symfony\Bus\Middleware\RoutingKeyMiddleware
+            messenger_event.bus:
+                default_middleware: allow_no_handlers
+                middleware:
+                    - App\System\Infrastructure\Symfony\Bus\Middleware\ForceSyncMiddleware
+                    - App\System\Infrastructure\Symfony\Bus\Middleware\SimpleMessagePublisherMiddleware
+                    - App\System\Infrastructure\Symfony\Bus\Middleware\HandlerExceptionCatcherMiddleware
 
         # Uncomment this (and the failed transport below) to send failed messages to this transport for later handling.
         # failure_transport: failed
