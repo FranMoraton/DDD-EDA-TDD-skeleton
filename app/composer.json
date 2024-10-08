@@ -1,5 +1,6 @@
 {
   "name": "freepikcompany/api-coding-task",
+  "version": "1.0.0",
   "description": "An API Backend coding task",
   "license": "MIT",
   "authors": [

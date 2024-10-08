@@ -8,13 +8,10 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
 use Symfony\Component\Messenger\Middleware\StackInterface;
 
-final class TransactionMiddleware implements MiddlewareInterface
+final readonly class TransactionMiddleware implements MiddlewareInterface
 {
-    private Connection $connection;
-
-    public function __construct(Connection $connection)
+    public function __construct(private Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     public function handle(Envelope $envelope, StackInterface $stack): Envelope
