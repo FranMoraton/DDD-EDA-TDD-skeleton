@@ -26,8 +26,13 @@ abstract class DomainEvent implements JsonSerializable
         array $payload,
         int $aggregateVersion = 0,
     ): static {
-        return new static($messageId, $aggregateId, $aggregateVersion, $occurredOn, $payload);
+        $event = new static($messageId, $aggregateId, $aggregateVersion, $occurredOn, $payload);
+        $event->rebuildPayload();
+
+        return $event;
     }
+
+    abstract public function rebuildPayload(): void;
 
     abstract public static function messageName(): string;
 

@@ -9,7 +9,7 @@ use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
 use Symfony\Component\Messenger\Middleware\StackInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 
-final class SimpleMessagePublisherMiddleware implements MiddlewareInterface
+final readonly class SimpleMessagePublisherMiddleware implements MiddlewareInterface
 {
     public function __construct(private MessageBusInterface $asyncCommandBus)
     {

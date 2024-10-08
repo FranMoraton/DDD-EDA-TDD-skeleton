@@ -10,6 +10,10 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 
 final class ExceptionListener
 {
+    public function __construct(private readonly string $env)
+    {
+    }
+
     public function onKernelException(ExceptionEvent $event): void
     {
         $exception = $event->getThrowable();
@@ -45,9 +49,19 @@ final class ExceptionListener
 
     public function responseFromInternalException(\Throwable $throwable): JsonResponse
     {
+        if ('prod' === $this->env) {
+            $content = [
+                'message' => 'Something went wrong'
+            ];
+
+            return new JsonResponse($content, 500);
+        }
+
         $content = [
             'real' => $throwable->getMessage(),
-            'message' => 'Something went wrong'
+            'file' => $throwable->getFile(),
+            'line' => $throwable->getLine(),
+            'trace' => $throwable->getTrace(),
         ];
 
         return new JsonResponse($content, 500);

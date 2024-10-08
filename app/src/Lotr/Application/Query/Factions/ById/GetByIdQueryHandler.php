@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace App\Lotr\Application\Query\Factions\ById;
 
-use Doctrine\DBAL\Connection;
+use App\Lotr\Domain\Model\Faction\Faction;
+use App\Lotr\Domain\Model\Faction\FactionRepository;
+use App\Lotr\Domain\Model\Faction\ValueObject\Id;
 
 final readonly class GetByIdQueryHandler
 {
-    public function __construct(private Connection $connection)
+    public function __construct(private FactionRepository $factionRepository)
     {
-        // TODO: Implement __call() method.
     }
 
-    public function __invoke(GetByIdQuery $query): array
+    public function __invoke(GetByIdQuery $query): ?Faction
     {
-        $x = $this->connection->fetchAllAssociative('select * from factions');
-
-        var_dump($x);
-        die;
+        return $this->factionRepository->byId(Id::from($query->id()));
     }
 }

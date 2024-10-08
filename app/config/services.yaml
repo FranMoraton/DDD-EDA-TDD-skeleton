@@ -52,8 +52,9 @@ services:
         tags:
             - { name: messenger.message_handler, bus: messenger_event.bus }
 
-
     App\System\Infrastructure\Symfony\Listener\ExceptionListener:
+        arguments:
+            $env: '%kernel.environment%'
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
 
@@ -72,7 +73,17 @@ services:
         arguments:
             $asyncCommandBus: '@publish_command.bus'
 
-    Symfony\Component\Serializer\Normalizer\ObjectNormalizer: ~
+    Symfony\Component\Serializer\Normalizer\ObjectNormalizer:
+        arguments:
+            $classMetadataFactory: ~
+            $nameConverter: ~
+            $propertyAccessor: '@property_accessor'
+            $propertyTypeExtractor: '@property_info'
+
+    Symfony\Component\Serializer\Serializer:
+        arguments:
+            $normalizers:
+                - '@Symfony\Component\Serializer\Normalizer\ObjectNormalizer'
 
 imports:
     - { resource: commands.yaml }

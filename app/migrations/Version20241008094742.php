@@ -13,7 +13,7 @@ final class Version20241008094742 extends AbstractMigration
     {
         $this->addSql('
             CREATE TABLE IF NOT EXISTS `factions` (
-                `id` INT NOT NULL AUTO_INCREMENT,
+                `id` CHAR(36) NOT NULL,
                 `faction_name` VARCHAR(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
                 `description` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
                 PRIMARY KEY (`id`)
@@ -22,7 +22,7 @@ final class Version20241008094742 extends AbstractMigration
 
         $this->addSql('
             CREATE TABLE IF NOT EXISTS `equipments` (
-                `id` INT NOT NULL AUTO_INCREMENT,
+                `id` CHAR(36) NOT NULL,
                 `name` VARCHAR(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
                 `type` VARCHAR(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
                 `made_by` VARCHAR(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -32,12 +32,12 @@ final class Version20241008094742 extends AbstractMigration
 
         $this->addSql('
             CREATE TABLE IF NOT EXISTS `characters` (
-                `id` INT NOT NULL AUTO_INCREMENT,
+                `id` CHAR(36) NOT NULL,
                 `name` VARCHAR(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
                 `birth_date` DATE NOT NULL,
                 `kingdom` VARCHAR(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-                `equipment_id` INT NOT NULL,
-                `faction_id` INT NOT NULL,
+                `equipment_id` CHAR(36) NOT NULL,
+                `faction_id` CHAR(36) NOT NULL,
                 PRIMARY KEY (`id`),
                 KEY `equipment_id` (`equipment_id`),
                 KEY `faction_id` (`faction_id`),

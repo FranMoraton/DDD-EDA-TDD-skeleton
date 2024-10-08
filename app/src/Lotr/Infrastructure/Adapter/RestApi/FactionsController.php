@@ -17,7 +17,13 @@ final class FactionsController extends BusController
     {
         $requestContent = $this->getRequestBody($request);
 
-        $this->publishSyncCommand(new CreateFactionCommand());
+        $this->publishSyncCommand(
+            new CreateFactionCommand(
+                $requestContent->get('id'),
+                $requestContent->get('name'),
+                $requestContent->get('description'),
+            ),
+        );
 
         return new JsonResponse(
             null,
@@ -29,8 +35,7 @@ final class FactionsController extends BusController
     {
         $id = $request->attributes->get('id');
 
-        var_dump($id);
-        $this->publishQuery(new GetByIdQuery());
+        $this->publishQuery(new GetByIdQuery($id));
 
         return new JsonResponse(
             null,
