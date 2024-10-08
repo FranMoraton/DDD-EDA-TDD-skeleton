@@ -5,6 +5,7 @@ framework:
             messenger_command.bus:
                 default_middleware: true
                 middleware:
+                    - App\System\Infrastructure\Symfony\Bus\Middleware\ForceSyncMiddleware
                     - App\System\Infrastructure\Symfony\Bus\Middleware\LoggerMiddleware
                     - App\System\Infrastructure\Symfony\Bus\Middleware\TransactionMiddleware
                     - App\System\Infrastructure\Symfony\Bus\Middleware\HandlerExceptionCatcherMiddleware
