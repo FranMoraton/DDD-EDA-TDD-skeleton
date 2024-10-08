@@ -47,24 +47,25 @@ services:
     networks:
       - bridge
 
-#  amqp:
-#    build:
-#      context: .
-#      dockerfile: docker/rabbitmq/Dockerfile
-#    ports:
-#      - 5672:5672
-#      - 15672:15672
-#    volumes:
-#      - amqp-data:/var/lib/rabbitmq
-#    environment:
-#      RABBITMQ_DEFAULT_USER: guest
-#      RABBITMQ_DEFAULT_PASS: guest
-#      RABBITMQ_DEFAULT_VHOST: app
-#    networks:
-#      - bridge
+  amqp:
+    build:
+      context: .
+      dockerfile: docker/rabbitmq/Dockerfile
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - amqp-data:/var/lib/rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_VHOST: app
+    networks:
+      - bridge
 
 networks:
   bridge:
 
 volumes:
   mysql_data:
+  amqp-data:

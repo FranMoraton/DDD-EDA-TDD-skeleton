@@ -6,4 +6,5 @@ namespace App\System\Application;
 
 interface Query
 {
+    public static function messageName(): string;
 }

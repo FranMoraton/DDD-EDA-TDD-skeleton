@@ -11,19 +11,90 @@ framework:
             messenger_query.bus:
                 default_middleware: true
                 middleware:
+            publish_event.bus:
+                default_middleware: allow_no_handlers
+                middleware:
+                    - App\System\Infrastructure\Symfony\Bus\Middleware\EventRecorderMiddleware
+                    - App\System\Infrastructure\Symfony\Bus\Middleware\RoutingKeyMiddleware
+            publish_command.bus:
+                default_middleware: allow_no_handlers
+                middleware:
+                    - App\System\Infrastructure\Symfony\Bus\Middleware\RoutingKeyMiddleware
 
         # Uncomment this (and the failed transport below) to send failed messages to this transport for later handling.
         # failure_transport: failed
 
         transports:
-            # https://symfony.com/doc/current/messenger.html#transport-configuration
-            # async: '%env(MESSENGER_TRANSPORT_DSN)%'
-            # failed: 'doctrine://default?queue_name=failed'
-            # sync: 'sync://'
+            failed_commands:
+                dsn: '%env(AMQP_DSN)%'
+                serializer: messenger.transport.symfony_serializer
+                options:
+                    exchange:
+                        name: failed_commands
+                        type: topic
+                    queues:
+                        commands_dead:
+                            binding_keys:
+                                - commands
+
+            commands:
+                dsn: '%env(AMQP_DSN)%'
+                failure_transport: failed_commands
+                serializer: messenger.transport.symfony_serializer
+                options:
+                    exchange:
+                        name: commands
+                        type: fanout
+                    delay:
+                        queue_name_pattern: 'commands_%%delay%%'
+                    queues:
+                        commands:
+                retry_strategy:
+                    max_retries: 5
+                    delay: 10000
+                    multiplier: 6
+                    max_delay: 1800000
+
+            events:
+                dsn: '%env(AMQP_DSN_EVENTS)%'
+                serializer: messenger.transport.symfony_serializer
+                options:
+                    exchange:
+                        name: events
+                        type: topic
+                    queues:
+                        lotr_events:
+                            binding_keys:
+                                - company.app.#.domain_event.#
+                            arguments:
+                                x-dead-letter-exchange: lotr_events_dead
+                retry_strategy:
+                    max_retries: 0
+            events_retry:
+                dsn: '%env(AMQP_DSN_EVENTS)%'
+                options:
+                    exchange:
+                        name: lotr_events
+                        type: fanout
+                    queues:
+                        lotr_events:
+                            arguments:
+                                x-dead-letter-exchange: lotr_events_dead
+            events_dead:
+                dsn: '%env(AMQP_DSN_EVENTS)%'
+                options:
+                    exchange:
+                        name: lotr_events_dead
+                        type: fanout
+                    queues:
+                        lotr_events_dead:
+                            arguments:
+                                x-message-ttl: 180000
+                                x-dead-letter-exchange: lotr_events
 
         routing:
-            # Route your messages to the transports
-            # 'App\Message\YourMessage': async
+            App\System\Domain\Event\DomainEvent: events
+            App\System\Application\Command: commands
 
 # when@test:
 #    framework:

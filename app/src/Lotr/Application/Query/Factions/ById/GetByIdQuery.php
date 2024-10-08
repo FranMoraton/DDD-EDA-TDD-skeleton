@@ -8,4 +8,8 @@ use App\System\Application\Query;
 
 final class GetByIdQuery implements Query
 {
+    public static function messageName(): string
+    {
+        return 'company.lotr.1.query.faction.by_id';
+    }
 }

@@ -25,7 +25,10 @@
     "symfony/runtime": "^6.0",
     "symfony/yaml": "^6.0",
     "doctrine/doctrine-bundle": "^2.13",
-    "doctrine/doctrine-migrations-bundle": "^3.3"
+    "doctrine/doctrine-migrations-bundle": "^3.3",
+    "ramsey/uuid": "^4.7",
+    "symfony/serializer": "6.4.*",
+    "symfony/property-access": "6.4.*"
   },
   "require-dev": {
     "dg/bypass-finals": "^1.8",

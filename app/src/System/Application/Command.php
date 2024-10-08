@@ -6,4 +6,5 @@ namespace App\System\Application;
 
 interface Command
 {
+    public static function messageName(): string;
 }

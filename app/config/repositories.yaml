@@ -1,0 +1,3 @@
+services:
+    App\System\Domain\Event\DomainEventStoreRepository:
+        alias: App\System\Infrastructure\Domain\Event\DbalDomainEventStoreRepository

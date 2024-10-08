@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\System\Infrastructure\Adapter\RestApi;
 
+use App\System\Application\AsyncCommandPublisher;
 use App\System\Application\Command;
 use App\System\Application\Query;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,7 +17,8 @@ abstract class BusController extends AbstractController
 {
     public function __construct(
         private readonly MessageBusInterface $commandBus,
-        private readonly MessageBusInterface $queryBus
+        private readonly MessageBusInterface $queryBus,
+        private readonly AsyncCommandPublisher $asyncCommandPublisher,
     ) {
     }
 
@@ -46,4 +48,10 @@ abstract class BusController extends AbstractController
 
         return $handledStamps[0]->getResult();
     }
+
+    protected function publishAsync(Command ...$commands): void
+    {
+        $this->asyncCommandPublisher->execute(...$commands);
+    }
+
 }

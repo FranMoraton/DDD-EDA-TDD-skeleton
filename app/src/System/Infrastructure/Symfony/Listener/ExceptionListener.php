@@ -43,9 +43,10 @@ final class ExceptionListener
         return new JsonResponse($content, $exception->domainExceptionCode()->toHttpCode());
     }
 
-    public function responseFromInternalException(): JsonResponse
+    public function responseFromInternalException(\Throwable $throwable): JsonResponse
     {
         $content = [
+            'real' => $throwable->getMessage(),
             'message' => 'Something went wrong'
         ];
 

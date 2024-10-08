@@ -49,6 +49,19 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
 
+    App\System\Application\DomainEventPublisher:
+        autowire: true
+        arguments:
+            $eventBus: '@publish_event.bus'
+
+    App\System\Application\AsyncCommandPublisher:
+        autowire: true
+        arguments:
+            $publishCommandBus: '@publish_command.bus'
+
+    Symfony\Component\Serializer\Normalizer\ObjectNormalizer: ~
+
 imports:
     - { resource: commands.yaml }
     - { resource: connections.yaml }
+    - { resource: repositories.yaml }
