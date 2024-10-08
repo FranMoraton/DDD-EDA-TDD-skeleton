@@ -29,6 +29,10 @@ HELP_COLOR := $(BLUE)
 UID=$(shell id -u)
 GID=$(shell id -g)
 DOCKER_PHP_SERVICE=php
+DOCKER_DB_SERVICE=db
+DOCKER_DB_PORT=3306
+DOCKER_AMQP_SERVICE=amqp
+DOCKER_AMQP_PORT=5672
 
 # DEFAULT COMMANDS -----------------------------------------------------------------------------------------------------
 all: help
@@ -43,13 +47,13 @@ help: ## Listar comandos disponibles en este Makefile
 
 
 # BUILD COMMANDS -------------------------------------------------------------------------------------------------------
-init: erase cache-folders build composer-install start
+init: erase cache-folders build composer-install start migrations
 
 erase:
 		docker compose down -v
 
 build:
-		docker compose build --no-cache && \
+		docker compose build && \
 		docker compose pull
 
 cache-folders:
@@ -74,10 +78,15 @@ stop:
 		docker compose stop
 
 bash:
-		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh
+		docker compose exec -it -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh
 
 logs:
 		docker compose logs -f ${DOCKER_PHP_SERVICE}
 
 grumphp:
-		docker compose exec ${DOCKER_PHP_SERVICE} grumphp run
+		docker compose exec -it -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} grumphp run
+
+migrations:
+		docker compose run -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc 'while ! nc -z ${DOCKER_DB_SERVICE} ${DOCKER_DB_PORT}; do echo "Waiting for DB service"; sleep 3; done;'
+		docker compose run -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc 'while ! nc -z ${DOCKER_AMQP_SERVICE} ${DOCKER_AMQP_PORT}; do echo "Waiting for AMQP service"; sleep 3; done;'
+		docker compose run -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc './bin/console app:environment:init'

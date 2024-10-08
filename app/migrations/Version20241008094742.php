@@ -11,9 +11,6 @@ final class Version20241008094742 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
-        $this->addSql('CREATE DATABASE IF NOT EXISTS `lotr` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;');
-        $this->addSql('USE `lotr`;');
-
         $this->addSql('
             CREATE TABLE IF NOT EXISTS `factions` (
                 `id` INT NOT NULL AUTO_INCREMENT,
@@ -55,6 +52,5 @@ final class Version20241008094742 extends AbstractMigration
         $this->addSql('DROP TABLE IF EXISTS `factions`;');
         $this->addSql('DROP TABLE IF EXISTS `equipments`;');
         $this->addSql('DROP TABLE IF EXISTS `characters`;');
-        $this->addSql('DROP DATABASE IF EXISTS `lotr`;');
     }
 }
