@@ -9,7 +9,6 @@ use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
 use Symfony\Component\Messenger\Middleware\StackInterface;
 use Symfony\Component\Messenger\Stamp\ReceivedStamp;
 
-
 final class ForceSyncMiddleware implements MiddlewareInterface
 {
     public function handle(Envelope $envelope, StackInterface $stack): Envelope

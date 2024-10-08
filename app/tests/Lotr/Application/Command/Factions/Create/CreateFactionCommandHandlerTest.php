@@ -3,14 +3,19 @@
 namespace App\Tests\Lotr\Application\Command\Factions\Create;
 
 use App\Lotr\Application\Command\Factions\Create\CreateFactionCommandHandler;
+use App\Lotr\Domain\Model\Faction\Event\FactionWasCreated;
+use App\Lotr\Domain\Model\Faction\Faction;
 use App\Lotr\Domain\Model\Faction\FactionRepository;
 use App\System\Application\DomainEventPublisher;
 use App\System\Domain\Exception\AlreadyExistException;
 use App\Tests\Lotr\Domain\Model\Faction\RandomFactionGenerator;
+use App\Tests\System\Infrastructure\PhpUnit\SpyTestHelper;
 use PHPUnit\Framework\TestCase;
 
 class CreateFactionCommandHandlerTest extends TestCase
 {
+    use SpyTestHelper;
+
     private FactionRepository $factionRepository;
     private DomainEventPublisher $domainEventPublisher;
 
@@ -42,7 +47,6 @@ class CreateFactionCommandHandlerTest extends TestCase
 
         self::expectException(AlreadyExistException::class);
         $handler($command);
-
     }
 
     public function testGivenCreateCommandWhenFactionExistThenFail(): void
@@ -62,7 +66,10 @@ class CreateFactionCommandHandlerTest extends TestCase
 
         $this->domainEventPublisher
             ->expects(self::once())
-            ->method('execute');
+            ->method('execute')
+            ->will(
+                self::extractArguments($faction),
+            );
 
         $handler = new CreateFactionCommandHandler(
             $this->factionRepository,
@@ -71,7 +78,12 @@ class CreateFactionCommandHandlerTest extends TestCase
 
         $handler($command);
 
-        self::assertEquals(1, 1);
+        self::assertEquals($faction::modelName(), Faction::modelName());
+        self::assertEquals($faction->id(), $command->id());
+        self::assertEquals($faction->name(), $command->name());
+        self::assertEquals($faction->description(), $command->description());
+        $firstEvent = $faction->events()[array_key_first($faction->events())];
+        self::assertEquals($firstEvent::messageName(), FactionWasCreated::messageName());
     }
 
     protected function setUp(): void

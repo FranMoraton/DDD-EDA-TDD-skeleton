@@ -86,6 +86,12 @@ logs:
 grumphp:
 		docker compose exec -it -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} grumphp run
 
+fix-cs:
+		docker compose exec -it -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} phpcbf --standard=PSR12 src tests
+
+tests:
+		docker compose exec -it -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} phpunit --configuration phpunit.xml.dist --coverage-text --order=random --colors=never
+
 migrations:
 		docker compose run -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc 'while ! nc -z ${DOCKER_DB_SERVICE} ${DOCKER_DB_PORT}; do echo "Waiting for DB service"; sleep 3; done;'
 		docker compose run -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc 'while ! nc -z ${DOCKER_AMQP_SERVICE} ${DOCKER_AMQP_PORT}; do echo "Waiting for AMQP service"; sleep 3; done;'

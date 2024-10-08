@@ -3,7 +3,8 @@ grumphp:
         composer:
             strict: true
         phpcs:
-            standard: ['phpcs.xml.dist']
+            standard:
+                - 'phpcs.xml.dist'
             whitelist_patterns:
                 - '/^src\/(.*)/'
                 - '/^tests\/(.*)/'
@@ -14,6 +15,12 @@ grumphp:
                 task: shell
             scripts:
                 - ["-c", "phpstan analyse -l 8 src"]
+        phpcs_shell:
+            metadata:
+                label: cs
+                task: shell
+            scripts:
+                - ["-c", "phpcs --standard=phpcs.xml.dist"]
         phpunit: ~
         phpversion:
             project: '8.3'

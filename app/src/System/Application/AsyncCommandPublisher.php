@@ -6,7 +6,6 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 final class AsyncCommandPublisher
 {
-
     public function __construct(private MessageBusInterface $publishCommandBus)
     {
     }

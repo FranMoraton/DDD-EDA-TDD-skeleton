@@ -53,5 +53,4 @@ abstract class BusController extends AbstractController
     {
         $this->asyncCommandPublisher->execute(...$commands);
     }
-
 }
