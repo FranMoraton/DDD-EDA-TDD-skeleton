@@ -1,4 +1,3 @@
---- > migrations
 --- > tests
 
 --- > casos de uso
@@ -11,3 +10,6 @@
 
 ---> k8s
 ---> ci/cd
+
+--> auth
+--> mejorar serializacion y logging
