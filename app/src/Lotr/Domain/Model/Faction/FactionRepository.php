@@ -11,4 +11,5 @@ interface FactionRepository
     public function byId(Id $id): ?Faction;
     public function add(Faction $faction): void;
     public function update(Faction $faction): void;
+    public function remove(Faction $faction): void;
 }

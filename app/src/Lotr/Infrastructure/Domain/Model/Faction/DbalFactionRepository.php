@@ -42,6 +42,11 @@ class DbalFactionRepository extends DbalRepository implements FactionRepository
         );
     }
 
+    public function remove(Faction $faction): void
+    {
+        $this->executeDelete(['id' => $faction->id()]);
+    }
+
     protected static function tableName(): string
     {
         return self::TABLE_NAME;

@@ -7,3 +7,8 @@ factions_by_id:
     path: /v1/factions/{id}
     controller: \App\Lotr\Infrastructure\Adapter\RestApi\FactionsController::byId
     methods: [GET]
+
+factions_delete:
+    path: /v1/factions/{id}
+    controller: \App\Lotr\Infrastructure\Adapter\RestApi\FactionsController::remove
+    methods: [DELETE]

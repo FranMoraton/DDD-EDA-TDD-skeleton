@@ -50,6 +50,14 @@ class Faction extends Aggregate
         return $faction;
     }
 
+    public function remove(): self
+    {
+        $this->recordThat(FactionWasCreated::from($this->id, $this->name, $this->description));
+
+        return $this;
+    }
+
+
     public static function modelName(): string
     {
         return self::NAME;

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Lotr\Infrastructure\Adapter\RestApi;
 
 use App\Lotr\Application\Command\Factions\Create\CreateFactionCommand;
+use App\Lotr\Application\Command\Factions\Remove\RemoveFactionCommand;
 use App\Lotr\Application\Query\Factions\ById\GetByIdQuery;
 use App\System\Infrastructure\Adapter\RestApi\BusController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -39,6 +40,18 @@ final class FactionsController extends BusController
 
         return new JsonResponse(
             $result,
+            Response::HTTP_OK
+        );
+    }
+
+    public function remove(Request $request): JsonResponse
+    {
+        $id = $request->attributes->get('id');
+
+        $this->publishSyncCommand(new RemoveFactionCommand($id));
+
+        return new JsonResponse(
+            null,
             Response::HTTP_OK
         );
     }
