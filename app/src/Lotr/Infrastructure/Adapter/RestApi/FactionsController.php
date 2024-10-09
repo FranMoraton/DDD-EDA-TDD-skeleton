@@ -6,6 +6,7 @@ namespace App\Lotr\Infrastructure\Adapter\RestApi;
 
 use App\Lotr\Application\Command\Factions\Create\CreateFactionCommand;
 use App\Lotr\Application\Command\Factions\Remove\RemoveFactionCommand;
+use App\Lotr\Application\Command\Factions\Update\UpdateFactionCommand;
 use App\Lotr\Application\Query\Factions\ById\GetByIdQuery;
 use App\System\Infrastructure\Adapter\RestApi\BusController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -61,7 +62,7 @@ final class FactionsController extends BusController
         $requestContent = $this->getRequestBody($request);
 
         $this->publishSyncCommand(
-            new CreateFactionCommand(
+            new UpdateFactionCommand(
                 $request->attributes->get('id'),
                 $requestContent->get('name'),
                 $requestContent->get('description'),

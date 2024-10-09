@@ -1,3 +1,4 @@
+#factions
 factions_create:
     path: /v1/factions
     controller: \App\Lotr\Infrastructure\Adapter\RestApi\FactionsController::create
@@ -16,4 +17,4 @@ factions_delete:
 factions_update:
     path: /v1/factions/{id}
     controller: \App\Lotr\Infrastructure\Adapter\RestApi\FactionsController::update
-    methods: [DELETE]
+    methods: [PATCH]
