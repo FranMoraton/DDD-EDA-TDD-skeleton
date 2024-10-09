@@ -18,3 +18,24 @@ factions_update:
     path: /v1/factions/{id}
     controller: \App\Lotr\Infrastructure\Adapter\RestApi\FactionsController::update
     methods: [PATCH]
+
+#equipments
+equipments_create:
+    path: /v1/equipments
+    controller: \App\Lotr\Infrastructure\Adapter\RestApi\EquipmentsController::create
+    methods: [POST]
+
+equipments_by_id:
+    path: /v1/equipments/{id}
+    controller: \App\Lotr\Infrastructure\Adapter\RestApi\EquipmentsController::byId
+    methods: [GET]
+
+equipments_delete:
+    path: /v1/equipments/{id}
+    controller: \App\Lotr\Infrastructure\Adapter\RestApi\EquipmentsController::remove
+    methods: [DELETE]
+
+equipments_update:
+    path: /v1/equipments/{id}
+    controller: \App\Lotr\Infrastructure\Adapter\RestApi\EquipmentsController::update
+    methods: [PATCH]

@@ -1,15 +1,14 @@
 --- > tests
-
 --- > casos de uso
-
---- > cache
-
 
 ---> behat
 ---> documentacion
+
+---> mejorar serializacion y logging add name a log de comandos/eventos (info)
+---> ejemplo de proyeccion
+---> cache
 
 ---> k8s
 ---> ci/cd
 
 --> auth
---> mejorar serializacion y logging

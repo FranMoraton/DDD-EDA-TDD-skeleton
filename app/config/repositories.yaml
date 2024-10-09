@@ -4,3 +4,6 @@ services:
 
     App\Lotr\Domain\Model\Faction\FactionRepository:
         alias: App\Lotr\Infrastructure\Domain\Model\Faction\DbalFactionRepository
+
+    App\Lotr\Domain\Model\Equipment\EquipmentRepository:
+        alias: App\Lotr\Infrastructure\Domain\Model\Equipment\DbalEquipmentRepository
