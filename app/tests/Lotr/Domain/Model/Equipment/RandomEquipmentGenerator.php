@@ -18,10 +18,10 @@ final class RandomEquipmentGenerator
         $faker = Factory::create();
 
         return Equipment::from(
-        $id ?? $faker->uuid(),
-        $name ?? $faker->name,
-        $type ?? $faker->text,
-        $madeBy ?? $faker->text,
+            $id ?? $faker->uuid(),
+            $name ?? $faker->name,
+            $type ?? $faker->text,
+            $madeBy ?? $faker->text,
         );
     }
 }

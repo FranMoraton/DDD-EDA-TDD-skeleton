@@ -3,7 +3,6 @@
 namespace App\Lotr\Application\Command\Equipments\Update;
 
 use App\Lotr\Domain\Model\Equipment\Equipment;
-
 use App\Lotr\Domain\Model\Equipment\EquipmentRepository;
 use App\Lotr\Domain\Model\Equipment\ValueObject\Id;
 use App\System\Application\DomainEventPublisher;
@@ -12,7 +11,7 @@ use App\System\Domain\Exception\NotFoundException;
 final readonly class UpdateEquipmentCommandHandler
 {
     public function __construct(
-        private EquipmentRepository  $equipmentRepository,
+        private EquipmentRepository $equipmentRepository,
         private DomainEventPublisher $domainEventPublisher,
     ) {
     }

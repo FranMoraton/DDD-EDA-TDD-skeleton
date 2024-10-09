@@ -39,3 +39,24 @@ equipments_update:
     path: /v1/equipments/{id}
     controller: \App\Lotr\Infrastructure\Adapter\RestApi\EquipmentsController::update
     methods: [PATCH]
+
+#characters
+characters_create:
+    path: /v1/characters
+    controller: \App\Lotr\Infrastructure\Adapter\RestApi\CharactersController::create
+    methods: [POST]
+
+characters_by_id:
+    path: /v1/characters/{id}
+    controller: \App\Lotr\Infrastructure\Adapter\RestApi\CharactersController::byId
+    methods: [GET]
+
+characters_delete:
+    path: /v1/characters/{id}
+    controller: \App\Lotr\Infrastructure\Adapter\RestApi\CharactersController::remove
+    methods: [DELETE]
+
+characters_update:
+    path: /v1/characters/{id}
+    controller: \App\Lotr\Infrastructure\Adapter\RestApi\CharactersController::update
+    methods: [PATCH]

@@ -46,16 +46,16 @@ class Equipment extends Aggregate
         string $type,
         string $madeBy,
     ): self {
-        $faction = new self(
+        $equipment = new self(
             $idVo = Id::from($id),
             $nameVo = Name::from($name),
             $typeVo = Type::from($type),
             $madeByVo = MadeBy::from($madeBy),
         );
 
-        $faction->recordThat(EquipmentWasCreated::from($idVo, $nameVo, $typeVo, $madeByVo));
+        $equipment->recordThat(EquipmentWasCreated::from($idVo, $nameVo, $typeVo, $madeByVo));
 
-        return $faction;
+        return $equipment;
     }
 
     public function update(
@@ -67,23 +67,24 @@ class Equipment extends Aggregate
         $typeVo = Type::from($type);
         $madeByVo = MadeBy::from($madeBy);
 
-        if (true === $this->name->equalTo($nameVo)
+        if (
+            true === $this->name->equalTo($nameVo)
             && true === $this->type->equalTo($typeVo)
             && true === $this->madeBy->equalTo($madeByVo)
         ) {
             return $this;
         }
 
-        $faction = new self(
+        $equipment = new self(
             $idVo = $this->id,
             $nameVo,
             $typeVo,
             $madeByVo,
         );
 
-        $faction->recordThat(EquipmentWasUpdated::from($idVo, $nameVo, $typeVo, $madeByVo));
+        $equipment->recordThat(EquipmentWasUpdated::from($idVo, $nameVo, $typeVo, $madeByVo));
 
-        return $faction;
+        return $equipment;
     }
 
     public function remove(): self

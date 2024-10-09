@@ -1,5 +1,10 @@
---- > tests
---- > casos de uso
+---> añadir specifications en el borrar equipo o faction, de que estan en uso por un character
+ ya que no tiene sentido que un character exista con una faction o equipment que no exista
+
+---> refactor a finder para usar la query/error de factions y equipment en ambos casos de uso
+---> refactor assertions a specifications reusabilidad
+
+---> validaciones en vo
 
 ---> behat
 ---> documentacion

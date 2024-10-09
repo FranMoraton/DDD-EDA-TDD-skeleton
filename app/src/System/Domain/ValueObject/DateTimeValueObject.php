@@ -11,6 +11,7 @@ class DateTimeValueObject extends \DateTimeImmutable implements JsonSerializable
 {
     private const string TIME_ZONE = 'UTC';
     private const string TIME_FORMAT = 'Y-m-d\TH:i:s.uP';
+    private const string DATE_FORMAT = 'Y-m-d';
 
     final private function __construct($time, $timezone)
     {
@@ -52,5 +53,15 @@ class DateTimeValueObject extends \DateTimeImmutable implements JsonSerializable
     public function __toString(): string
     {
         return $this->format(\DATE_ATOM);
+    }
+
+    final public function equalTo(DateTimeValueObject $other): bool
+    {
+        return static::class === \get_class($other) && $this->value() === $other->value();
+    }
+
+    public function toDate(): string
+    {
+        return $this->format(self::DATE_FORMAT);
     }
 }
