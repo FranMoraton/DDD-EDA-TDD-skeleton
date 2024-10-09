@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Lotr\Domain\Model\Faction;
 
 use App\Lotr\Domain\Model\Faction\Event\FactionWasCreated;
+use App\Lotr\Domain\Model\Faction\Event\FactionWasRemoved;
+use App\Lotr\Domain\Model\Faction\Event\FactionWasUpdated;
 use App\Lotr\Domain\Model\Faction\ValueObject\Description;
 use App\Lotr\Domain\Model\Faction\ValueObject\Id;
 use App\Lotr\Domain\Model\Faction\ValueObject\Name;
@@ -50,9 +52,31 @@ class Faction extends Aggregate
         return $faction;
     }
 
+    public function update(
+        string $name,
+        string $description,
+    ): self {
+        $nameVo = Name::from($name);
+        $descriptionVo = Description::from($description);
+
+        if (true === $this->name->equalTo($nameVo) && true === $this->description->equalTo($descriptionVo)) {
+            return $this;
+        }
+
+        $faction = new self(
+            $idVo = $this->id,
+            $nameVo,
+            $descriptionVo,
+        );
+
+        $faction->recordThat(FactionWasUpdated::from($idVo, $nameVo, $descriptionVo));
+
+        return $faction;
+    }
+
     public function remove(): self
     {
-        $this->recordThat(FactionWasCreated::from($this->id, $this->name, $this->description));
+        $this->recordThat(FactionWasRemoved::from($this->id, $this->name, $this->description));
 
         return $this;
     }
@@ -78,7 +102,7 @@ class Faction extends Aggregate
         return $this->description;
     }
 
-    public function jsonSerialize(): mixed
+    public function jsonSerialize(): array
     {
         return [
             'id' => $this->id(),

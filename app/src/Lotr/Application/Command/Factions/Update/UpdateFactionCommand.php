@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Lotr\Application\Command\Factions\Create;
+namespace App\Lotr\Application\Command\Factions\Update;
 
 use App\System\Application\Command;
 
-final readonly class CreateFactionCommand implements Command
+final readonly class UpdateFactionCommand implements Command
 {
-    private const string NAME = 'company.lotr.1.command.faction.create';
+    private const string NAME = 'company.lotr.1.command.faction.update';
 
     public function __construct(private string $id, private string $name, private string $description)
     {

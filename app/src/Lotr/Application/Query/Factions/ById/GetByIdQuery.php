@@ -8,6 +8,8 @@ use App\System\Application\Query;
 
 final class GetByIdQuery implements Query
 {
+    private const string NAME = 'company.lotr.1.query.faction.by_id';
+
     public function __construct(private string $id)
     {
     }
@@ -19,6 +21,6 @@ final class GetByIdQuery implements Query
 
     public static function messageName(): string
     {
-        return 'company.lotr.1.query.faction.by_id';
+        return self::NAME;
     }
 }

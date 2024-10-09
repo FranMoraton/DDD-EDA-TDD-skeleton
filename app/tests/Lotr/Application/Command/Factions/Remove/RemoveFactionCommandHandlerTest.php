@@ -3,7 +3,7 @@
 namespace App\Tests\Lotr\Application\Command\Factions\Remove;
 
 use App\Lotr\Application\Command\Factions\Remove\RemoveFactionCommandHandler;
-use App\Lotr\Domain\Model\Faction\Event\FactionWasCreated;
+use App\Lotr\Domain\Model\Faction\Event\FactionWasRemoved;
 use App\Lotr\Domain\Model\Faction\Faction;
 use App\Lotr\Domain\Model\Faction\FactionRepository;
 use App\System\Application\DomainEventPublisher;
@@ -53,7 +53,7 @@ class RemoveFactionCommandHandlerTest extends TestCase
         self::assertEquals($faction::modelName(), Faction::modelName());
         self::assertEquals($faction->id(), $command->id());
         $firstEvent = $faction->events()[array_key_first($faction->events())];
-        self::assertEquals($firstEvent::messageName(), FactionWasCreated::messageName());
+        self::assertEquals($firstEvent::messageName(), FactionWasRemoved::messageName());
     }
 
     public function testGivenRemoveCommandWhenFactionDoesNotExistThenFail(): void

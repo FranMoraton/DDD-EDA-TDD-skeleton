@@ -12,3 +12,8 @@ factions_delete:
     path: /v1/factions/{id}
     controller: \App\Lotr\Infrastructure\Adapter\RestApi\FactionsController::remove
     methods: [DELETE]
+
+factions_update:
+    path: /v1/factions/{id}
+    controller: \App\Lotr\Infrastructure\Adapter\RestApi\FactionsController::update
+    methods: [DELETE]

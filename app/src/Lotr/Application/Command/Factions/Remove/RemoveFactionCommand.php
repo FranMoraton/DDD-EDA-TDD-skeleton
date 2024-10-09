@@ -8,6 +8,8 @@ use App\System\Application\Command;
 
 final readonly class RemoveFactionCommand implements Command
 {
+    private const string NAME = 'company.lotr.1.command.faction.remove';
+
     public function __construct(private string $id)
     {
     }
@@ -19,6 +21,6 @@ final readonly class RemoveFactionCommand implements Command
 
     public static function messageName(): string
     {
-        return 'company.lotr.1.command.faction.remove';
+        return self::NAME;
     }
 }

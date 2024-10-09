@@ -55,4 +55,22 @@ final class FactionsController extends BusController
             Response::HTTP_OK
         );
     }
+
+    public function update(Request $request): JsonResponse
+    {
+        $requestContent = $this->getRequestBody($request);
+
+        $this->publishSyncCommand(
+            new CreateFactionCommand(
+                $request->attributes->get('id'),
+                $requestContent->get('name'),
+                $requestContent->get('description'),
+            ),
+        );
+
+        return new JsonResponse(
+            null,
+            Response::HTTP_OK
+        );
+    }
 }
