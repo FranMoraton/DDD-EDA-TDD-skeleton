@@ -1,4 +1,4 @@
-.PHONY: all help erase build cache-folders composer-install composer-update composer-require composer-require-dev start stop logs bash grumphp fix-cs tests migrations
+.PHONY: all help erase build cache-folders composer-install composer-update composer-require composer-require-dev start stop logs bash grumphp fix-cs tests migrations consume-commands consume-events
 
 # CONFIG ---------------------------------------------------------------------------------------------------------------
 ifneq (,$(findstring xterm,${TERM}))
@@ -95,3 +95,9 @@ migrations: ## Initialize environment and execute migrations
 		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc 'while ! nc -z ${DOCKER_DB_SERVICE} ${DOCKER_DB_PORT}; do echo "Waiting for DB service"; sleep 3; done;'
 		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc 'while ! nc -z ${DOCKER_AMQP_SERVICE} ${DOCKER_AMQP_PORT}; do echo "Waiting for AMQP service"; sleep 3; done;'
 		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc './bin/console app:environment:init'
+
+consume-commands: ## Consume messages from the commands transport
+		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} console messenger:consume commands --time-limit=3600 --memory-limit=128M --no-interaction
+
+consume-events: ## Consume messages from the events transport
+		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} console messenger:consume events --time-limit=3600 --memory-limit=128M --no-interaction
