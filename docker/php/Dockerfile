@@ -12,7 +12,7 @@ RUN apk add --no-cache openssl-dev \
         opcache-stable\
         intl-stable \
         zip-stable \
-        @composer-2.7.7 \
+        @composer-2.8.3 \
         amqp-1.11.0 && \
     rm -rf /tmp/pear
 

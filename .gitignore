@@ -1,10 +1,10 @@
-/app/var/cache/*
-/app/var/log/*
-/app/vendor/*
-/app/.env
-/app/.env.*
-/app/.env*
+var/cache/*
+var/log/*
+vendor/*
+.env
+.env.*
+.env*
 
 .idea
 
-/app/.phpunit.result.cache
+.phpunit.result.cache

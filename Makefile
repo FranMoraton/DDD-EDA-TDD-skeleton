@@ -1,4 +1,4 @@
-.PHONY: all
+.PHONY: all help erase build cache-folders composer-install composer-update composer-require composer-require-dev start stop logs bash grumphp fix-cs tests migrations
 
 # CONFIG ---------------------------------------------------------------------------------------------------------------
 ifneq (,$(findstring xterm,${TERM}))
@@ -37,7 +37,7 @@ DOCKER_AMQP_PORT=5672
 # DEFAULT COMMANDS -----------------------------------------------------------------------------------------------------
 all: help
 
-help: ## Listar comandos disponibles en este Makefile
+help: ## Display the available commands in this Makefile
 	@echo "╔══════════════════════════════════════════════════════════════════════════════╗"
 	@echo "║                           ${CYAN}.:${RESET} AVAILABLE COMMANDS ${CYAN}:.${RESET}                           ║"
 	@echo "╚══════════════════════════════════════════════════════════════════════════════╝"
@@ -45,54 +45,53 @@ help: ## Listar comandos disponibles en este Makefile
 	@grep -E '^[a-zA-Z_0-9%-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "${COMMAND_COLOR}%-40s${RESET} ${HELP_COLOR}%s${RESET}\n", $$1, $$2}'
 	@echo ""
 
-
 # BUILD COMMANDS -------------------------------------------------------------------------------------------------------
-init: erase cache-folders build composer-install start migrations
+init: erase cache-folders build composer-install start migrations ## Initialize the project (clean, build, install, migrate)
 
-erase:
+erase: ## Remove Docker containers and volumes
 		docker compose down -v
 
-build:
+build: ## Build and pull Docker images
 		docker compose build && \
 		docker compose pull
 
-cache-folders:
+cache-folders: ## Create and set permissions for cache folders
 		mkdir -p ~/.composer && chown ${UID}:${GID} ~/.composer
 
-composer-install:
+composer-install: ## Install Composer dependencies
 		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} composer install --verbose
 
-composer-update:
+composer-update: ## Update Composer dependencies
 		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} composer update --verbose
 
-composer-require:
+composer-require: ## Require a Composer dependency
 		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} composer require --verbose
 
-composer-require-dev:
+composer-require-dev: ## Require a development-only Composer dependency
 		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} composer require --dev --verbose
 
-start:
+start: ## Start Docker services
 		docker compose up -d
 
-stop:
+stop: ## Stop Docker services
 		docker compose stop
 
-bash:
-		docker compose exec -it -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh
-
-logs:
+logs: ## Display logs of the PHP service
 		docker compose logs -f ${DOCKER_PHP_SERVICE}
 
-grumphp:
-		docker compose exec -it -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} grumphp run
+bash: ## Access the PHP container shell
+		docker compose exec -it -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh
 
-fix-cs:
-		docker compose exec -it -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} phpcbf --standard=PSR12 src tests
+grumphp: ## Run GrumPHP to enforce code quality
+		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} grumphp run
 
-tests:
-		docker compose exec -it -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} phpunit --configuration phpunit.xml.dist --coverage-text --order=random --colors=never
+fix-cs: ## Automatically fix code style issues using PSR-12
+		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} phpcbf --standard=PSR12 src tests
 
-migrations:
-		docker compose run -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc 'while ! nc -z ${DOCKER_DB_SERVICE} ${DOCKER_DB_PORT}; do echo "Waiting for DB service"; sleep 3; done;'
-		docker compose run -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc 'while ! nc -z ${DOCKER_AMQP_SERVICE} ${DOCKER_AMQP_PORT}; do echo "Waiting for AMQP service"; sleep 3; done;'
-		docker compose run -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc './bin/console app:environment:init'
+tests: ## Run unit tests with PHPUnit
+		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} phpunit --configuration phpunit.xml.dist --coverage-text --order=random --colors=never
+
+migrations: ## Initialize environment and execute migrations
+		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc 'while ! nc -z ${DOCKER_DB_SERVICE} ${DOCKER_DB_PORT}; do echo "Waiting for DB service"; sleep 3; done;'
+		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc 'while ! nc -z ${DOCKER_AMQP_SERVICE} ${DOCKER_AMQP_PORT}; do echo "Waiting for AMQP service"; sleep 3; done;'
+		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc './bin/console app:environment:init'

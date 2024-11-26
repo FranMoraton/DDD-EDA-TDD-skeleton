@@ -1,0 +1,74 @@
+{
+  "name": "fran-moraton/skeleton",
+  "description": "A skeleton for rapid application development using Test-Driven Development (TDD), Domain-Driven Design (DDD), and Event-Driven Architecture (EDA). Provides a clean structure, preconfigured tools, and best practices to kickstart scalable and testable applications",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Fran Moraton"
+    }
+  ],
+  "require": {
+    "php": "^8.3",
+    "ext-json": "*",
+    "ext-pdo": "*",
+    "doctrine/orm": "^3.2",
+    "nelmio/cors-bundle": "^2.5",
+    "symfony/amqp-messenger": "^6.0",
+    "symfony/console": "^6.0",
+    "symfony/dotenv": "^6.0",
+    "symfony/flex": "^2.4",
+    "symfony/framework-bundle": "^6.0",
+    "symfony/messenger": "^6.0",
+    "symfony/monolog-bundle": "^3.10",
+    "symfony/runtime": "^6.0",
+    "symfony/yaml": "^6.0",
+    "doctrine/doctrine-bundle": "^2.13",
+    "doctrine/doctrine-migrations-bundle": "^3.3",
+    "ramsey/uuid": "^4.7",
+    "symfony/serializer": "6.4.*",
+    "symfony/property-access": "6.4.*"
+  },
+  "require-dev": {
+    "dg/bypass-finals": "^1.8",
+    "fakerphp/faker": "^1.23",
+    "phpro/grumphp": "^v2.8",
+    "phpstan/phpstan": "^1.11",
+    "phpstan/phpstan-symfony": "^1.4",
+    "phpunit/phpunit": "^11.4",
+    "squizlabs/php_codesniffer": "^3.10"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "App\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "auto-scripts": {
+      "cache:clear": "symfony-cmd",
+      "assets:install %PUBLIC_DIR%": "symfony-cmd"
+    },
+    "post-install-cmd": [
+      "@auto-scripts",
+      "rm -rf .git/hooks",
+      "mkdir -p .git/hooks",
+      "cp -r ./config/hooks/* .git/hooks"
+    ]
+  },
+  "config": {
+    "allow-plugins": true
+  },
+  "conflict": {
+    "symfony/symfony": "*"
+  },
+  "extra": {
+    "symfony": {
+      "allow-contrib": false,
+      "require": "6.4.*"
+    }
+  }
+}

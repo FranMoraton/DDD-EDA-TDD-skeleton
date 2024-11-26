@@ -5,7 +5,7 @@ services:
       dockerfile: docker/nginx/Dockerfile
       target: local
     volumes:
-      - ./app/public:/var/www/public
+      - ./public:/var/www/public
     environment:
       PHP_HOST: php
     ports:
@@ -21,14 +21,13 @@ services:
       dockerfile: docker/php/Dockerfile
       target: development
     volumes:
-      - ./app:/var/www
-      - ./.git:/var/www/.git
+      - .:/var/www
       - ~/.composer:/.composer
     networks:
       - bridge
 
   db:
-    image: percona:5.7
+    image: mysql:8.4
     ports:
       - "3306:3306"
     volumes:
