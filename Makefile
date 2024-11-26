@@ -97,7 +97,7 @@ migrations: ## Initialize environment and execute migrations
 		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc './bin/console app:environment:init'
 
 consume-commands: ## Consume messages from the commands transport
-		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} console messenger:consume commands --time-limit=3600 --memory-limit=128M --no-interaction
+		docker compose exec -it -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} console messenger:consume commands --time-limit=60 -m 1 --memory-limit=128M --no-interaction
 
 consume-events: ## Consume messages from the events transport
-		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} console messenger:consume events --time-limit=3600 --memory-limit=128M --no-interaction
+		docker compose exec -it -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} console messenger:consume events --time-limit=60 -m 1 --memory-limit=128M --no-interaction
