@@ -8,25 +8,25 @@
     }
   ],
   "require": {
-    "php": "^8.3",
+    "php": "^8.4",
     "ext-json": "*",
     "ext-pdo": "*",
     "doctrine/orm": "^3.2",
     "nelmio/cors-bundle": "^2.5",
-    "symfony/amqp-messenger": "^6.0",
-    "symfony/console": "^6.0",
-    "symfony/dotenv": "^6.0",
+    "symfony/amqp-messenger": "^7.2",
+    "symfony/console": "^7.2",
+    "symfony/dotenv": "^7.2",
     "symfony/flex": "^2.4",
-    "symfony/framework-bundle": "^6.0",
-    "symfony/messenger": "^6.0",
+    "symfony/framework-bundle": "^7.2",
+    "symfony/messenger": "^7.2",
     "symfony/monolog-bundle": "^3.10",
-    "symfony/runtime": "^6.0",
-    "symfony/yaml": "^6.0",
+    "symfony/runtime": "^7.2",
+    "symfony/yaml": "^7.2",
     "doctrine/doctrine-bundle": "^2.13",
     "doctrine/doctrine-migrations-bundle": "^3.3",
     "ramsey/uuid": "^4.7",
-    "symfony/serializer": "6.4.*",
-    "symfony/property-access": "6.4.*"
+    "symfony/serializer": "^7.2",
+    "symfony/property-access": "^7.2"
   },
   "require-dev": {
     "dg/bypass-finals": "^1.8",
@@ -68,7 +68,7 @@
   "extra": {
     "symfony": {
       "allow-contrib": false,
-      "require": "6.4.*"
+      "require": "7.2.*"
     }
   }
 }

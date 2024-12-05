@@ -1,4 +1,4 @@
-FROM php:8.3-fpm-alpine3.20 AS base
+FROM php:8.4-fpm-alpine3.20 AS base
 
 ENV PROJECT_DIR /var/www
 ENV PATH $PROJECT_DIR/bin:$PROJECT_DIR/vendor/bin:$PATH
@@ -30,5 +30,5 @@ FROM base AS development
 COPY docker/php/config/php.ini /usr/local/etc/php/php.ini
 COPY docker/php/config/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 RUN apk add --no-cache git bash && \
-    install-php-extensions xdebug-3.3.2 && \
+    install-php-extensions xdebug-3.4.0 && \
     rm -rf /tmp/pear
