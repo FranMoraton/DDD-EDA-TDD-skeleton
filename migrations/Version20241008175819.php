@@ -17,20 +17,23 @@ final class Version20241008175819 extends AbstractMigration
     public function up(Schema $schema): void
     {
         $this->addSql('
-            ALTER TABLE factions 
-            ADD updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL, 
+            ALTER TABLE factions
+            ADD created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+            ADD updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, 
             ADD version INT NOT NULL DEFAULT 1;
         ');
 
         $this->addSql('
             ALTER TABLE equipments 
-            ADD updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL, 
+            ADD created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+            ADD updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, 
             ADD version INT NOT NULL DEFAULT 1;
         ');
 
         $this->addSql('
             ALTER TABLE characters 
-            ADD updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL, 
+            ADD created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+            ADD updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, 
             ADD version INT NOT NULL DEFAULT 1;
         ');
     }

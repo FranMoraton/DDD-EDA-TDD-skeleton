@@ -1,11 +1,14 @@
 doctrine:
     dbal:
         connections:
-            default:
-                driver: 'pdo_mysql'
-                server_version: '5.7'
-                charset: utf8mb4
+            write:
                 url: '%write_db%'
+                driver: 'pdo_pgsql'
+                charset: UTF8
+                mapping_types:
+                    enum: string
+                server_version: '15.7'
+
 
 when@test:
     doctrine:

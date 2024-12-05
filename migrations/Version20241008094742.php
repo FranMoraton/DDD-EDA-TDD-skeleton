@@ -12,45 +12,46 @@ final class Version20241008094742 extends AbstractMigration
     public function up(Schema $schema): void
     {
         $this->addSql('
-            CREATE TABLE IF NOT EXISTS `factions` (
-                `id` CHAR(36) NOT NULL,
-                `faction_name` VARCHAR(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-                `description` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-                PRIMARY KEY (`id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+            CREATE TABLE IF NOT EXISTS factions (
+                id UUID NOT NULL,
+                faction_name VARCHAR(128) NOT NULL,
+                description TEXT NOT NULL,
+                PRIMARY KEY (id)
+            );
         ');
 
         $this->addSql('
-            CREATE TABLE IF NOT EXISTS `equipments` (
-                `id` CHAR(36) NOT NULL,
-                `name` VARCHAR(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-                `type` VARCHAR(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-                `made_by` VARCHAR(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-                PRIMARY KEY (`id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+            CREATE TABLE IF NOT EXISTS equipments (
+                id UUID NOT NULL,
+                name VARCHAR(128) NOT NULL,
+                type VARCHAR(128) NOT NULL,
+                made_by VARCHAR(128) NOT NULL,
+                PRIMARY KEY (id)
+            );
         ');
 
         $this->addSql('
-            CREATE TABLE IF NOT EXISTS `characters` (
-                `id` CHAR(36) NOT NULL,
-                `name` VARCHAR(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-                `birth_date` DATE NOT NULL,
-                `kingdom` VARCHAR(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-                `equipment_id` CHAR(36) NOT NULL,
-                `faction_id` CHAR(36) NOT NULL,
-                PRIMARY KEY (`id`),
-                KEY `equipment_id` (`equipment_id`),
-                KEY `faction_id` (`faction_id`),
-                CONSTRAINT `characters_ibfk_1` FOREIGN KEY (`equipment_id`) REFERENCES `equipments` (`id`),
-                CONSTRAINT `characters_ibfk_2` FOREIGN KEY (`faction_id`) REFERENCES `factions` (`id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+            CREATE TABLE IF NOT EXISTS characters (
+                id UUID NOT NULL,
+                name VARCHAR(128) NOT NULL,
+                birth_date DATE NOT NULL,
+                kingdom VARCHAR(128) NOT NULL,
+                equipment_id UUID NOT NULL,
+                faction_id UUID NOT NULL,
+                PRIMARY KEY (id),
+                CONSTRAINT fk_characters_equipment FOREIGN KEY (equipment_id) REFERENCES equipments (id),
+                CONSTRAINT fk_characters_faction FOREIGN KEY (faction_id) REFERENCES factions (id)
+            );
         ');
+
+        $this->addSql('CREATE INDEX characters_equipment_id_idx ON characters (equipment_id);');
+        $this->addSql('CREATE INDEX characters_faction_id_idx ON characters (faction_id);');
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql('DROP TABLE IF EXISTS `factions`;');
-        $this->addSql('DROP TABLE IF EXISTS `equipments`;');
-        $this->addSql('DROP TABLE IF EXISTS `characters`;');
+        $this->addSql('DROP TABLE IF EXISTS characters;');
+        $this->addSql('DROP TABLE IF EXISTS equipments;');
+        $this->addSql('DROP TABLE IF EXISTS factions;');
     }
 }

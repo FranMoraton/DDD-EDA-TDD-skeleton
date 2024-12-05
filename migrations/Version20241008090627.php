@@ -18,10 +18,10 @@ final class Version20241008090627 extends AbstractMigration
     {
         $this->addSql('
             CREATE TABLE IF NOT EXISTS event_store (
-                message_id CHAR(36) NOT NULL PRIMARY KEY,
-                aggregate_id VARCHAR(36) NOT NULL,
+                message_id UUID NOT NULL PRIMARY KEY,
+                aggregate_id UUID NOT NULL,
                 message_name VARCHAR(255) NOT NULL,
-                payload TEXT NOT NULL,
+                payload JSONB not null,
                 occurred_on DECIMAL(18, 6) NOT NULL,
                 aggregate_version VARCHAR(60) NOT NULL
             );

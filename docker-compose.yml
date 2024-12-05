@@ -27,18 +27,16 @@ services:
       - bridge
 
   db:
-    image: mysql:8.4
+    image: postgres:15.7-alpine
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: lotr
-      MYSQL_PASSWORD: guest
-      MYSQL_USER: guest
+      POSTGRES_USER: guest
+      POSTGRES_PASSWORD: guest
     healthcheck:
-      test: "/usr/bin/mysql --user=root --password=root --execute \"SHOW DATABASES;\""
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
       interval: 3s
       timeout: 1s
       retries: 5
@@ -65,5 +63,5 @@ networks:
   bridge:
 
 volumes:
-  mysql_data:
+  postgres_data:
   amqp-data:

@@ -8,7 +8,7 @@ RUN chmod +x /usr/local/bin/install-php-extensions
 
 RUN apk add --no-cache openssl-dev \
     && install-php-extensions \
-        pdo_mysql-stable \
+        pdo_pgsql-stable  \
         opcache-stable\
         intl-stable \
         zip-stable \
