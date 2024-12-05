@@ -17,7 +17,7 @@ grumphp:
                 - ["-c", "phpstan analyse -l 8 src"]
         phpunit: ~
         phpversion:
-            project: '8.3'
+            project: '8.4'
         securitychecker_composeraudit:
             format: plain
             run_always: true
