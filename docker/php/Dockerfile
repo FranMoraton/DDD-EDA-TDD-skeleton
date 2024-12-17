@@ -12,7 +12,7 @@ RUN apk add --no-cache openssl-dev \
         opcache-stable\
         intl-stable \
         zip-stable \
-        @composer-2.8.3 \
+        @composer-2.8.4 \
         amqp-1.11.0 && \
     rm -rf /tmp/pear
 
@@ -32,3 +32,22 @@ COPY docker/php/config/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 RUN apk add --no-cache git bash && \
     install-php-extensions xdebug-3.4.0 && \
     rm -rf /tmp/pear
+
+FROM base AS result
+ENV APP_ENV=prod
+COPY ./ $PROJECT_DIR
+RUN cp -f $PROJECT_DIR/docker/php/config/public.pem $PROJECT_DIR/config/jwt/public.pem
+RUN composer install --no-dev --classmap-authoritative --optimize-autoloader
+RUN rm -rf \
+            docker \
+            tests \
+            .env.test \
+            grumphp.yml \
+            phpcs.xml.dist \
+            phpstan.neon \
+            phpunit.xml.dist
+
+FROM base AS prod
+COPY --from=result $PROJECT_DIR ./
+RUN chown -R www-data:www-data $PROJECT_DIR
+USER www-data
