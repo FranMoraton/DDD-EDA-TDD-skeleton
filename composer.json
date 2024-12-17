@@ -26,7 +26,9 @@
     "doctrine/doctrine-migrations-bundle": "^3.3",
     "ramsey/uuid": "^4.7",
     "symfony/serializer": "^7.2",
-    "symfony/property-access": "^7.2"
+    "symfony/property-access": "^7.2",
+    "lexik/jwt-authentication-bundle": "^3.1",
+    "symfony/security-bundle": "7.2.*"
   },
   "require-dev": {
     "dg/bypass-finals": "^1.8",
