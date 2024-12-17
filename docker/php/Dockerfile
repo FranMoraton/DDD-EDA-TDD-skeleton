@@ -16,8 +16,8 @@ RUN apk add --no-cache openssl-dev \
         amqp-1.11.0 && \
     rm -rf /tmp/pear
 
-COPY docker/php/config/php.ini /usr/local/etc/php/
-COPY docker/php/config/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+COPY docker/php/config/php_prod.ini /usr/local/etc/php/
+COPY docker/php/config/opcache_prod.ini /usr/local/etc/php/conf.d/opcache.ini
 COPY docker/php/config/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 WORKDIR $PROJECT_DIR
