@@ -22,36 +22,6 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    App\Lotr\Infrastructure\Adapter\RestApi\:
-        resource: '../src/Lotr/Infrastructure/Adapter/RestApi/*'
-        bind:
-            Symfony\Component\Messenger\MessageBusInterface $commandBus: '@messenger_command.bus'
-            Symfony\Component\Messenger\MessageBusInterface $queryBus: '@messenger_query.bus'
-        tags:
-            - { name: controller.service_arguments }
-
-
-    App\Lotr\Application\Command\:
-        autowire: true
-        autoconfigure: false
-        resource: '../src/Lotr/Application/Command/*/*/*Handler.php'
-        tags:
-            - { name: messenger.message_handler, bus: messenger_command.bus }
-
-    App\Lotr\Application\Query\:
-        autowire: true
-        autoconfigure: false
-        resource: '../src/Lotr/Application/Query/*/*/*Handler.php'
-        tags:
-            - { name: messenger.message_handler, bus: messenger_query.bus }
-
-#    App\Lotr\Infrastructure\Adapter\Amqp\:
-#        resource: '../src/Lotr/Infrastructure/Adapter/Amqp/*'
-#        autowire: true
-#        autoconfigure: false
-#        tags:
-#            - { name: messenger.message_handler, bus: messenger_event.bus }
-
     App\System\Infrastructure\Symfony\Listener\ExceptionListener:
         arguments:
             $env: '%kernel.environment%'
@@ -89,3 +59,5 @@ imports:
     - { resource: commands.yaml }
     - { resource: connections.yaml }
     - { resource: repositories.yaml }
+    - { resource: context/lotr/services.yaml}
+    - { resource: context/users/services.yaml}

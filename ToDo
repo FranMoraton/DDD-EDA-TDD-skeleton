@@ -1,19 +1,15 @@
 ---> añadir specifications en el borrar equipo o faction, de que estan en uso por un character
  ya que no tiene sentido que un character exista con una faction o equipment que no exista
+---> añadir check para email unico a users
 
----> refactor a finder para usar la query/error de factions y equipment en ambos casos de uso
----> refactor assertions a specifications reusabilidad
-
----> validaciones en vo
-
+---> authentication and authorization
+---> serializer and compiler pass for events/command
+---> criteria
+---> cache query bus
 ---> behat
----> documentacion
+---> documentation asyncApi/openApi
 
----> mejorar serializacion y logging add name a log de comandos/eventos (info)
----> ejemplo de proyeccion
----> cache
-
----> k8s
+---> distributed tracing correlation/causation
 ---> ci/cd
-
---> auth
+---> k8s
+---> Datadog free tier

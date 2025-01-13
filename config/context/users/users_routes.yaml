@@ -1,0 +1,19 @@
+users_create:
+    path: /v1/users
+    controller: \App\Users\Infrastructure\Adapter\RestApi\UsersController::create
+    methods: [POST]
+
+users_by_id:
+    path: /v1/users/{id}
+    controller: \App\Users\Infrastructure\Adapter\RestApi\UsersController::byId
+    methods: [GET]
+
+users_delete:
+    path: /v1/users/{id}
+    controller: \App\Users\Infrastructure\Adapter\RestApi\UsersController::remove
+    methods: [DELETE]
+
+users_update:
+    path: /v1/users/{id}
+    controller: \App\Users\Infrastructure\Adapter\RestApi\UsersController::update
+    methods: [PATCH]

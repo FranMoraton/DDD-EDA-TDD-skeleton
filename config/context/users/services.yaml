@@ -1,0 +1,35 @@
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    App\Users\Infrastructure\Adapter\RestApi\:
+        resource: '../../../src/Users/Infrastructure/Adapter/RestApi/*'
+        bind:
+            Symfony\Component\Messenger\MessageBusInterface $commandBus: '@messenger_command.bus'
+            Symfony\Component\Messenger\MessageBusInterface $queryBus: '@messenger_query.bus'
+        tags:
+            - { name: controller.service_arguments }
+
+
+    App\Users\Application\Command\:
+        autowire: true
+        autoconfigure: false
+        resource: '../../../src/Users/Application/Command/*/*/*Handler.php'
+        tags:
+            - { name: messenger.message_handler, bus: messenger_command.bus }
+
+    App\Users\Application\Query\:
+        autowire: true
+        autoconfigure: false
+        resource: '../../../src/Users/Application/Query/*/*/*Handler.php'
+        tags:
+            - { name: messenger.message_handler, bus: messenger_query.bus }
+
+#    App\Users\Infrastructure\Adapter\Amqp\:
+#        resource: '../../../src/Users/Infrastructure/Adapter/Amqp/*'
+#        autowire: true
+#        autoconfigure: false
+#        tags:
+#            - { name: messenger.message_handler, bus: messenger_event.bus }
