@@ -22,7 +22,7 @@ class DbalArrayUserMapper
             'id' => $user->id(),
             'email' => $user->email(),
             'password' => $user->password(),
-            'role' => $user->role(),
+            'role' => $user->role()->value,
         ];
     }
 }

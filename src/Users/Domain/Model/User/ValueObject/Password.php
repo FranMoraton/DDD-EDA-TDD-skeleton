@@ -12,7 +12,7 @@ final class Password extends StringValueObject
 {
     private const string REGEX = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/';
 
-    public static function from(#[\SensitiveParameter] string $value): static
+    public static function create(#[\SensitiveParameter] string $value): static
     {
         if (false === (bool) preg_match(self::REGEX, $value)) {
             throw new ValidationException(

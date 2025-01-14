@@ -7,3 +7,6 @@ services:
 
     App\Lotr\Domain\Model\Equipment\EquipmentRepository:
         alias: App\Lotr\Infrastructure\Domain\Model\Equipment\DbalEquipmentRepository
+
+    App\Users\Domain\Model\User\UserRepository:
+        alias: App\Users\Infrastructure\Domain\Model\User\DbalUserRepository

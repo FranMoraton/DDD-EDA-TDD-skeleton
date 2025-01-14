@@ -49,7 +49,7 @@ class User extends Aggregate
         $user = new self(
             $idVo = Id::from($id),
             $emailVo = Email::from($email),
-            $passwordVo = Password::from($password),
+            $passwordVo = Password::create($password),
             $roleVo = Role::from($role)
         );
 
