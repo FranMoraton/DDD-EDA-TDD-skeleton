@@ -21,6 +21,13 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+            - '../src/Users/Application/Command/*/*/*Handler.php'
+            - '../src/Users/Application/Query/*/*/*Handler.php'
+            - '../src/Users/Infrastructure/Adapter/RestApi/*'
+            - '../src/Lotr/Application/Command/*/*/*Handler.php'
+            - '../src/Lotr/Application/Query/*/*/*Handler.php'
+            - '../src/Lotr/Infrastructure/Adapter/RestApi/*'
+
 
     App\System\Infrastructure\Symfony\Listener\ExceptionListener:
         arguments:

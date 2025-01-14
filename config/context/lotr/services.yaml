@@ -12,7 +12,6 @@ services:
         tags:
             - { name: controller.service_arguments }
 
-
     App\Lotr\Application\Command\:
         autowire: true
         autoconfigure: false
