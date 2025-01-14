@@ -17,3 +17,7 @@ users_update:
     path: /v1/users/{id}
     controller: \App\Users\Infrastructure\Adapter\RestApi\UsersController::update
     methods: [PATCH]
+
+users_login:
+    path: /v1/login
+    methods: [POST]

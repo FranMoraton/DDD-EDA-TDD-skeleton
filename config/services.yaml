@@ -62,6 +62,17 @@ services:
             $normalizers:
                 - '@Symfony\Component\Serializer\Normalizer\ObjectNormalizer'
 
+#    Lcobucci\JWT\Signer\Hmac\Sha256: ~
+#
+#    Lcobucci\JWT\Configuration:
+#        factory: ['Lcobucci\JWT\Configuration', 'forSymmetricSigner']
+#        arguments:
+#            - '@Lcobucci\JWT\Signer\Hmac\Sha256'
+#            - '%env(resolve:JWT_SECRET_KEY)%'
+#            - '%env(resolve:JWT_PUBLIC_KEY)%'
+#
+#    Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface: '@lexik_jwt_authentication.jwt_manager'
+
 imports:
     - { resource: commands.yaml }
     - { resource: connections.yaml }
