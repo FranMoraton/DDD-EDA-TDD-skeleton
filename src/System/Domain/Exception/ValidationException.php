@@ -6,7 +6,7 @@ namespace App\System\Domain\Exception;
 
 final class ValidationException extends DomainException
 {
-    private const string TYPE = 'NOT_FOUND';
+    private const string TYPE = 'VALIDATION_ERROR';
 
     public function __construct(
         private readonly string $modelClass,
