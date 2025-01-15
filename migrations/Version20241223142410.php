@@ -28,6 +28,23 @@ final class Version20241223142410 extends AbstractMigration
                 PRIMARY KEY (id)
             );
         ');
+
+        $this->addSql("CREATE INDEX users_id_version_idx ON users(id,version);");
+        $this->addSql("CREATE INDEX users_external_reference_idx ON users(email);");
+        $this->addSql("CREATE INDEX users_role ON users(role)");
+
+        $this->addSql("
+            insert into public.users (id, email, password, role, created_at, updated_at, version)
+            values  (
+                     '01ceb46e-96d8-41b6-972a-9b2403d36bd7',
+                     'test@test.com',
+                     '\$argon2id\$v=19\$m=65536,t=4,p=1\$Ly5RdWl6Lk1OWEw4YzFpQg\$mJRVLsPIzJv3MndN5U0ju7zPgRAluNq/wyL/vn9xcTQ',
+                     'ROLE_ADMIN',
+                     '2025-01-15 16:16:32.194025',
+                     '2025-01-15 16:16:32.194025',
+                     1
+            );
+        ");
     }
 
     public function down(Schema $schema): void

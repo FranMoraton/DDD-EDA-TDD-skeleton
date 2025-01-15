@@ -1,10 +1,6 @@
----> añadir specifications en el borrar equipo o faction, de que estan en uso por un character
- ya que no tiene sentido que un character exista con una faction o equipment que no exista
 ---> añadir check para email unico a users
 
----> authentication and authorization
 ---> serializer and compiler pass for events/command
----> criteria
 ---> cache query bus
 ---> behat
 ---> documentation asyncApi/openApi

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\System\Infrastructure\Dbal;
 
+use App\System\Domain\Criteria\Criteria;
 use App\System\Domain\ValueObject\DateTimeValueObject;
 use Doctrine\DBAL\Connection;
 
@@ -29,6 +30,17 @@ abstract class DbalRepository
     abstract protected function map(array $item): mixed;
 
     abstract protected static function tableName(): string;
+
+    protected function mapCollection(array $collection): array
+    {
+        $items = [];
+
+        foreach ($collection as $item) {
+            $items[] = $this->map($item);
+        }
+
+        return $items;
+    }
 
     protected function addControlFields(array $item, object $model): object
     {
@@ -104,5 +116,52 @@ abstract class DbalRepository
         }
 
         return $result;
+    }
+
+    protected function findByCriteria(Criteria $criteria): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('*')->from(static::tableName(), 't');
+
+        foreach ($criteria->filters() as $field => $filter) {
+            $qb->andWhere("t.$field {$filter['operator']} :$field")
+                ->setParameter((string) $field, $filter['value']);
+        }
+
+        if (null !== $criteria->limit()) {
+            $qb->setMaxResults($criteria->limit());
+        }
+
+        if (null !== $criteria->offset()) {
+            $qb->setFirstResult($criteria->offset());
+        }
+
+        if ($order = $criteria->order()) {
+            $qb->orderBy('t.' . $order['field'], $order['direction']);
+        }
+
+        return $this->mapCollection($qb->executeQuery()->fetchAllAssociative());
+    }
+
+    public function countByCriteria(Criteria $criteria): int
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('COUNT(*) as total_count')
+            ->from(static::tableName(), 't');
+
+        foreach ($criteria->filters() as $field => $filter) {
+            $qb->andWhere("t.$field {$filter['operator']} :$field")
+                ->setParameter((string) $field, $filter['value']);
+        }
+
+        $result = $qb->executeQuery()->fetchAssociative();
+
+        if (false === $result) {
+            return 0;
+        }
+
+        \assert(\is_numeric($result['total_count']));
+
+        return (int) $result['total_count'];
     }
 }

@@ -53,9 +53,9 @@ final class SecurityUser implements UserInterface, PasswordAuthenticatedUserInte
 
     public function getUserIdentifier(): string
     {
-        \assert('' !== $this->id);
+        \assert('' !== $this->email);
 
-        return $this->id;
+        return $this->email;
     }
 
     public function getRoles(): array

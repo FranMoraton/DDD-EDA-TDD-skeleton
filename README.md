@@ -16,6 +16,7 @@ This project is designed to simplify the creation of new applications following 
     - GrumPHP to enforce code quality.
     - Support for migrations and message transport.
 - **Authentication and Authorization Module**: Provides a basic structure for handling user authentication and access control.
+- **Default Admin User**: A preconfigured admin user to simplify authentication during development.
 
 ---
 
@@ -107,6 +108,16 @@ make help
 
 ---
 
+### 8. Access the Application
+   To access a Bearer Token for authentication,
+   use the /users/v1/login endpoint with the following credentials for the default admin user:
+
+```json
+{
+  "email": "test@test.com",
+  "password": "Test1234$"
+}
+```
 
 ## Key Principles
 

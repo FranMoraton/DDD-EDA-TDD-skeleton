@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Users\Infrastructure\Domain\Model\User;
 
+use App\System\Domain\Criteria\Criteria;
 use App\System\Infrastructure\Dbal\DbalRepository;
 use App\Users\Domain\Model\User\User;
 use App\Users\Domain\Model\User\UserRepository;
@@ -45,6 +46,16 @@ class DbalUserRepository extends DbalRepository implements UserRepository
     public function remove(User $user): void
     {
         $this->executeDelete(['id' => $user->id()]);
+    }
+
+    public function search(Criteria $criteria): array
+    {
+        return $this->findByCriteria($criteria);
+    }
+
+    public function count(Criteria $criteria): int
+    {
+        return $this->countByCriteria($criteria);
     }
 
     protected static function tableName(): string

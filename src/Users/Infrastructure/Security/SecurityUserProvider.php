@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Users\Infrastructure\Security;
 
+use App\System\Domain\Criteria\Criteria;
+use App\Users\Domain\Model\User\Criteria\ByEmailCriteria;
 use App\Users\Domain\Model\User\User;
 use App\Users\Domain\Model\User\UserRepository;
+use App\Users\Domain\Model\User\ValueObject\Email;
 use App\Users\Domain\Model\User\ValueObject\Id;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -53,12 +56,15 @@ final readonly class SecurityUserProvider implements UserProviderInterface
 
     private function findUser(string $identifier): User
     {
-        $user = $this->userRepository->byId(Id::from($identifier));
+        $users = $this->userRepository->search(
+            ByEmailCriteria::create(Email::from($identifier))
+        );
 
-        if (null === $user) {
+
+        if (\count($users) === 0) {
             throw new UserNotFoundException();
         }
 
-        return $user;
+        return $users[array_key_first($users)];
     }
 }
