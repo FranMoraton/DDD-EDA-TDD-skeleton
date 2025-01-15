@@ -59,6 +59,28 @@ services:
     networks:
       - bridge
 
+  openapi:
+    image: swaggerapi/swagger-ui
+    environment:
+      - SWAGGER_JSON=/docs/openapi.yaml
+    volumes:
+      - ./docs:/docs
+    ports:
+      - 8090:8080
+    networks:
+      - bridge
+
+  asyncapi:
+    build:
+      context: .
+      dockerfile: docker/asyncapi/Dockerfile
+    volumes:
+      - ./docs:/app/docs
+    ports:
+      - 8091:80
+    networks:
+      - bridge
+
 networks:
   bridge:
 

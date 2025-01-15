@@ -1,0 +1,123 @@
+asyncapi: '2.0.0'
+info:
+    title: User Events API
+    version: '1.0.0'
+    description: API for user domain events such as creation, removal, and updates.
+
+servers:
+    production:
+        url: api.example.com
+        protocol: amqp
+
+channels:
+    user/created:
+        description: Channel for user creation events.
+        subscribe:
+            summary: Event emitted when a user is created.
+            message:
+                contentType: application/json
+                name: UserWasCreated
+                payload:
+                    $ref: '#/components/schemas/UserWasCreated'
+    user/removed:
+        description: Channel for user removal events.
+        subscribe:
+            summary: Event emitted when a user is removed.
+            message:
+                contentType: application/json
+                name: UserWasRemoved
+                payload:
+                    $ref: '#/components/schemas/UserWasRemoved'
+    user/updated:
+        description: Channel for user update events.
+        subscribe:
+            summary: Event emitted when a user is updated.
+            message:
+                contentType: application/json
+                name: UserWasUpdated
+                payload:
+                    $ref: '#/components/schemas/UserWasUpdated'
+
+components:
+    schemas:
+        Uuid:
+            type: string
+            format: uuid
+            description: A UUID for identifying entities.
+
+        DateTimeValueObject:
+            type: string
+            format: date-time
+            description: A date-time value object.
+
+        UserWasCreated:
+            type: object
+            properties:
+                message_id:
+                    $ref: '#/components/schemas/Uuid'
+                name:
+                    type: string
+                    example: 'company.app.1.domain_event.user.was_created'
+                aggregate_id:
+                    $ref: '#/components/schemas/Uuid'
+                aggregate_version:
+                    type: integer
+                    example: 0
+                occurred_on:
+                    $ref: '#/components/schemas/DateTimeValueObject'
+                payload:
+                    type: object
+                    properties:
+                        email:
+                            type: string
+                            format: email
+                        role:
+                            type: string
+
+        UserWasRemoved:
+            type: object
+            properties:
+                message_id:
+                    $ref: '#/components/schemas/Uuid'
+                name:
+                    type: string
+                    example: 'company.app.1.domain_event.user.was_removed'
+                aggregate_id:
+                    $ref: '#/components/schemas/Uuid'
+                aggregate_version:
+                    type: integer
+                    example: 0
+                occurred_on:
+                    $ref: '#/components/schemas/DateTimeValueObject'
+                payload:
+                    type: object
+                    properties:
+                        email:
+                            type: string
+                            format: email
+                        role:
+                            type: string
+
+        UserWasUpdated:
+            type: object
+            properties:
+                message_id:
+                    $ref: '#/components/schemas/Uuid'
+                name:
+                    type: string
+                    example: 'company.app.1.domain_event.user.was_updated'
+                aggregate_id:
+                    $ref: '#/components/schemas/Uuid'
+                aggregate_version:
+                    type: integer
+                    example: 0
+                occurred_on:
+                    $ref: '#/components/schemas/DateTimeValueObject'
+                payload:
+                    type: object
+                    properties:
+                        email:
+                            type: string
+                            format: email
+                        role:
+                            type: string

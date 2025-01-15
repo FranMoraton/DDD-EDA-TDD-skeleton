@@ -17,6 +17,9 @@ This project is designed to simplify the creation of new applications following 
     - Support for migrations and message transport.
 - **Authentication and Authorization Module**: Provides a basic structure for handling user authentication and access control.
 - **Default Admin User**: A preconfigured admin user to simplify authentication during development.
+- **API Documentation**:
+    - **AsyncAPI** available at [http://localhost:8091](http://localhost:8091).
+    - **OpenAPI** available at [http://localhost:8090](http://localhost:8090).
 
 ---
 
@@ -119,6 +122,10 @@ make help
 }
 ```
 
+### 9. Access API Documentation
+   AsyncAPI documentation is available at http://localhost:8091.
+   OpenAPI documentation is available at http://localhost:8090.
+
 ## Key Principles
 
 - **DDD**: Organizes code into clear, domain-aligned modules.
@@ -133,6 +140,7 @@ Contributions to improve this project are welcome. Please make sure to follow th
 
 - Use GrumPHP to validate code quality.
 - Write tests for all new features.
+- Add Documentation in docs/
 
 ---
 
