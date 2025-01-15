@@ -5,13 +5,20 @@ declare(strict_types=1);
 namespace App\Users\Application\Query\Users\ById;
 
 use App\System\Application\Query;
+use App\System\Domain\ValueObject\Uuid;
 
-final class GetByIdQuery implements Query
+final class GetByIdQuery extends Query
 {
     private const string NAME = 'company.users.1.query.user.by_id';
 
-    public function __construct(private string $id)
+    private string $id;
+
+    public static function create(string $id): self
     {
+        return self::fromPayload(
+            Uuid::v4(),
+            ['id' => $id],
+        );
     }
 
     public function id(): string
@@ -22,5 +29,12 @@ final class GetByIdQuery implements Query
     public static function messageName(): string
     {
         return self::NAME;
+    }
+
+    public function rebuildPayload(): void
+    {
+        $payload = $this->payload();
+
+        $this->id = $payload['id'];
     }
 }

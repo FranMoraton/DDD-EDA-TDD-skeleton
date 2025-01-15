@@ -5,17 +5,32 @@ declare(strict_types=1);
 namespace App\Users\Application\Command\Users\Create;
 
 use App\System\Application\Command;
+use App\System\Domain\ValueObject\Uuid;
 
-final readonly class CreateUserCommand implements Command
+final class CreateUserCommand extends Command
 {
     private const string NAME = 'company.users.1.command.user.create';
 
-    public function __construct(
-        private string $id,
-        private string $email,
-        private string $role,
-        #[\SensitiveParameter] private string $password,
-    ) {
+    private string $id;
+    private string $email;
+    private string $role;
+    private string $password;
+
+    public static function create(
+        string $id,
+        string $email,
+        string $role,
+        #[\SensitiveParameter] string $password,
+    ): self {
+        return self::fromPayload(
+            Uuid::v4(),
+            [
+                'id' => $id,
+                'email' => $email,
+                'role' => $role,
+                'password' => $password,
+            ],
+        );
     }
 
     public function id(): string
@@ -41,5 +56,14 @@ final readonly class CreateUserCommand implements Command
     public static function messageName(): string
     {
         return self::NAME;
+    }
+
+    public function rebuildPayload(): void
+    {
+        $payload = $this->payload();
+        $this->id = $payload['id'];
+        $this->email = $payload['email'];
+        $this->role = $payload['role'];
+        $this->password = $payload['password'];
     }
 }

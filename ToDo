@@ -1,7 +1,5 @@
----> serializer and compiler pass for events/command
 ---> cache query bus
 ---> behat
----> documentation asyncApi/openApi
 
 ---> distributed tracing correlation/causation
 ---> ci/cd

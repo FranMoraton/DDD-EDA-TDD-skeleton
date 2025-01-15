@@ -1,6 +1,9 @@
 framework:
     messenger:
         default_bus: messenger_command.bus
+        serializer:
+            default_serializer: App\System\Infrastructure\Symfony\Bus\Serializer\CustomSerializer
+
         buses:
             messenger_command.bus:
                 default_middleware: true
@@ -34,7 +37,6 @@ framework:
         transports:
             failed_commands:
                 dsn: '%env(AMQP_DSN)%'
-                serializer: messenger.transport.symfony_serializer
                 options:
                     exchange:
                         name: failed_commands
@@ -47,7 +49,6 @@ framework:
             commands:
                 dsn: '%env(AMQP_DSN)%'
                 failure_transport: failed_commands
-                serializer: messenger.transport.symfony_serializer
                 options:
                     exchange:
                         name: commands
@@ -64,40 +65,39 @@ framework:
 
             events:
                 dsn: '%env(AMQP_DSN_EVENTS)%'
-                serializer: messenger.transport.symfony_serializer
                 options:
                     exchange:
                         name: events
                         type: topic
                     queues:
-                        lotr_events:
+                        app_example_events:
                             binding_keys:
                                 - company.app.#.domain_event.#
                             arguments:
-                                x-dead-letter-exchange: lotr_events_dead
+                                x-dead-letter-exchange: app_example_events_dead
                 retry_strategy:
                     max_retries: 0
             events_retry:
                 dsn: '%env(AMQP_DSN_EVENTS)%'
                 options:
                     exchange:
-                        name: lotr_events
+                        name: app_example_events
                         type: fanout
                     queues:
-                        lotr_events:
+                        app_example_events:
                             arguments:
-                                x-dead-letter-exchange: lotr_events_dead
+                                x-dead-letter-exchange: app_example_events_dead
             events_dead:
                 dsn: '%env(AMQP_DSN_EVENTS)%'
                 options:
                     exchange:
-                        name: lotr_events_dead
+                        name: app_example_events_dead
                         type: fanout
                     queues:
-                        lotr_events_dead:
+                        app_example_events_dead:
                             arguments:
                                 x-message-ttl: 180000
-                                x-dead-letter-exchange: lotr_events
+                                x-dead-letter-exchange: app_example_events
 
         routing:
             App\System\Domain\Event\DomainEvent: events

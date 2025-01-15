@@ -34,7 +34,7 @@ final class Version20241223142410 extends AbstractMigration
         $this->addSql("CREATE INDEX users_role ON users(role)");
 
         $this->addSql("
-            insert into public.users (id, email, password, role, created_at, updated_at, version)
+            insert into users (id, email, password, role, created_at, updated_at, version)
             values  (
                      '01ceb46e-96d8-41b6-972a-9b2403d36bd7',
                      'test@test.com',

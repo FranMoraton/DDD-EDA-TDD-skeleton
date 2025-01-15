@@ -1,10 +1,6 @@
 system_routes:
     resource: routes/system_routes.yaml
 
-lotr_routes:
-    resource: context/lotr/lotr_routes.yaml
-    prefix: /lotr
-
 users_routes:
     resource: context/users/users_routes.yaml
     prefix: /users

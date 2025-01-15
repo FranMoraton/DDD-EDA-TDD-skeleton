@@ -24,10 +24,6 @@ services:
             - '../src/Users/Application/Command/*/*/*Handler.php'
             - '../src/Users/Application/Query/*/*/*Handler.php'
             - '../src/Users/Infrastructure/Adapter/RestApi/*'
-            - '../src/Lotr/Application/Command/*/*/*Handler.php'
-            - '../src/Lotr/Application/Query/*/*/*Handler.php'
-            - '../src/Lotr/Infrastructure/Adapter/RestApi/*'
-
 
     App\System\Infrastructure\Symfony\Listener\ExceptionListener:
         arguments:
@@ -50,32 +46,8 @@ services:
         arguments:
             $asyncCommandBus: '@publish_command.bus'
 
-    Symfony\Component\Serializer\Normalizer\ObjectNormalizer:
-        arguments:
-            $classMetadataFactory: ~
-            $nameConverter: ~
-            $propertyAccessor: '@property_accessor'
-            $propertyTypeExtractor: '@property_info'
-
-    Symfony\Component\Serializer\Serializer:
-        arguments:
-            $normalizers:
-                - '@Symfony\Component\Serializer\Normalizer\ObjectNormalizer'
-
-#    Lcobucci\JWT\Signer\Hmac\Sha256: ~
-#
-#    Lcobucci\JWT\Configuration:
-#        factory: ['Lcobucci\JWT\Configuration', 'forSymmetricSigner']
-#        arguments:
-#            - '@Lcobucci\JWT\Signer\Hmac\Sha256'
-#            - '%env(resolve:JWT_SECRET_KEY)%'
-#            - '%env(resolve:JWT_PUBLIC_KEY)%'
-#
-#    Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface: '@lexik_jwt_authentication.jwt_manager'
-
 imports:
     - { resource: commands.yaml }
     - { resource: connections.yaml }
     - { resource: repositories.yaml }
-    - { resource: context/lotr/services.yaml}
     - { resource: context/users/services.yaml}

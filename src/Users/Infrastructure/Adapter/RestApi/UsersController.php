@@ -20,7 +20,7 @@ final class UsersController extends BusController
         $requestContent = $this->getRequestBody($request);
 
         $this->publishSyncCommand(
-            new CreateUserCommand(
+            CreateUserCommand::create(
                 $requestContent->get('id'),
                 $requestContent->get('email'),
                 $requestContent->get('role'),
@@ -39,7 +39,7 @@ final class UsersController extends BusController
         $requestContent = $this->getRequestBody($request);
 
         $this->publishSyncCommand(
-            new UpdateUserCommand(
+            UpdateUserCommand::create(
                 $request->attributes->get('id'),
                 $requestContent->get('email'),
                 $requestContent->get('role'),
@@ -56,7 +56,7 @@ final class UsersController extends BusController
     {
         $id = $request->attributes->get('id');
 
-        $result = $this->publishQuery(new GetByIdQuery($id));
+        $result = $this->publishQuery(GetByIdQuery::create($id));
 
         return new JsonResponse(
             $result,
@@ -68,7 +68,7 @@ final class UsersController extends BusController
     {
         $id = $request->attributes->get('id');
 
-        $this->publishSyncCommand(new RemoveUserCommand($id));
+        $this->publishSyncCommand(RemoveUserCommand::create($id));
 
         return new JsonResponse(
             null,

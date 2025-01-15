@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\System\Application;
 
-interface Command
+abstract class Command extends Message
 {
-    public static function messageName(): string;
+    abstract public function rebuildPayload(): void;
+    abstract public static function messageName(): string;
 }

@@ -2,11 +2,5 @@ services:
     App\System\Domain\Event\DomainEventStoreRepository:
         alias: App\System\Infrastructure\Domain\Event\DbalDomainEventStoreRepository
 
-    App\Lotr\Domain\Model\Faction\FactionRepository:
-        alias: App\Lotr\Infrastructure\Domain\Model\Faction\DbalFactionRepository
-
-    App\Lotr\Domain\Model\Equipment\EquipmentRepository:
-        alias: App\Lotr\Infrastructure\Domain\Model\Equipment\DbalEquipmentRepository
-
     App\Users\Domain\Model\User\UserRepository:
         alias: App\Users\Infrastructure\Domain\Model\User\DbalUserRepository

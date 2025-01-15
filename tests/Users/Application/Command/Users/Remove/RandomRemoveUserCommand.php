@@ -12,7 +12,7 @@ class RandomRemoveUserCommand
     ): RemoveUserCommand {
         $faker = Factory::create();
 
-        return new RemoveUserCommand(
+        return RemoveUserCommand::create(
             $id ?? $faker->uuid(),
         );
     }

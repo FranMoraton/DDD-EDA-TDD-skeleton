@@ -19,7 +19,7 @@ class RandomCreateUserCommand
     ): CreateUserCommand {
         $faker = FakerFactory::create();
 
-        return new CreateUserCommand(
+        return CreateUserCommand::create(
             $id ?? $faker->uuid(),
             $email ?? $faker->email(),
             $role ?? self::obtainRandomValue(Role::class),

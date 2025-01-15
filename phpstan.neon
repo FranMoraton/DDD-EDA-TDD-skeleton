@@ -14,5 +14,6 @@ parameters:
     - %rootDir%/../../../config/*
     - %rootDir%/../../../src/System/Infrastructure/DBALRepository.php
     - %rootDir%/../../../src/Users/Infrastructure/Security/SecurityUserProvider.php
+    - %rootDir%/../../../src/System/Infrastructure/Symfony/DependencyInjection/Compiler/*
   symfony:
     container_xml_path: null

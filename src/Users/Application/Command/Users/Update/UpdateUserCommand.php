@@ -5,16 +5,26 @@ declare(strict_types=1);
 namespace App\Users\Application\Command\Users\Update;
 
 use App\System\Application\Command;
+use App\System\Domain\ValueObject\Uuid;
 
-final readonly class UpdateUserCommand implements Command
+final class UpdateUserCommand extends Command
 {
     private const string NAME = 'company.users.1.command.user.update';
 
-    public function __construct(
-        private string $id,
-        private string $email,
-        private string $role,
-    ) {
+    private string $id;
+    private string $email;
+    private string $role;
+
+    public static function create(string $id, string $email, string $role): self
+    {
+        return self::fromPayload(
+            Uuid::v4(),
+            [
+                'id' => $id,
+                'email' => $email,
+                'role' => $role,
+            ],
+        );
     }
 
     public function id(): string
@@ -35,5 +45,14 @@ final readonly class UpdateUserCommand implements Command
     public static function messageName(): string
     {
         return self::NAME;
+    }
+
+    public function rebuildPayload(): void
+    {
+        $payload = $this->payload();
+
+        $this->id = $payload['id'];
+        $this->email = $payload['email'];
+        $this->role = $payload['role'];
     }
 }
