@@ -1,5 +1,3 @@
----> añadir check para email unico a users
-
 ---> serializer and compiler pass for events/command
 ---> cache query bus
 ---> behat

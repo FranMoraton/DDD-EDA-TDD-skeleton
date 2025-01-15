@@ -11,6 +11,10 @@ interface UserRepository
     public function add(User $user): void;
     public function update(User $user): void;
     public function remove(User $user): void;
+    /**
+     * @param Criteria $criteria
+     * @return array<User>
+    */
     public function search(Criteria $criteria): array;
     public function count(Criteria $criteria): int;
 }

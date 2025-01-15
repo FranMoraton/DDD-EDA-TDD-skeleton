@@ -3,6 +3,7 @@
 namespace App\Tests\Users\Application\Command\Users\Update;
 
 use App\System\Application\DomainEventPublisher;
+use App\System\Domain\Exception\AlreadyExistException;
 use App\System\Domain\Exception\NotFoundException;
 use App\Tests\System\Infrastructure\PhpUnit\SpyTestHelper;
 use App\Tests\Users\Domain\Model\User\RandomUserGenerator;
@@ -45,6 +46,48 @@ class UpdateUserCommandHandlerTest extends TestCase
         );
 
         self::expectException(NotFoundException::class);
+        $handler($command);
+    }
+
+    public function testGivenUpdateCommandWhenUserEmailIsDifferentButIsInUseThenFail(): void
+    {
+        $command = RandomUpdateUserCommand::execute();
+
+        $this->userRepository
+            ->expects(self::once())
+            ->method('byId')
+            ->with(
+                $command->id(),
+            )->willReturn(
+                $oldUser = RandomUserGenerator::execute(
+                    id: $command->id(),
+                    role: $command->role(),
+                ),
+            );
+
+        $this->userRepository
+            ->expects(self::once())
+            ->method('search')
+            ->willReturn(
+                [
+                    RandomUserGenerator::execute(email: $command->email()),
+                ],
+            );
+
+        $this->userRepository
+            ->expects(self::never())
+            ->method('update');
+
+        $this->domainEventPublisher
+            ->expects(self::never())
+            ->method('execute');
+
+        $handler = new UpdateUserCommandHandler(
+            $this->userRepository,
+            $this->domainEventPublisher,
+        );
+
+        self::expectException(AlreadyExistException::class);
         $handler($command);
     }
 

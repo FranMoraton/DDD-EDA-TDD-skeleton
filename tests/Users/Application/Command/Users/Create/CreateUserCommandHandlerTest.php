@@ -19,7 +19,7 @@ class CreateUserCommandHandlerTest extends TestCase
     private UserRepository $userRepository;
     private DomainEventPublisher $domainEventPublisher;
 
-    public function testGivenCreateWhenUserDoesNotExistThenSuccess(): void
+    public function testGivenCreateWhenUserExistsThenFail(): void
     {
         $command = RandomCreateUserCommand::execute();
 
@@ -49,7 +49,7 @@ class CreateUserCommandHandlerTest extends TestCase
         $handler($command);
     }
 
-    public function testGivenCreateCommandWhenUserExistThenFail(): void
+    public function testGivenCreateWhenEmailInUseThenSuccess(): void
     {
         $command = RandomCreateUserCommand::execute();
 
@@ -58,7 +58,40 @@ class CreateUserCommandHandlerTest extends TestCase
             ->method('byId')
             ->with(
                 $command->id(),
-            );
+            )->willReturn(null);
+
+        $this->userRepository
+            ->expects(self::once())
+            ->method('search')
+            ->willReturn([RandomUserGenerator::execute()]);
+
+        $this->userRepository
+            ->expects(self::never())
+            ->method('add');
+
+        $this->domainEventPublisher
+            ->expects(self::never())
+            ->method('execute');
+
+        $handler = new CreateUserCommandHandler(
+            $this->userRepository,
+            $this->domainEventPublisher,
+        );
+
+        self::expectException(AlreadyExistException::class);
+        $handler($command);
+    }
+
+    public function testGivenCreateCommandWhenUserDoesNotExistThenSuccess(): void
+    {
+        $command = RandomCreateUserCommand::execute();
+
+        $this->userRepository
+            ->expects(self::once())
+            ->method('byId')
+            ->with(
+                $command->id(),
+            )->willReturn(null);
 
         $this->userRepository
             ->expects(self::once())

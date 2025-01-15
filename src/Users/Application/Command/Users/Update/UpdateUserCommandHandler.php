@@ -2,16 +2,13 @@
 
 namespace App\Users\Application\Command\Users\Update;
 
-use App\Lotr\Domain\Model\Character\CharacterRepository;
-use App\Lotr\Domain\Model\Equipment\Equipment;
-use App\Lotr\Domain\Model\Equipment\EquipmentRepository;
-use App\Lotr\Domain\Model\Equipment\ValueObject\Id as EquipmentId;
-use App\Lotr\Domain\Model\Faction\FactionRepository;
-use App\Lotr\Domain\Model\Faction\ValueObject\Id as FactionId;
 use App\System\Application\DomainEventPublisher;
+use App\System\Domain\Exception\AlreadyExistException;
 use App\System\Domain\Exception\NotFoundException;
+use App\Users\Domain\Model\User\Criteria\ByEmailCriteria;
 use App\Users\Domain\Model\User\User;
 use App\Users\Domain\Model\User\UserRepository;
+use App\Users\Domain\Model\User\ValueObject\Email;
 use App\Users\Domain\Model\User\ValueObject\Id;
 
 final readonly class UpdateUserCommandHandler
@@ -25,6 +22,8 @@ final readonly class UpdateUserCommandHandler
     public function __invoke(UpdateUserCommand $command): void
     {
         $user = $this->userFinder($command);
+
+        $this->emailAlreadyInUseChecker($user, $command->email());
 
         $user = $user->update(
             $command->email(),
@@ -45,5 +44,20 @@ final readonly class UpdateUserCommandHandler
         }
 
         return $user;
+    }
+
+    public function emailAlreadyInUseChecker(User $user, string $email): void
+    {
+        if ($user->email()->equalTo($userEmail = Email::from($email))) {
+            return;
+        }
+
+        $users = $this->userRepository->search(ByEmailCriteria::create($userEmail));
+
+        if (\count($users) === 0) {
+            return;
+        }
+
+        throw new AlreadyExistException(User::modelName(), User::modelName(), []);
     }
 }
