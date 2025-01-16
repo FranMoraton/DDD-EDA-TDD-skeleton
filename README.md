@@ -17,6 +17,7 @@ This project is designed to simplify the creation of new applications following 
     - Support for migrations and message transport.
 - **Authentication and Authorization Module**: Provides a basic structure for handling user authentication and access control.
 - **Default Admin User**: A preconfigured admin user to simplify authentication during development.
+- **Cache of Queries**: Optimized query caching using a custom implementation that extends CacheQuery, enabling efficient and reusable cache strategies for database operations.
 - **API Documentation**:
     - **AsyncAPI** available at [http://localhost:8091](http://localhost:8091).
     - **OpenAPI** available at [http://localhost:8090](http://localhost:8090).
