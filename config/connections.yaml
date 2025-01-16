@@ -14,3 +14,10 @@ services:
 
     connection.dbal.configuration:
         class: Doctrine\DBAL\Configuration
+
+    http.client.localhost:
+        class: GuzzleHttp\Client
+        arguments:
+            - base_uri: 'http://localhost'
+              headers:
+                user-agent: 'task/skeleton'

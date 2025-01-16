@@ -8,6 +8,7 @@ default:
             contexts:
                 - App\Tests\System\Infrastructure\Behat\FeatureContext
                 - App\Tests\System\Infrastructure\Behat\HttpClientContext
+                - App\Tests\System\Infrastructure\Behat\RestContext
                 - App\Tests\System\Infrastructure\Behat\MessageBusContext
                 - App\Tests\Users\Infrastructure\Domain\Model\User\DbalUserContext
 

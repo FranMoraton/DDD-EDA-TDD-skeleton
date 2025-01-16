@@ -37,8 +37,11 @@ services:
             Symfony\Component\Messenger\MessageBusInterface $commandBus: '@messenger_command.bus'
             Symfony\Component\Messenger\MessageBusInterface $eventBus: '@messenger_event.bus'
 
-    App\Tests\Users\Infrastructure\:
-        resource: '../tests/Users/Infrastructure/*'
-
     App\System\Infrastructure\Symfony\Bus\Middleware\SpyMiddleware:
         class: App\System\Infrastructure\Symfony\Bus\Middleware\SpyMiddleware
+
+    http.client.localhost:
+        class: App\Tests\System\Infrastructure\Guzzle\ClientMock
+
+    App\Tests\Users\Infrastructure\:
+        resource: '../tests/Users/Infrastructure/*'

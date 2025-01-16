@@ -9,9 +9,10 @@ RUN chmod +x /usr/local/bin/install-php-extensions
 RUN apk add --no-cache openssl-dev \
     && install-php-extensions \
         pdo_pgsql-stable  \
-        opcache-stable\
+        opcache-stable \
         intl-stable \
         zip-stable \
+        xml-stable \
         @composer-2.8.4 \
         amqp-1.11.0 && \
     rm -rf /tmp/pear
