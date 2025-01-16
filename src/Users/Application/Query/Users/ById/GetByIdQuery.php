@@ -6,6 +6,7 @@ namespace App\Users\Application\Query\Users\ById;
 
 use App\System\Application\Query;
 use App\System\Domain\ValueObject\Uuid;
+use Assert\Assert;
 
 final class GetByIdQuery extends Query
 {
@@ -34,6 +35,11 @@ final class GetByIdQuery extends Query
     public function rebuildPayload(): void
     {
         $payload = $this->payload();
+
+        Assert::lazy()->tryAll()
+            ->that($payload, 'payload')->isArray()
+            ->keyExists('id')
+            ->verifyNow();
 
         $this->id = $payload['id'];
     }

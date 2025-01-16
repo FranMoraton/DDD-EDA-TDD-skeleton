@@ -6,6 +6,7 @@ namespace App\Users\Application\Command\Users\Remove;
 
 use App\System\Application\Command;
 use App\System\Domain\ValueObject\Uuid;
+use Assert\Assert;
 
 final class RemoveUserCommand extends Command
 {
@@ -36,6 +37,11 @@ final class RemoveUserCommand extends Command
     public function rebuildPayload(): void
     {
         $payload = $this->payload();
+
+        Assert::lazy()->tryAll()
+            ->that($payload, 'payload')->isArray()
+            ->keyExists('id')
+            ->verifyNow();
 
         $this->id = $payload['id'];
     }

@@ -6,6 +6,7 @@ namespace App\Users\Application\Command\Users\Create;
 
 use App\System\Application\Command;
 use App\System\Domain\ValueObject\Uuid;
+use Assert\Assert;
 
 final class CreateUserCommand extends Command
 {
@@ -61,6 +62,15 @@ final class CreateUserCommand extends Command
     public function rebuildPayload(): void
     {
         $payload = $this->payload();
+
+        Assert::lazy()->tryAll()
+            ->that($payload, 'payload')->isArray()
+            ->keyExists('id')
+            ->keyExists('email')
+            ->keyExists('role')
+            ->keyExists('password')
+            ->verifyNow();
+
         $this->id = $payload['id'];
         $this->email = $payload['email'];
         $this->role = $payload['role'];

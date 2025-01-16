@@ -12,6 +12,7 @@ use App\System\Domain\ValueObject\Uuid;
 use App\System\Infrastructure\Symfony\Bus\Serializer\Mappers\CommandMapper;
 use App\System\Infrastructure\Symfony\Bus\Serializer\Mappers\EventMapper;
 use App\System\Infrastructure\Symfony\Bus\Serializer\Mappers\QueryMapper;
+use Assert\Assert;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\MessageDecodingFailedException;
 use Symfony\Component\Messenger\Stamp\RedeliveryStamp;
@@ -144,31 +145,31 @@ final class CustomSerializer implements SerializerInterface
 
     private function assertContent(array $content): void
     {
-//        Assert::lazy()->tryAll()
-//            ->that($content, 'content')->isArray()
-//            ->keyExists('message_id')
-//            ->keyExists('type')
-//            ->keyExists('payload')
-//            ->verifyNow();
-//
-//        Assert::lazy()->tryAll()
-//            ->that($content['message_id'], 'message_id')->uuid()
-//            ->that($content['type'], 'type')->string()->notEmpty()
-//            ->that($content['payload'], 'attributes')->isArray()
-//            ->verifyNow();
+        Assert::lazy()->tryAll()
+            ->that($content, 'content')->isArray()
+            ->keyExists('message_id')
+            ->keyExists('type')
+            ->keyExists('payload')
+            ->verifyNow();
+
+        Assert::lazy()->tryAll()
+            ->that($content['message_id'], 'message_id')->uuid()
+            ->that($content['type'], 'type')->string()->notEmpty()
+            ->that($content['payload'], 'attributes')->isArray()
+            ->verifyNow();
     }
 
     private function assertEventContent(array $content): void
     {
-//        Assert::lazy()->tryAll()
-//            ->that($content, 'content')->isArray()
-//            ->keyExists('aggregate_id')
-//            ->keyExists('occurred_on')
-//            ->verifyNow();
-//
-//        Assert::lazy()->tryAll()
-//            ->that($content['aggregate_id'], 'aggregate_id')->uuid()
-//            ->that($content['occurred_on'], 'occurred_on')->date(\DateTimeInterface::RFC3339_EXTENDED)
-//            ->verifyNow();
+        Assert::lazy()->tryAll()
+            ->that($content, 'content')->isArray()
+            ->keyExists('aggregate_id')
+            ->keyExists('occurred_on')
+            ->verifyNow();
+
+        Assert::lazy()->tryAll()
+            ->that($content['aggregate_id'], 'aggregate_id')->uuid()
+            ->that($content['occurred_on'], 'occurred_on')->date(\DateTimeInterface::ATOM)
+            ->verifyNow();
     }
 }
