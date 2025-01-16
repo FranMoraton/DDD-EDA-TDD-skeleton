@@ -1,4 +1,4 @@
-.PHONY: all help erase build cache-folders composer-install composer-update composer-require composer-require-dev start stop logs bash grumphp fix-cs tests migrations consume-commands consume-events
+.PHONY: all help erase build cache-folders composer-install composer-update composer-require composer-require-dev start stop logs bash grumphp fix-cs tests behat migrations consume-commands consume-events
 
 # CONFIG ---------------------------------------------------------------------------------------------------------------
 ifneq (,$(findstring xterm,${TERM}))
@@ -90,6 +90,9 @@ fix-cs: ## Automatically fix code style issues using PSR-12
 
 tests: ## Run unit tests with PHPUnit
 		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} phpunit --configuration phpunit.xml.dist --coverage-text --order=random --colors=never
+
+behat: ## Run acceptance tests with behat
+		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} behat --strict --stop-on-failure --format progress
 
 migrations: ## Initialize environment and execute migrations
 		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc 'while ! nc -z ${DOCKER_DB_SERVICE} ${DOCKER_DB_PORT}; do echo "Waiting for DB service"; sleep 3; done;'

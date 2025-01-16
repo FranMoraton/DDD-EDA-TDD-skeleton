@@ -36,17 +36,17 @@ abstract class BusController extends AbstractController
     protected function publishSyncCommand(Command $command): mixed
     {
         $envelope =  $this->commandBus->dispatch($command);
-        $handledStamps = $envelope->all(HandledStamp::class);
+        $handledStamps = $envelope->last(HandledStamp::class);
 
-        return $handledStamps[0]->getResult();
+        return $handledStamps?->getResult();
     }
 
     protected function publishQuery(Query $query): mixed
     {
         $envelope =  $this->queryBus->dispatch($query);
-        $handledStamps = $envelope->all(HandledStamp::class);
+        $handledStamps = $envelope->last(HandledStamp::class);
 
-        return $handledStamps[0]->getResult();
+        return $handledStamps?->getResult();
     }
 
     protected function publishAsync(Command ...$commands): void

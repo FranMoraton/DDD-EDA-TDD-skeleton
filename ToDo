@@ -1,4 +1,4 @@
----> behat
+---> behat fix checking user against bbdd when testing
 
 ---> distributed tracing correlation/causation
 ---> ci/cd

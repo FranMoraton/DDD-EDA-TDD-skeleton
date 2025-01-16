@@ -16,6 +16,10 @@ grumphp:
             scripts:
                 - ["-c", "phpstan analyse -l 8 src"]
         phpunit: ~
+        behat:
+            config: 'behat.yml.dist'
+            stop_on_failure: true
+            format: pretty
         phpversion:
             project: '8.4'
         securitychecker_composeraudit:

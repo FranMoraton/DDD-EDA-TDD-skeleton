@@ -1,0 +1,20 @@
+default:
+    suites:
+        api:
+            paths:
+                - tests/Users/Entrypoint/features/api
+                - tests/Users/Entrypoint/features/command
+                - tests/System/Entrypoint/features/api
+            contexts:
+                - App\Tests\System\Infrastructure\Behat\FeatureContext
+                - App\Tests\System\Infrastructure\Behat\HttpClientContext
+                - App\Tests\System\Infrastructure\Behat\MessageBusContext
+                - App\Tests\Users\Infrastructure\Domain\Model\User\DbalUserContext
+
+    extensions:
+        FriendsOfBehat\SymfonyExtension:
+            bootstrap: config/bootstrap.php
+            kernel:
+                class: App\Kernel
+                environment: test
+                debug: false
