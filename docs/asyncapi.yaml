@@ -10,6 +10,26 @@ servers:
         protocol: amqp
 
 channels:
+    event/created:
+        description: Canal para eventos de creación de eventos del Marketplace.
+        subscribe:
+            summary: Evento emitido cuando un evento del marketplace es creado.
+            message:
+                contentType: application/json
+                name: EventWasCreated
+                payload:
+                    $ref: '#/components/schemas/EventWasCreated'
+
+    event/updated:
+        description: Canal para eventos de actualización de eventos del Marketplace.
+        subscribe:
+            summary: Evento emitido cuando un evento del marketplace es actualizado.
+            message:
+                contentType: application/json
+                name: EventWasUpdated
+                payload:
+                    $ref: '#/components/schemas/EventWasUpdated'
+
     user/created:
         description: Channel for user creation events.
         subscribe:
@@ -49,6 +69,123 @@ components:
             type: string
             format: date-time
             description: A date-time value object.
+
+        EventWasCreated:
+            type: object
+            properties:
+                message_id:
+                    $ref: '#/components/schemas/Uuid'
+                name:
+                    type: string
+                    example: 'company.marketplace.1.domain_event.event.was_created'
+                aggregate_id:
+                    $ref: '#/components/schemas/Uuid'
+                aggregate_version:
+                    type: integer
+                    example: 0
+                occurred_on:
+                    $ref: '#/components/schemas/DateTimeValueObject'
+                payload:
+                    type: object
+                    properties:
+                        base_event_id:
+                            type: integer
+                        sell_mode:
+                            type: string
+                        title:
+                            type: string
+                        event_start_date:
+                            type: string
+                            format: date-time
+                        event_end_date:
+                            type: string
+                            format: date-time
+                        event_id:
+                            type: integer
+                        sell_from:
+                            type: string
+                            format: date-time
+                        sell_to:
+                            type: string
+                            format: date-time
+                        sold_out:
+                            type: boolean
+                        zones:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/Zone'
+                        request_time:
+                            type: string
+                            format: date-time
+                        organizer_company_id:
+                            type: string
+                            nullable: true
+
+        EventWasUpdated:
+            type: object
+            properties:
+                message_id:
+                    $ref: '#/components/schemas/Uuid'
+                name:
+                    type: string
+                    example: 'company.marketplace.1.domain_event.event.was_updated'
+                aggregate_id:
+                    $ref: '#/components/schemas/Uuid'
+                aggregate_version:
+                    type: integer
+                    example: 0
+                occurred_on:
+                    $ref: '#/components/schemas/DateTimeValueObject'
+                payload:
+                    type: object
+                    properties:
+                        base_event_id:
+                            type: integer
+                        sell_mode:
+                            type: string
+                        title:
+                            type: string
+                        event_start_date:
+                            type: string
+                            format: date-time
+                        event_end_date:
+                            type: string
+                            format: date-time
+                        event_id:
+                            type: integer
+                        sell_from:
+                            type: string
+                            format: date-time
+                        sell_to:
+                            type: string
+                            format: date-time
+                        sold_out:
+                            type: boolean
+                        zones:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/Zone'
+                        request_time:
+                            type: string
+                            format: date-time
+                        organizer_company_id:
+                            type: string
+                            nullable: true
+
+        Zone:
+            type: object
+            properties:
+                zone_id:
+                    type: integer
+                capacity:
+                    type: integer
+                price:
+                    type: number
+                    format: float
+                name:
+                    type: string
+                numbered:
+                    type: boolean
 
         UserWasCreated:
             type: object

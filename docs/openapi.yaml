@@ -4,6 +4,62 @@ info:
     description: API for user management in the system.
     version: 1.0.0
 paths:
+    /v1/events/{id}:
+        get:
+            summary: Retrieve event by ID
+            description: Fetches the details of a specific event by its unique ID.
+            parameters:
+                -   name: id
+                    in: path
+                    required: true
+                    schema:
+                        type: string
+                        format: uuid
+                    description: The ID of the event to retrieve.
+            responses:
+                '200':
+                    description: Successfully retrieved event details.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Event'
+                '404':
+                    description: Event not found.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Event not found
+    /v1/events/provider:
+        post:
+            summary: Bring events from external provider
+            description: Brings events from an external provider and processes them.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/BringFromProviderRequest'
+            responses:
+                '200':
+                    description: Events successfully fetched and processed.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BringFromProviderResponse'
+                '500':
+                    description: Internal server error when processing events.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Internal server error.
     /v1/users:
         post:
             summary: Create a new user
@@ -141,3 +197,68 @@ components:
                     type: string
                 role:
                     type: string
+
+        Event:
+            type: object
+            properties:
+                id:
+                    type: string
+                    format: uuid
+                base_event_id:
+                    type: integer
+                sell_mode:
+                    type: string
+                title:
+                    type: string
+                event_start_date:
+                    type: string
+                    format: date-time
+                event_end_date:
+                    type: string
+                    format: date-time
+                event_id:
+                    type: integer
+                sell_from:
+                    type: string
+                    format: date-time
+                sell_to:
+                    type: string
+                    format: date-time
+                sold_out:
+                    type: boolean
+                request_time:
+                    type: string
+                    format: date-time
+                organizer_company_id:
+                    type: string
+                    nullable: true
+                zones:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Zone'
+        BringFromProviderRequest:
+            type: object
+            properties:
+                provider_id:
+                    type: string
+                    description: The ID of the provider from which to fetch events.
+        BringFromProviderResponse:
+            type: object
+            properties:
+                message:
+                    type: string
+                    example: Events successfully brought from provider.
+        Zone:
+            type: object
+            properties:
+                zone_id:
+                    type: integer
+                capacity:
+                    type: integer
+                price:
+                    type: number
+                    format: float
+                name:
+                    type: string
+                numbered:
+                    type: boolean
