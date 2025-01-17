@@ -155,7 +155,6 @@ class RestContext implements Context
         if (null === $this->responseManager->getResponse()) {
             throw new \RuntimeException('No response received');
         }
-        var_dump($this->responseManager->getResponse());
 
         $expectedContents = \json_decode(\trim(\implode($body->getStrings())), true, 512, \JSON_THROW_ON_ERROR);
         $expectedContents = \json_encode($expectedContents);

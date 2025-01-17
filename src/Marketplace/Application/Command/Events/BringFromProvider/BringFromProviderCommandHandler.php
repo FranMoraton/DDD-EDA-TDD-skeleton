@@ -5,6 +5,7 @@ namespace App\Marketplace\Application\Command\Events\BringFromProvider;
 use App\Marketplace\Application\Command\Events\Register\RegisterEventCommand;
 use App\Marketplace\Domain\Service\Event\ProviderEventsExtractor\ProviderEventsExtractor;
 use App\System\Application\AsyncCommandPublisher;
+use App\System\Domain\ValueObject\DateTimeValueObject;
 use App\System\Domain\ValueObject\Uuid;
 
 final readonly class BringFromProviderCommandHandler
@@ -20,11 +21,18 @@ final readonly class BringFromProviderCommandHandler
         $commands = [];
 
         $events = $this->providerEventsExtractor->execute($command->providerId());
+        $requestTime = DateTimeValueObject::now()->value();
 
         foreach ($events as $event) {
             $commands[] = RegisterEventCommand::fromPayload(
-                $id = Uuid::v4(),
-                array_merge($event, ['id' => $id->value()]),
+                Uuid::v4(),
+                array_merge(
+                    $event,
+                    [
+                        'id' => Uuid::v4()->value(),
+                        'request_time' => $requestTime,
+                    ],
+                ),
             );
         }
 

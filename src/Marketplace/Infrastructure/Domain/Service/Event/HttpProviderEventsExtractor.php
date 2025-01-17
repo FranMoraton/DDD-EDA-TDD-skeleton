@@ -39,41 +39,38 @@ final readonly class HttpProviderEventsExtractor implements ProviderEventsExtrac
 
     private function cleanXmlAttributes(array $data): array
     {
-        // Procesar base_event manualmente
-        if (isset($data['output']['base_event'])) {
-            $baseEvents = $data['output']['base_event'];
-            if (!is_array(reset($baseEvents))) {
-                // Si no es un array de objetos, lo envolvemos en uno
-                $baseEvents = [$baseEvents];
-            }
+        $baseEvents = $data['output']['base_event'];
 
-            foreach ($baseEvents as &$baseEvent) {
-                $baseEvent = $this->processAttributes($baseEvent);
-
-                // Procesar evento dentro de base_event
-                if (isset($baseEvent['event'])) {
-                    $baseEvent['event'] = $this->processAttributes($baseEvent['event']);
-
-                    // Procesar zonas dentro de evento
-                    if (isset($baseEvent['event']['zone'])) {
-                        $zones = $baseEvent['event']['zone'];
-                        if (isset($zones['@attributes'])) {
-                            // Si es un único objeto de zona, lo envolvemos en un array
-                            $zones = [$zones];
-                        }
-
-                        foreach ($zones as &$zone) {
-                            $zone = $this->processAttributes($zone);
-                        }
-                        $baseEvent['event']['zone'] = $zones;
-                    }
-                }
-            }
-
-            $data['output']['base_event'] = $baseEvents;
+        if (!is_array(reset($baseEvents))) {
+            $baseEvents = [$baseEvents];
         }
 
-        return $data['output']['base_event'];
+        $result = [];
+
+        foreach ($baseEvents as $baseEvent) {
+            $baseEvent = $this->processAttributes($baseEvent);
+
+            $event = $this->processAttributes($baseEvent['event']);
+
+            $zones = $event['zone'];
+            if (isset($zones['@attributes'])) {
+                $zones = [$zones];
+            }
+
+            foreach ($zones as &$zone) {
+                $zone = $this->processAttributes($zone);
+            }
+            $event['zones'] = $zones;
+            unset($event['zone']);
+
+            $combinedEvent = array_merge($baseEvent, $event);
+
+            unset($combinedEvent['event']);
+
+            $result[] = $combinedEvent;
+        }
+
+        return $result;
     }
 
     private function processAttributes(array &$item): array

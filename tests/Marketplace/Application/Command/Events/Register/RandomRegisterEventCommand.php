@@ -1,17 +1,19 @@
 <?php
 
-declare(strict_types=1);
+namespace App\Tests\Marketplace\Application\Command\Events\Register;
 
-namespace App\Tests\Marketplace\Domain\Model\Event;
-
-use App\Marketplace\Domain\Model\Event\Event;
+use App\Marketplace\Application\Command\Events\Register\RegisterEventCommand;
 use App\Marketplace\Domain\Model\Event\ValueObject\SellMode;
 use App\Marketplace\Domain\Model\Event\ValueObject\Zone;
+use App\System\Domain\ValueObject\DateTimeValueObject;
 use App\System\Infrastructure\Service\JsonSerializer;
 use App\Tests\System\Infrastructure\Faker\FakerFactory;
+use App\Tests\System\Infrastructure\PhpUnit\EnumTestHelper;
 
-final class RandomEventGenerator
+class RandomRegisterEventCommand
 {
+    use EnumTestHelper;
+
     public static function execute(
         ?string $id = null,
         ?int $baseEventId = null,
@@ -26,10 +28,10 @@ final class RandomEventGenerator
         ?array $zones = null,
         ?string $requestTime = null,
         ?string $organizerCompanyId = null
-    ): Event {
+    ): RegisterEventCommand {
         $faker = FakerFactory::create();
 
-        return Event::from(
+        return RegisterEventCommand::create(
             $id ?? $faker->uuid(),
             $baseEventId ?? $faker->randomNumber(),
             $sellMode ?? SellMode::ONLINE,
@@ -50,7 +52,7 @@ final class RandomEventGenerator
                         $faker->boolean(),
                     ),
                 )),
-                ],
+            ],
             $requestTime ?? $faker->dateTime()->format(\DATE_ATOM),
             $organizerCompanyId,
         );

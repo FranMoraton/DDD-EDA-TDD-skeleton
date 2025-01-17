@@ -11,8 +11,7 @@ final class EventsCriteria extends Criteria
     protected function allowedFields(): array
     {
         return [
-            'external_id' => 'string',
-            'provider_id' => 'string',
+            'base_event_id' => 'int'
         ];
     }
 }
