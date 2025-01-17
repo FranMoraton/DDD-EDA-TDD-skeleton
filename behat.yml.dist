@@ -14,6 +14,7 @@ default:
                 - App\Tests\System\Infrastructure\Behat\MessageBusContext
                 - App\Tests\Users\Infrastructure\Domain\Model\User\DbalUserContext
                 - App\Tests\Marketplace\Infrastructure\Domain\Model\Event\DbalEventContext
+                - App\Tests\Marketplace\Infrastructure\Domain\Model\EventProjection\DbalEventProjectionContext
         event:
             paths:
                 - tests/Marketplace/Entrypoint/features/event

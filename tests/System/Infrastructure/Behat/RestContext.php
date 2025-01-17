@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\System\Infrastructure\Behat;
 
+use App\System\Infrastructure\Service\JsonSerializer;
 use App\Tests\System\Infrastructure\Faker\FakerFactory;
 use App\Users\Domain\Model\User\ValueObject\Role;
 use App\Users\Infrastructure\Security\SecurityUser;
@@ -194,5 +195,28 @@ class RestContext implements Context
                 $responseContents,
             ));
         }
+    }
+
+    /**
+     * @Then the JSON response should be:
+     */
+    public function assertJsonResponse(PyStringNode $expected): void
+    {
+        $response = $this->responseManager->getResponse()->getContent();
+
+        $message = 'The JSON response is not the expected';
+
+        $arrayResponse = JsonSerializer::decodeArray($response);
+        \ksort($arrayResponse);
+        $sortedSerializedResponse = JsonSerializer::encode($arrayResponse);
+
+        $arrayExpected = JsonSerializer::decodeArray($expected->getRaw());
+        \ksort($arrayExpected);
+        $sortedSerializedExpected = JsonSerializer::encode($arrayExpected);
+
+        Assert::that(
+            $sortedSerializedResponse,
+            $message
+        )->eq($sortedSerializedExpected);
     }
 }

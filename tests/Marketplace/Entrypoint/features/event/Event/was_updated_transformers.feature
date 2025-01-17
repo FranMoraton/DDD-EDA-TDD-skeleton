@@ -1,4 +1,4 @@
-Feature: Event Was Created transformers
+Feature: Event Was Updated transformers
 
     Scenario: Register Event command
         Given the buses are clean
@@ -6,7 +6,7 @@ Feature: Event Was Created transformers
         """
         {
             "message_id": "6b13c149-d6cf-466b-b9e8-93ec404963a2",
-            "type": "company.marketplace.1.domain_event.event.was_created",
+            "type": "company.marketplace.1.domain_event.event.was_updated",
             "payload": {
                 "base_event_id": 291,
                 "sell_mode": "online",
