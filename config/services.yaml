@@ -23,7 +23,10 @@ services:
             - '../src/Kernel.php'
             - '../src/Users/Application/Command/*/*/*Handler.php'
             - '../src/Users/Application/Query/*/*/*Handler.php'
-            - '../src/Users/Infrastructure/Adapter/RestApi/*'
+            - '../src/Users/Infrastructure/Adapter/*'
+            - '../src/Marketplace/Application/Command/*/*/*Handler.php'
+            - '../src/Marketplace/Application/Query/*/*/*Handler.php'
+            - '../src/Marketplace/Infrastructure/Adapter/*'
 
     App\System\Infrastructure\Symfony\Listener\ExceptionListener:
         arguments:
@@ -51,3 +54,4 @@ imports:
     - { resource: connections.yaml }
     - { resource: repositories.yaml }
     - { resource: context/users/services.yaml}
+    - { resource: context/marketplace/services.yaml}

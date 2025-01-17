@@ -4,3 +4,7 @@ system_routes:
 users_routes:
     resource: context/users/users_routes.yaml
     prefix: /users
+
+marketplace_routes:
+    resource: context/marketplace/marketplace_routes.yaml
+    prefix: /marketplace

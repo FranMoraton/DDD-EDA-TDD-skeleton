@@ -37,7 +37,6 @@ final class ResponseManager implements Context
     public function sendEvent(DomainEvent $message): void
     {
         $this->eventBus->dispatch($message);
-
     }
 
     public function getResponse(): ?Response

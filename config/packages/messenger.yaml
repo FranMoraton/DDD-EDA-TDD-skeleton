@@ -74,6 +74,7 @@ framework:
                         app_example_events:
                             binding_keys:
                                 - company.app.#.domain_event.#
+                                - company.marketplace.#.domain_event.#
                             arguments:
                                 x-dead-letter-exchange: app_example_events_dead
                 retry_strategy:

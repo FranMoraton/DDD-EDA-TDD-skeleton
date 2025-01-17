@@ -95,6 +95,15 @@ final readonly class MessageBusContext implements Context
     }
 
     /**
+     * @Then the :commandName command should be dispatched :nTimes times
+     * @throws \Exception
+     */
+    public function theCommandShouldBeDispatchedNTimes(string $commandName, int $nTimes): void
+    {
+        $this->responseManager->getLatestSpyMiddleware()->hasCommand($commandName, $nTimes);
+    }
+
+    /**
      * @Given the buses are clean
      */
     public function theBusesAreClean(): void

@@ -15,14 +15,21 @@ framework:
                     - App\System\Infrastructure\Symfony\Bus\Middleware\HandlerExceptionCatcherMiddleware
             messenger_event.bus:
                 middleware:
+                    - App\System\Infrastructure\Symfony\Bus\Middleware\ForceSyncMiddleware
+                    - App\System\Infrastructure\Symfony\Bus\Middleware\SimpleMessagePublisherMiddleware
                     - App\System\Infrastructure\Symfony\Bus\Middleware\SpyMiddleware
                     - App\System\Infrastructure\Symfony\Bus\Middleware\HandlerExceptionCatcherMiddleware
             publish_event.bus:
                 default_middleware: allow_no_handlers
                 middleware:
                     - App\System\Infrastructure\Symfony\Bus\Middleware\SpyMiddleware
-        routing:
+            publish_command.bus:
+                default_middleware: allow_no_handlers
+                middleware:
+                    - App\System\Infrastructure\Symfony\Bus\Middleware\ForceSyncMiddleware
+                    - App\System\Infrastructure\Symfony\Bus\Middleware\SpyMiddleware
 
+        routing:
 
 services:
     _defaults:
@@ -43,5 +50,11 @@ services:
     http.client.localhost:
         class: App\Tests\System\Infrastructure\Guzzle\ClientMock
 
+    http.client.provider:
+        class: App\Tests\System\Infrastructure\Guzzle\ClientMock
+
     App\Tests\Users\Infrastructure\:
         resource: '../tests/Users/Infrastructure/*'
+
+    App\Tests\Marketplace\Infrastructure\:
+        resource: '../tests/Marketplace/Infrastructure/*'
