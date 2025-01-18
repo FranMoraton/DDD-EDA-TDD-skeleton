@@ -21,23 +21,6 @@ final readonly class UpsertEventCommandHandler
 
     public function __invoke(UpsertEventCommand $command): void
     {
-        $maxPrice = null;
-        $minPrice = null;
-        foreach ($command->zones() as $zone) {
-            $price = (float) $zone['price'];
-
-            if (null === $minPrice || $price < $minPrice) {
-                $minPrice = $price;
-            }
-
-            if (null === $maxPrice || $price > $maxPrice) {
-                $maxPrice = $price;
-            }
-        }
-
-        $minPrice = $minPrice ?? 0.0;
-        $maxPrice = $maxPrice ?? 0.0;
-
         $startDateTime = $command->eventStartDate();
         $endDateTime = $command->eventEndDate();
 
@@ -48,11 +31,11 @@ final readonly class UpsertEventCommandHandler
             $startDateTime->format('H:i:s'),
             $endDateTime->format('Y-m-d'),
             $endDateTime->format('H:i:s'),
-            $minPrice,
-            $maxPrice,
+            $command->minPrice(),
+            $command->maxPrice(),
             $command->eventStartDate()->value(),
             $command->eventEndDate()->value(),
-            $command->lastEventDate()
+            $command->lastEventDate(),
         );
 
         $this->eventProjectionRepository->upsertByEventDate($eventProjection);

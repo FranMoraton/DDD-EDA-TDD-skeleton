@@ -25,7 +25,9 @@ final class RandomEventGenerator
         ?bool $soldOut = null,
         ?array $zones = null,
         ?string $requestTime = null,
-        ?string $organizerCompanyId = null
+        ?string $organizerCompanyId = null,
+        ?float $minPrice = null,
+        ?float $maxPrice = null,
     ): Event {
         $faker = FakerFactory::create();
 
@@ -53,6 +55,8 @@ final class RandomEventGenerator
                 ],
             $requestTime ?? $faker->dateTime()->format(\DATE_ATOM),
             $organizerCompanyId,
+            $minPrice ?? $faker->randomNumber(),
+            $maxPrice ?? $faker->randomNumber(),
         );
     }
 }

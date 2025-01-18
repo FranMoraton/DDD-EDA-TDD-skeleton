@@ -19,6 +19,8 @@ Feature: Recover Event by Id
                 "sold_out": false,
                 "request_time": "2025-01-17T17:41:16+00:00",
                 "organizer_company_id": "2",
+                "min_price": 55,
+                "max_price": 100,
                 "zones": [
                     {
                         "zone_id": 40,
@@ -62,6 +64,8 @@ Feature: Recover Event by Id
             "sold_out": false,
             "request_time": "2025-01-17T17:41:16+00:00",
             "organizer_company_id": "2",
+            "min_price": 55,
+            "max_price": 100,
             "zones": [
                 {
                     "zone_id": 40,

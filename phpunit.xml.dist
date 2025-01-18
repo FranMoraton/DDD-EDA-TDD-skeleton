@@ -1,39 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit
-        bootstrap="tests/bootstrap.php"
-        colors="true"
-        verbose="true"
-        beStrictAboutTestsThatDoNotTestAnything="true"
-        beStrictAboutOutputDuringTests="true"
-        beStrictAboutChangesToGlobalState="true"
-        failOnWarning="true"
-        failOnRisky="true">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="tests/bootstrap.php"
+         cacheDirectory=".phpunit.cache"
+         executionOrder="depends,defects"
+         shortenArraysForExportThreshold="10"
+         beStrictAboutCoverageMetadata="true"
+         beStrictAboutOutputDuringTests="true"
+         displayDetailsOnPhpunitDeprecations="true"
+         failOnPhpunitDeprecation="true"
+         failOnRisky="true"
+         failOnWarning="true">
     <testsuites>
         <testsuite name="unit_test">
-            <directory>./tests</directory>
+            <directory>tests</directory>
         </testsuite>
     </testsuites>
 
-    <filter>
-        <whitelist>
-            <directory suffix=".php">./src</directory>
-        </whitelist>
-    </filter>
-
-    <php>
-        <ini name="error_reporting" value="-1" />
-        <ini name="display_errors" value="1" />
-
-        <!-- ###+ lexik/jwt-authentication-bundle ### -->
-        <env name="JWT_SECRET_KEY" value="%kernel.project_dir%/config/jwt/private.pem"/>
-        <env name="JWT_PUBLIC_KEY" value="%kernel.project_dir%/config/jwt/public.pem"/>
-        <env name="JWT_PASSPHRASE" value="255108fe99722b2b81f9f075ff31b294ffe07b60f65779c5176c4b1edf0133be"/>
-        <!-- ###- lexik/jwt-authentication-bundle ### -->
-    </php>
-
-    <logging>
-        <log type="junit" target="tests/logs/junit.xml" />
-        <log type="coverage-html" target="tests/logs/coverage/" />
-        <log type="coverage-clover" target="tests/logs/coverage.xml" />
-    </logging>
+    <source ignoreIndirectDeprecations="true" restrictNotices="true" restrictWarnings="true">
+        <include>
+            <directory>src</directory>
+        </include>
+    </source>
 </phpunit>

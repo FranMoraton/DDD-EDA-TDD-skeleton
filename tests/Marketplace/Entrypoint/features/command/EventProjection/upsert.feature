@@ -38,6 +38,8 @@ Feature: Upsert Event projection command
                 "sell_to": "2021-06-30T20:00:00",
                 "sold_out": "false",
                 "last_event_date": "2025-01-17T17:41:16+00:00",
+                "min_price": 50,
+                "max_price": 100,
                 "zones": [
                     {
                         "zone_id": "40",

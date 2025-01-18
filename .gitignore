@@ -8,6 +8,7 @@ vendor/*
 .idea
 
 .phpunit.result.cache
+.phpunit.cache
 
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem

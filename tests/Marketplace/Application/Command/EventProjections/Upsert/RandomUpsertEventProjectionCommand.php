@@ -28,7 +28,9 @@ class RandomUpsertEventProjectionCommand
         ?bool $soldOut = null,
         ?array $zones = null,
         ?string $lastEventDate = null,
-        ?string $organizerCompanyId = null
+        ?string $organizerCompanyId = null,
+        ?float $minPrice = null,
+        ?float $maxPrice = null,
     ): UpsertEventCommand {
         $faker = FakerFactory::create();
 
@@ -56,6 +58,8 @@ class RandomUpsertEventProjectionCommand
             ],
             $lastEventDate ?? $faker->dateTime()->format(\DATE_ATOM),
             $organizerCompanyId,
+            $minPrice ?? $faker->randomFloat(),
+            $maxPrice ?? $faker->randomFloat(),
         );
     }
 }

@@ -46,7 +46,7 @@ RUN rm -rf \
             grumphp.yml \
             phpcs.xml.dist \
             phpstan.neon \
-            phpunit.xml.dist
+            phpunit.xml.dist.dist
 
 FROM base AS prod
 COPY --from=result $PROJECT_DIR ./

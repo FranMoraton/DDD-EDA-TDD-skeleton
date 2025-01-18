@@ -26,6 +26,8 @@ final class UpsertEventCommand extends Command
     private array $zones;
     private DateTimeValueObject $lastEventDate;
     private ?string $organizerCompanyId;
+    private float $minPrice;
+    private float $maxPrice;
 
     public static function create(
         string $id,
@@ -40,7 +42,9 @@ final class UpsertEventCommand extends Command
         bool $soldOut,
         array $zones,
         string $lastEventDate,
-        ?string $organizerCompanyId
+        ?string $organizerCompanyId,
+        float $minPrice,
+        float $maxPrice,
     ): self {
         return self::fromPayload(
             Uuid::v4(),
@@ -58,6 +62,8 @@ final class UpsertEventCommand extends Command
                 'zones' => $zones,
                 'last_event_date' => $lastEventDate,
                 'organizer_company_id' => $organizerCompanyId,
+                'min_price' => $minPrice,
+                'max_price' => $maxPrice,
             ],
         );
     }
@@ -127,6 +133,16 @@ final class UpsertEventCommand extends Command
         return $this->organizerCompanyId;
     }
 
+    public function minPrice(): float
+    {
+        return $this->minPrice;
+    }
+
+    public function maxPrice(): float
+    {
+        return $this->maxPrice;
+    }
+
     public static function messageName(): string
     {
         return self::NAME;
@@ -150,6 +166,8 @@ final class UpsertEventCommand extends Command
             ->keyExists('sold_out')
             ->keyExists('zones')
             ->keyExists('last_event_date')
+            ->keyExists('min_price')
+            ->keyExists('max_price')
             ->verifyNow();
 
         foreach ($payload['zones'] as $zone) {
@@ -176,5 +194,7 @@ final class UpsertEventCommand extends Command
         $this->zones = $payload['zones'];
         $this->lastEventDate = DateTimeValueObject::from($payload['last_event_date']);
         $this->organizerCompanyId = $payload['organizer_company_id'] ?? null;
+        $this->minPrice = $payload['min_price'];
+        $this->maxPrice = $payload['max_price'];
     }
 }

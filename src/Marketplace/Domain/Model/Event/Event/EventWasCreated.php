@@ -26,6 +26,8 @@ class EventWasCreated extends DomainEvent
     private array $zones;
     private string $requestTime;
     private ?string $organizerCompanyId;
+    private float $minPrice;
+    private float $maxPrice;
 
     public static function from(
         Id $aggregateId,
@@ -41,6 +43,8 @@ class EventWasCreated extends DomainEvent
         array $zones,
         DateTimeValueObject $requestTime,
         ?OrganizerCompanyId $organizerCompanyId,
+        float $minPrice,
+        float $maxPrice,
     ): self {
         return self::fromPayload(
             Uuid::v4(),
@@ -59,6 +63,8 @@ class EventWasCreated extends DomainEvent
                 'zones' => $zones,
                 'request_time' => $requestTime->value(),
                 'organizer_company_id' => $organizerCompanyId,
+                'min_price' => $minPrice,
+                'max_price' => $maxPrice,
             ],
         );
     }
@@ -79,6 +85,8 @@ class EventWasCreated extends DomainEvent
         $this->zones = $payload['zones'];
         $this->requestTime = $payload['request_time'];
         $this->organizerCompanyId = $payload['organizer_company_id'];
+        $this->minPrice = $payload['min_price'];
+        $this->maxPrice = $payload['max_price'];
     }
 
     public static function messageName(): string
@@ -144,5 +152,15 @@ class EventWasCreated extends DomainEvent
     public function organizerCompanyId(): ?string
     {
         return $this->organizerCompanyId;
+    }
+
+    public function minPrice(): float
+    {
+        return $this->minPrice;
+    }
+
+    public function maxPrice(): float
+    {
+        return $this->maxPrice;
     }
 }

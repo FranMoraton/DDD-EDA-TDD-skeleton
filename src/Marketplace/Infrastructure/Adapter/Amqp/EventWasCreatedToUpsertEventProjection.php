@@ -25,6 +25,8 @@ final class EventWasCreatedToUpsertEventProjection
             $event->zones(),
             $event->occurredOn()->value(),
             $event->organizerCompanyId(),
+            $event->minPrice(),
+            $event->maxPrice(),
         );
     }
 }

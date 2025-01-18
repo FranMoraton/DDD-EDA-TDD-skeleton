@@ -41,7 +41,9 @@ Feature: Event Was Created transformers
                     }
                 ],
                 "request_time": "2025-01-17T20:54:09+00:00",
-                "organizer_company_id": null
+                "organizer_company_id": null,
+                "min_price": 55,
+                "max_price": 100
             },
             "aggregate_id": "1f4cbde7-5d5c-4be3-870e-1292d5728edf",
             "occurred_on": "2025-01-17T20:54:09+00:00"

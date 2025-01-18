@@ -23,6 +23,8 @@ class DbalArrayEventMapper
             JsonSerializer::decodeArray($item['zones']),
             $item['request_time'],
             $item['organizer_company_id'],
+            $item['min_price'],
+            $item['max_price'],
         );
     }
 
@@ -42,6 +44,8 @@ class DbalArrayEventMapper
             'zones' => JsonSerializer::encode($event->zones()),
             'request_time' => $event->requestTime()->value(),
             'organizer_company_id' => $event->organizerCompanyId()?->value(),
+            'min_price' => $event->minPrice(),
+            'max_price' => $event->maxPrice(),
         ];
     }
 }

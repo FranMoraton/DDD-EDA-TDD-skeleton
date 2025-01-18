@@ -34,7 +34,9 @@ class Event extends Aggregate
          */
         private readonly array $zones,
         private readonly DateTimeValueObject $requestTime,
-        private readonly ?OrganizerCompanyId $organizerCompanyId
+        private readonly ?OrganizerCompanyId $organizerCompanyId,
+        private readonly float $minPrice,
+        private readonly float $maxPrice,
     ) {
         parent::__construct();
     }
@@ -52,7 +54,9 @@ class Event extends Aggregate
         bool $soldOut,
         array $zones,
         string $requestTime,
-        ?string $organizerCompanyId
+        ?string $organizerCompanyId,
+        float $minPrice,
+        float $maxPrice,
     ): self {
         $transformedZones = [];
         foreach ($zones as $zone) {
@@ -72,7 +76,9 @@ class Event extends Aggregate
             $soldOut,
             $transformedZones,
             DateTimeValueObject::from($requestTime),
-            null !== $organizerCompanyId ? OrganizerCompanyId::from($organizerCompanyId) : null
+            null !== $organizerCompanyId ? OrganizerCompanyId::from($organizerCompanyId) : null,
+            $minPrice,
+            $maxPrice,
         );
     }
 
@@ -91,11 +97,8 @@ class Event extends Aggregate
         DateTimeValueObject $requestTime,
         ?string $organizerCompanyId
     ): self {
-        $transformedZones = [];
-
-        foreach ($zones as $zone) {
-            $transformedZones[] = Zone::fromArray($zone);
-        }
+        $transformedZones = self::transformZones($zones);
+        [$minPrice, $maxPrice] = self::calculateMinMaxPrices($transformedZones);
 
         $event = new self(
             $idVo = Id::from($id),
@@ -110,7 +113,9 @@ class Event extends Aggregate
             $soldOut,
             $transformedZones,
             $requestTime,
-            $organizerCompanyIdVo = $organizerCompanyId ? OrganizerCompanyId::from($organizerCompanyId) : null
+            $organizerCompanyIdVo = $organizerCompanyId ? OrganizerCompanyId::from($organizerCompanyId) : null,
+            $minPrice,
+            $maxPrice,
         );
 
         $event->recordThat(
@@ -127,7 +132,9 @@ class Event extends Aggregate
                 $soldOut,
                 $transformedZones,
                 $requestTime,
-                $organizerCompanyIdVo
+                $organizerCompanyIdVo,
+                $minPrice,
+                $maxPrice,
             )
         );
 
@@ -155,11 +162,10 @@ class Event extends Aggregate
 
         $sellModeVo = SellMode::from($sellMode);
         $titleVo = Title::from($title);
-        $transformedZones = [];
 
-        foreach ($zones as $zone) {
-            $transformedZones[] = Zone::fromArray($zone);
-        }
+        $transformedZones = self::transformZones($zones);
+        [$minPrice, $maxPrice] = self::calculateMinMaxPrices($transformedZones);
+
         $organizerCompanyIdVo = $organizerCompanyId ? OrganizerCompanyId::from($organizerCompanyId) : null;
 
         $event = new self(
@@ -175,7 +181,9 @@ class Event extends Aggregate
             $soldOut,
             $transformedZones,
             $requestTime,
-            $organizerCompanyIdVo
+            $organizerCompanyIdVo,
+            $minPrice,
+            $maxPrice,
         );
 
         $event->recordThat(
@@ -192,11 +200,51 @@ class Event extends Aggregate
                 $soldOut,
                 $transformedZones,
                 $requestTime,
-                $organizerCompanyIdVo
+                $organizerCompanyIdVo,
+                $minPrice,
+                $maxPrice,
             )
         );
 
         return $event;
+    }
+
+    /**
+     * @param array<Zone> $zones
+     * @return array<float>
+     */
+    private static function calculateMinMaxPrices(array $zones): array
+    {
+        $minPrice = null;
+        $maxPrice = null;
+
+        foreach ($zones as $zone) {
+            $price = $zone->price();
+
+            if ($minPrice === null || $price < $minPrice) {
+                $minPrice = $price;
+            }
+
+            if ($maxPrice === null || $price > $maxPrice) {
+                $maxPrice = $price;
+            }
+        }
+
+        return [$minPrice ?? 0.0, $maxPrice ?? 0.0];
+    }
+
+    /**
+     * @return array<Zone>
+     */
+    private static function transformZones(array $zones): array
+    {
+        $transformedZones = [];
+
+        foreach ($zones as $zone) {
+            $transformedZones[] = Zone::fromArray($zone);
+        }
+
+        return $transformedZones;
     }
 
     public function jsonSerialize(): array
@@ -214,6 +262,8 @@ class Event extends Aggregate
             'sold_out' => $this->soldOut,
             'request_time' => $this->requestTime,
             'organizer_company_id' => $this->organizerCompanyId,
+            'min_price' => $this->minPrice,
+            'max_price' => $this->maxPrice,
             'zones' => $this->zones,
         ];
     }
@@ -286,5 +336,15 @@ class Event extends Aggregate
     public function organizerCompanyId(): ?OrganizerCompanyId
     {
         return $this->organizerCompanyId;
+    }
+
+    public function minPrice(): float
+    {
+        return $this->minPrice;
+    }
+
+    public function maxPrice(): float
+    {
+        return $this->maxPrice;
     }
 }

@@ -23,6 +23,8 @@ class RegisterEventCommandHandlerTest extends TestCase
     private EventRepository $eventRepository;
     private DomainEventPublisher $domainEventPublisher;
 
+    private RegisterEventCommandHandler $handler;
+
     public function testGivenCreateWhenEventExistsThenFail(): void
     {
         $command = RandomRegisterEventCommand::execute();

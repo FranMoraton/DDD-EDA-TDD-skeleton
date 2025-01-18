@@ -34,6 +34,8 @@ final class Version20250117124421 extends AbstractMigration
                 sold_out BOOLEAN NOT NULL DEFAULT FALSE,
                 zones JSONB NOT NULL,
                 request_time TIMESTAMP NOT NULL,
+                min_price DECIMAL(10, 2) NOT NULL,
+                max_price DECIMAL(10, 2) NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, 
                 version INT NOT NULL DEFAULT 1,
