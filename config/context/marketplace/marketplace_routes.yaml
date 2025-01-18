@@ -1,7 +1,7 @@
 events_by_id:
     path: /v1/events/{id}
     controller: \App\Marketplace\Infrastructure\Adapter\RestApi\EventsController::byId
-    methods: [GET]
+    methods: [ GET ]
 
 bring_events_from_provider:
     path: /v1/events/provider

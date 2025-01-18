@@ -219,4 +219,13 @@ class RestContext implements Context
             $message
         )->eq($sortedSerializedExpected);
     }
+
+    /**
+     * @Then /^print last response$/
+     */
+    public function printLastResponse()
+    {
+        echo $this->responseManager->getResponse()->getContent();
+    }
+
 }

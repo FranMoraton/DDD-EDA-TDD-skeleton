@@ -101,8 +101,8 @@ class DbalEventProjectionRepository implements EventProjectionRepository
                 t.end_time,
                 t.min_price,
                 t.max_price,
-                t.start_date_time,
-                t.end_date_time,
+                t.starts_at,
+                t.ends_at,
                 t.last_event_date
             '
         )->from(self::TABLE_NAME, 't');

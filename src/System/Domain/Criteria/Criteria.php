@@ -17,7 +17,7 @@ abstract class Criteria
 
     public function withFilter(
         string $field,
-        int|bool|string|float|\DateTime $value,
+        int|bool|string|float|\DateTimeImmutable $value,
         Operator $operator
     ): self {
         $allowedFields = $this->allowedFields();
@@ -86,7 +86,7 @@ abstract class Criteria
     }
 
     protected function assertValueType(
-        int|bool|string|float|\DateTime $value,
+        int|bool|string|float|\DateTimeImmutable $value,
         string $type,
         string $field,
     ): void {
@@ -94,7 +94,7 @@ abstract class Criteria
             'int' => is_int($value),
             'float' => is_float($value),
             'bool' => is_bool($value),
-            'datetime' => $value instanceof \DateTime,
+            'datetime' => $value instanceof \DateTimeImmutable,
             'string' => is_string($value),
             default => throw new \InvalidArgumentException("Unsupported type: $type"),
         };

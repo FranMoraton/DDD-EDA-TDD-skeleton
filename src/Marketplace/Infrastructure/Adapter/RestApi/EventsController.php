@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Marketplace\Infrastructure\Adapter\RestApi;
 
 use App\Marketplace\Application\Command\Events\BringFromProvider\BringFromProviderCommand;
+use App\Marketplace\Application\Query\EventProjections\Search\SearchQuery;
 use App\Marketplace\Application\Query\Events\ById\GetByIdQuery;
 use App\System\Domain\ValueObject\Uuid;
 use App\System\Infrastructure\Adapter\RestApi\BusController;
@@ -35,5 +36,17 @@ final class EventsController extends BusController
         );
 
         return new JsonResponse(null, Response::HTTP_OK);
+    }
+
+    public function search(Request $request): JsonResponse
+    {
+        $result = $this->publishQuery(
+            SearchQuery::create(
+                $request->query->get('starts_at'),
+                $request->query->get('ends_at'),
+            ),
+        );
+
+        return new JsonResponse($result, Response::HTTP_OK);
     }
 }
