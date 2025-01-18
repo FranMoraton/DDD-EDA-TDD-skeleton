@@ -38,13 +38,13 @@ abstract class Criteria
         return $this;
     }
 
-    public function withLimit(int $limit): self
+    public function withLimit(?int $limit): self
     {
         $this->limit = $limit;
         return $this;
     }
 
-    public function withOffset(int $offset): self
+    public function withOffset(?int $offset): self
     {
         $this->offset = $offset;
         return $this;

@@ -16,14 +16,22 @@ final class SearchQuery extends CacheQuery
 
     private DateTimeValueObject $startsAt;
     private DateTimeValueObject $endsAt;
+    private ?int $itemsPerPage;
+    private ?int $page;
 
-    public static function create(mixed $startsAt, mixed $endsAt): self
-    {
+    public static function create(
+        mixed $startsAt,
+        mixed $endsAt,
+        mixed $itemsPerPage,
+        mixed $page,
+    ): self {
         return self::fromPayload(
             Uuid::v4(),
             [
                 'starts_at' => $startsAt,
                 'ends_at' => $endsAt,
+                'items_per_page' => $itemsPerPage,
+                'page' => $page,
             ],
         );
     }
@@ -36,6 +44,16 @@ final class SearchQuery extends CacheQuery
     public function endsAt(): DateTimeValueObject
     {
         return $this->endsAt;
+    }
+
+    public function itemsPerPage(): ?int
+    {
+        return $this->itemsPerPage;
+    }
+
+    public function page(): ?int
+    {
+        return $this->page;
     }
 
     public static function messageName(): string
@@ -51,15 +69,21 @@ final class SearchQuery extends CacheQuery
             ->that($payload, 'payload')->isArray()
             ->keyExists('starts_at')
             ->keyExists('ends_at')
+            ->keyExists('items_per_page')
+            ->keyExists('page')
             ->verifyNow();
 
         Assert::lazy()
             ->that($payload['starts_at'], 'starts_at')->date('Y-m-d\TH:i:s\Z')
             ->that($payload['ends_at'], 'ends_at')->date('Y-m-d\TH:i:s\Z')
+            ->that($payload['items_per_page'], 'items_per_page')->nullOr()->integerish()->greaterThan(0)
+            ->that($payload['page'], 'page')->nullOr()->integerish()->greaterThan(0)
             ->verifyNow();
 
         $this->startsAt = DateTimeValueObject::from($payload['starts_at']);
         $this->endsAt = DateTimeValueObject::from($payload['ends_at']);
+        $this->itemsPerPage = null !== $payload['items_per_page'] ? (int) $payload['items_per_page'] : null;
+        $this->page = null !== $payload['page'] ? (int) $payload['page'] : null;
     }
 
     public function expirationTime(): int

@@ -6,9 +6,13 @@ namespace App\System\Infrastructure\Symfony\Listener;
 
 use App\System\Domain\Exception\DomainException;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\System\Infrastructure\Dbal\TransactionLockFailedException;
 
-final class ExceptionListener
+final readonly class ExceptionListener
 {
     public function __construct(private readonly string $env)
     {
@@ -18,52 +22,75 @@ final class ExceptionListener
     {
         $exception = $event->getThrowable();
 
-        match (true) {
-            $exception instanceof DomainException => $this->changeResponse(
-                $event,
-                $this->responseFromDomainException(...)
+        $response = match (true) {
+            $exception instanceof DomainException => $this->responseFromDomainException($exception),
+            $exception instanceof \InvalidArgumentException => $this->buildErrorResponse(
+                Response::HTTP_BAD_REQUEST,
+                'InvalidArgumentException',
+                $exception,
             ),
-            default => $this->changeResponse(
-                $event,
-                $this->responseFromInternalException(...)
+            $exception instanceof AccessDeniedHttpException => $this->buildErrorResponse(
+                Response::HTTP_FORBIDDEN,
+                'AccessDenied',
+                $exception,
+            ),
+            $exception instanceof NotFoundHttpException => $this->buildErrorResponse(
+                Response::HTTP_NOT_FOUND,
+                'NotFound',
+                $exception,
+            ),
+            $exception instanceof TransactionLockFailedException => $this->buildErrorResponse(
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                'TransactionLockFailed',
+                $exception,
+            ),
+            default => $this->buildErrorResponse(
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                'InternalServerError',
+                $exception,
             ),
         };
+
+        $event->setResponse($response);
     }
 
-    public function changeResponse(ExceptionEvent $event, callable $getNewResponse): void
-    {
-        $getNewResponse($event->getThrowable());
-
-        $event->setResponse($getNewResponse($event->getThrowable()));
-    }
-
-    public function responseFromDomainException(DomainException $exception): JsonResponse
+    private function responseFromDomainException(DomainException $exception): JsonResponse
     {
         $content = [
-            'message' => $exception->getMessage(),
-            'payload' => $exception->payload()
+            'error' => [
+                'code' => $exception->domainExceptionCode()->toHttpCode(),
+                'message' => $exception->getMessage(),
+            ],
+            'data' => $exception->payload()
         ];
 
         return new JsonResponse($content, $exception->domainExceptionCode()->toHttpCode());
     }
 
-    public function responseFromInternalException(\Throwable $throwable): JsonResponse
+    private function buildErrorResponse(int $statusCode, string $message, \Throwable $throwable): JsonResponse
     {
-        if ('prod' === $this->env) {
-            $content = [
-                'message' => 'Something went wrong'
-            ];
+        $content = match ($this->env) {
+            'prod', 'test' => [
+                'error' => [
+                    'code' => $statusCode,
+                    'message' => $message
+                ],
+                'data' => null
+            ],
+            default => [
+                'error' => [
+                    'code' => $statusCode,
+                    'message' => $message
+                ],
+                'data' => [
+                    'real' => $throwable->getMessage(),
+                    'file' => $throwable->getFile(),
+                    'line' => $throwable->getLine(),
+                    'trace' => $throwable->getTrace(),
+                ]
+            ]
+        };
 
-            return new JsonResponse($content, 500);
-        }
-
-        $content = [
-            'real' => $throwable->getMessage(),
-            'file' => $throwable->getFile(),
-            'line' => $throwable->getLine(),
-            'trace' => $throwable->getTrace(),
-        ];
-
-        return new JsonResponse($content, 500);
+        return new JsonResponse($content, $statusCode);
     }
 }

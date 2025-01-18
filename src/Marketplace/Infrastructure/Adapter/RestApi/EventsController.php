@@ -44,6 +44,8 @@ final class EventsController extends BusController
             SearchQuery::create(
                 $request->query->get('starts_at'),
                 $request->query->get('ends_at'),
+                $request->query->get('items_per_page'),
+                $request->query->get('page'),
             ),
         );
 

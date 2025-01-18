@@ -1,8 +1,3 @@
----> pasar ya calculado en el evento el max y min price
----> formatear errores correctamente errorListener
----> añadir open api del search
-
-
 ---> behat fix checking user against bbdd when testing
 
 ---> distributed tracing correlation/causation

@@ -18,9 +18,22 @@ final readonly class SearchQueryHandler
     public function __invoke(SearchQuery $query): array
     {
         $data = $this->eventProjectionRepository->search(
-            BySearchCriteria::execute($query->startsAt(), $query->endsAt()),
+            BySearchCriteria::execute(
+                $query->startsAt(),
+                $query->endsAt(),
+                $query->itemsPerPage(),
+                $query->page(),
+            ),
         );
 
-        return $data;
+        return $this->transformResponse($data);
+    }
+
+    private function transformResponse(array $data): array
+    {
+        return [
+            'data' => ['events' => $data],
+            'error' => null,
+        ];
     }
 }
