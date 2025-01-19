@@ -150,6 +150,7 @@ run-minikube: ## Run using minikube
 	kubectl apply -f .deployment/asyncapi.yaml --context=minikube
 	kubectl apply -f .deployment/migration-job.yaml --context=minikube
 
+	eval $(minikube docker-env -u)
 	minikube ip
 
 stop-run-minikube: ## Stop using minikube
