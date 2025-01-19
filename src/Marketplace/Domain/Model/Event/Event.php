@@ -13,6 +13,7 @@ use App\Marketplace\Domain\Model\Event\ValueObject\Title;
 use App\Marketplace\Domain\Model\Event\ValueObject\SellMode;
 use App\Marketplace\Domain\Model\Event\ValueObject\OrganizerCompanyId;
 use App\System\Domain\ValueObject\DateTimeValueObject;
+use App\System\Infrastructure\Service\JsonSerializer;
 
 class Event extends Aggregate
 {
@@ -167,6 +168,21 @@ class Event extends Aggregate
         [$minPrice, $maxPrice] = self::calculateMinMaxPrices($transformedZones);
 
         $organizerCompanyIdVo = $organizerCompanyId ? OrganizerCompanyId::from($organizerCompanyId) : null;
+
+        if (
+            $this->eventId === $eventId &&
+            $this->soldOut === $soldOut &&
+            $this->sellMode->equalTo($sellModeVo) &&
+            $this->title->equalTo($titleVo) &&
+            $this->eventStartDate->equalTo($eventStartDate) &&
+            $this->eventEndDate->equalTo($eventEndDate) &&
+            $this->sellFrom->equalTo($sellFrom) &&
+            $this->sellTo->equalTo($sellTo) &&
+            JsonSerializer::encode($this->zones) === JsonSerializer::encode($transformedZones) &&
+            $organizerCompanyIdVo?->value() === $this->organizerCompanyId?->value()
+        ) {
+            return $this;
+        }
 
         $event = new self(
             $this->id,

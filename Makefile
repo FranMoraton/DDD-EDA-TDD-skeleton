@@ -155,4 +155,3 @@ run-minikube: ## Run using minikube
 stop-run-minikube: ## Stop using minikube
 	minikube stop
 	minikube delete
-

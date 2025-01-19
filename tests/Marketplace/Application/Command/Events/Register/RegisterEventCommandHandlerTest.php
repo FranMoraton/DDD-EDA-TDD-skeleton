@@ -160,6 +160,58 @@ class RegisterEventCommandHandlerTest extends TestCase
         self::assertCount(0, $event->events());
     }
 
+    public function testGivenRegisterCommandWhenEventBaseExistAndIsOlderButDataIsEqualThenDoNotUpdate(): void
+    {
+        $command = RandomRegisterEventCommand::execute(requestTime: DateTimeValueObject::from('now +2 days'));
+
+        $this->eventRepository
+            ->expects(self::once())
+            ->method('byId')
+            ->with(
+                $command->id(),
+            )->willReturn(null);
+
+        $this->eventRepository
+            ->expects(self::once())
+            ->method('search')
+            ->willReturn(
+                [
+                    $initialEvent = RandomEventGenerator::execute(
+                        $command->id(),
+                        $command->baseEventId(),
+                        $command->sellMode(),
+                        $command->title(),
+                        $command->eventStartDate(),
+                        $command->eventEndDate(),
+                        $command->eventId(),
+                        $command->sellFrom(),
+                        $command->sellTo(),
+                        $command->soldOut(),
+                        $command->zones(),
+                        DateTimeValueObject::from('now'),
+                        $command->organizerCompanyId(),
+                    ),
+                ],
+            );
+
+        $this->eventRepository
+            ->expects(self::once())
+            ->method('update');
+
+        $this->domainEventPublisher
+            ->expects(self::once())
+            ->method('execute')
+            ->will(
+                self::extractArguments($event),
+            );
+
+        ($this->handler)($command);
+
+        self::assertEquals($event::modelName(), Event::modelName());
+        self::assertCount(0, $event->events());
+        self::assertEquals(JsonSerializer::encode($event), JsonSerializer::encode($initialEvent));
+    }
+
     public function testGivenRegisterCommandWhenEventBaseExistAndIsOlderThenUpdate(): void
     {
         $command = RandomRegisterEventCommand::execute(requestTime: DateTimeValueObject::from('now +2 days'));

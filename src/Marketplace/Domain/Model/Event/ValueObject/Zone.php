@@ -48,6 +48,15 @@ final class Zone implements \JsonSerializable
         );
     }
 
+    public function equalTo(self $other): bool
+    {
+        return $this->zoneId === $other->zoneId &&
+            $this->capacity === $other->capacity &&
+            $this->price === $other->price &&
+            $this->name === $other->name &&
+            $this->numbered === $other->numbered;
+    }
+
     public function zoneId(): int
     {
         return $this->zoneId;
