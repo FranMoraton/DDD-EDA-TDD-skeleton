@@ -48,7 +48,7 @@ help: ## Display the available commands in this Makefile
 # BUILD COMMANDS -------------------------------------------------------------------------------------------------------
 init: erase cache-folders build composer-install start migrations ## Initialize the project (clean, build, install, migrate)
 
-erase: ## Remove Docker containers and volumes
+erase: stop-run ## Remove Docker containers and volumes
 		docker compose down -v
 
 build: ## Build and pull Docker images
@@ -106,7 +106,7 @@ consume-events: ## Consume messages from the events transport
 		docker compose exec -it -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} console messenger:consume events --bus=messenger_event.bus --time-limit=60 -m 1 --memory-limit=128M --no-interaction
 
 # CUSTOM RUN COMMAND --------------------------------------------------------------------------------------------------
-run: ## Run using docker-compose.run.yml
+run: erase ## Run using docker-compose.run.yml
 		docker compose -f docker-compose.yml -f docker-compose.run.yml down -v && \
 		mkdir -p ~/.composer && chown ${UID}:${GID} ~/.composer && \
 		docker compose -f docker-compose.yml -f docker-compose.run.yml build && \
@@ -115,3 +115,6 @@ run: ## Run using docker-compose.run.yml
 		docker compose -f docker-compose.yml -f docker-compose.run.yml run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc 'while ! nc -z ${DOCKER_DB_SERVICE} ${DOCKER_DB_PORT}; do echo "Waiting for DB service"; sleep 3; done;' && \
 		docker compose -f docker-compose.yml -f docker-compose.run.yml run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc 'while ! nc -z ${DOCKER_AMQP_SERVICE} ${DOCKER_AMQP_PORT}; do echo "Waiting for AMQP service"; sleep 3; done;' && \
 		docker compose -f docker-compose.yml -f docker-compose.run.yml run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc './bin/console app:environment:init'
+
+stop-run: ## Stop using docker-compose.run.yml
+		docker compose -f docker-compose.yml -f docker-compose.run.yml down -v

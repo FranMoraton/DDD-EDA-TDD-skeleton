@@ -19,7 +19,7 @@ services:
         build:
             context: .
             dockerfile: docker/php/Dockerfile
-            target: development
+            target: prod
         volumes:
             - .:/var/www
             - ~/.composer:/.composer
@@ -85,8 +85,8 @@ services:
         build:
             context: .
             dockerfile: docker/php/Dockerfile
-            target: development_worker
-        command: console messenger:consume commands --bus=messenger_command.bus --time-limit=60 -m 1 --memory-limit=128M --no-interaction
+            target: prod
+        command: entrypoint console messenger:consume commands --bus=messenger_command.bus --time-limit=60 -m 1 --memory-limit=128M --no-interaction
         volumes:
             - .:/var/www
         depends_on:
@@ -101,8 +101,8 @@ services:
         build:
             context: .
             dockerfile: docker/php/Dockerfile
-            target: development_worker
-        command: console messenger:consume events --bus=messenger_event.bus --time-limit=60 -m 1 --memory-limit=128M --no-interaction
+            target: prod
+        command: entrypoint console messenger:consume events --bus=messenger_event.bus --time-limit=60 -m 1 --memory-limit=128M --no-interaction
         volumes:
             - .:/var/www
         depends_on:
@@ -117,8 +117,8 @@ services:
         build:
             context: .
             dockerfile: docker/php/Dockerfile
-            target: development_worker
-        command: /bin/sh -c "while true; do console marketplace:events:from-provider; sleep 60; done"
+            target: prod
+        command: /bin/sh -c "while true; do entrypoint console marketplace:events:from-provider; sleep 60; done"
         volumes:
             - .:/var/www
         depends_on:
