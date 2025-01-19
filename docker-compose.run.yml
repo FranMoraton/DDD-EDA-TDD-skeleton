@@ -81,6 +81,54 @@ services:
         networks:
             - bridge
 
+    command-worker:
+        build:
+            context: .
+            dockerfile: docker/php/Dockerfile
+            target: development_worker
+        command: console messenger:consume commands --bus=messenger_command.bus --time-limit=60 -m 1 --memory-limit=128M --no-interaction
+        volumes:
+            - .:/var/www
+        depends_on:
+            - php
+            - db
+            - amqp
+        restart: always
+        networks:
+            - bridge
+
+    event-worker:
+        build:
+            context: .
+            dockerfile: docker/php/Dockerfile
+            target: development_worker
+        command: console messenger:consume events --bus=messenger_event.bus --time-limit=60 -m 1 --memory-limit=128M --no-interaction
+        volumes:
+            - .:/var/www
+        depends_on:
+            - php
+            - db
+            - amqp
+        restart: always
+        networks:
+            - bridge
+
+    cronjob:
+        build:
+            context: .
+            dockerfile: docker/php/Dockerfile
+            target: development_worker
+        command: /bin/sh -c "while true; do console marketplace:events:from-provider; sleep 60; done"
+        volumes:
+            - .:/var/www
+        depends_on:
+            - php
+            - db
+            - amqp
+        restart: always
+        networks:
+            - bridge
+
 networks:
     bridge:
 

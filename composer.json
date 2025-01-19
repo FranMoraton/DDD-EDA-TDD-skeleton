@@ -29,7 +29,8 @@
     "lexik/jwt-authentication-bundle": "^3.1",
     "symfony/security-bundle": "7.2.*",
     "beberlei/assert": "^3.3",
-    "guzzlehttp/guzzle": "^7.9"
+    "guzzlehttp/guzzle": "^7.9",
+    "symfony/translation": "7.2.*"
   },
   "require-dev": {
     "dg/bypass-finals": "^1.8",

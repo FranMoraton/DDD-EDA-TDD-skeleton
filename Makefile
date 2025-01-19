@@ -1,4 +1,4 @@
-.PHONY: all help erase build cache-folders composer-install composer-update composer-require composer-require-dev start stop logs bash grumphp fix-cs tests behat migrations consume-commands consume-events
+.PHONY: all help erase build cache-folders composer-install composer-update composer-require composer-require-dev start stop logs bash grumphp fix-cs tests behat migrations consume-commands consume-events run
 
 # CONFIG ---------------------------------------------------------------------------------------------------------------
 ifneq (,$(findstring xterm,${TERM}))
@@ -104,3 +104,14 @@ consume-commands: ## Consume messages from the commands transport
 
 consume-events: ## Consume messages from the events transport
 		docker compose exec -it -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} console messenger:consume events --bus=messenger_event.bus --time-limit=60 -m 1 --memory-limit=128M --no-interaction
+
+# CUSTOM RUN COMMAND --------------------------------------------------------------------------------------------------
+run: ## Run using docker-compose.run.yml
+		docker compose -f docker-compose.yml -f docker-compose.run.yml down -v && \
+		mkdir -p ~/.composer && chown ${UID}:${GID} ~/.composer && \
+		docker compose -f docker-compose.yml -f docker-compose.run.yml build && \
+		docker compose -f docker-compose.yml -f docker-compose.run.yml run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} composer install --verbose && \
+		docker compose -f docker-compose.yml -f docker-compose.run.yml up -d && \
+		docker compose -f docker-compose.yml -f docker-compose.run.yml run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc 'while ! nc -z ${DOCKER_DB_SERVICE} ${DOCKER_DB_PORT}; do echo "Waiting for DB service"; sleep 3; done;' && \
+		docker compose -f docker-compose.yml -f docker-compose.run.yml run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc 'while ! nc -z ${DOCKER_AMQP_SERVICE} ${DOCKER_AMQP_PORT}; do echo "Waiting for AMQP service"; sleep 3; done;' && \
+		docker compose -f docker-compose.yml -f docker-compose.run.yml run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc './bin/console app:environment:init'

@@ -12,6 +12,19 @@ services:
         tags:
             - { name: controller.service_arguments }
 
+#    App\Users\Infrastructure\Adapter\Command\:
+#        resource: '../../../src/Users/Infrastructure/Adapter/Command/*'
+#        bind:
+#            Symfony\Component\Messenger\MessageBusInterface $commandBus: '@messenger_command.bus'
+
+#    App\Users\Infrastructure\Adapter\Amqp\:
+#        resource: '../../../src/Users/Infrastructure/Adapter/Amqp/*'
+#        autowire: true
+#        autoconfigure: false
+#        tags:
+#            - { name: messenger.message_handler, bus: messenger_event.bus }
+
+
     App\Users\Application\Command\:
         autowire: true
         autoconfigure: false
@@ -25,10 +38,3 @@ services:
         resource: '../../../src/Users/Application/Query/*/*/*Handler.php'
         tags:
             - { name: messenger.message_handler, bus: messenger_query.bus }
-
-#    App\Users\Infrastructure\Adapter\Amqp\:
-#        resource: '../../../src/Users/Infrastructure/Adapter/Amqp/*'
-#        autowire: true
-#        autoconfigure: false
-#        tags:
-#            - { name: messenger.message_handler, bus: messenger_event.bus }

@@ -1,0 +1,24 @@
+#!/bin/bash
+set -e
+
+term_handler() {
+  echo "Recibida señal de terminación. Esperando que termine el proceso..."
+  wait "$COMMAND_PID"
+  exit 0
+}
+
+trap 'term_handler' SIGTERM SIGINT
+
+if [ -z "$1" ]; then
+  echo "Error: No se ha especificado un comando para ejecutar."
+  exit 1
+fi
+
+while true; do
+  echo "Ejecutando comando: $@"
+  "$@"
+  sleep 1
+done &
+
+COMMAND_PID=$!
+wait "$COMMAND_PID"

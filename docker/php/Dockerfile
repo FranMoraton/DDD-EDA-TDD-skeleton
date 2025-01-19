@@ -34,6 +34,12 @@ RUN apk add --no-cache git bash && \
     install-php-extensions xdebug-3.4.0 && \
     rm -rf /tmp/pear
 
+FROM development AS development_worker
+COPY bin/entrypoint /usr/local/bin/entrypoint
+RUN chmod +x /usr/local/bin/entrypoint
+
+ENTRYPOINT ["/usr/local/bin/entrypoint"]
+
 FROM base AS result
 ENV APP_ENV=prod
 COPY ./ $PROJECT_DIR
@@ -46,9 +52,19 @@ RUN rm -rf \
             grumphp.yml \
             phpcs.xml.dist \
             phpstan.neon \
-            phpunit.xml.dist.dist
+            phpunit.xml.dist
 
 FROM base AS prod
 COPY --from=result $PROJECT_DIR ./
 RUN chown -R www-data:www-data $PROJECT_DIR
 USER www-data
+
+FROM base AS worker
+
+COPY --from=result $PROJECT_DIR ./
+WORKDIR $PROJECT_DIR
+
+COPY bin/entrypoint /usr/local/bin/entrypoint
+RUN chmod +x /usr/local/bin/entrypoint
+
+ENTRYPOINT ["/usr/local/bin/entrypoint"]

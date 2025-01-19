@@ -12,6 +12,18 @@ services:
         tags:
             - { name: controller.service_arguments }
 
+    App\Marketplace\Infrastructure\Adapter\Command\:
+        resource: '../../../src/Marketplace/Infrastructure/Adapter/Command/*'
+        bind:
+            Symfony\Component\Messenger\MessageBusInterface $commandBus: '@messenger_command.bus'
+
+    App\Marketplace\Infrastructure\Adapter\Amqp\:
+        resource: '../../../src/Marketplace/Infrastructure/Adapter/Amqp/*'
+        autowire: true
+        autoconfigure: false
+        tags:
+            - { name: messenger.message_handler, bus: messenger_event.bus }
+
     App\Marketplace\Application\Command\:
         autowire: true
         autoconfigure: false
@@ -25,13 +37,6 @@ services:
         resource: '../../../src/Marketplace/Application/Query/*/*/*Handler.php'
         tags:
             - { name: messenger.message_handler, bus: messenger_query.bus }
-
-    App\Marketplace\Infrastructure\Adapter\Amqp\:
-        resource: '../../../src/Marketplace/Infrastructure/Adapter/Amqp/*'
-        autowire: true
-        autoconfigure: false
-        tags:
-            - { name: messenger.message_handler, bus: messenger_event.bus }
 
     App\Marketplace\Domain\Service\Event\ProviderEventsExtractor\ProviderEventsExtractor:
         class: App\Marketplace\Infrastructure\Domain\Service\Event\HttpProviderEventsExtractor
