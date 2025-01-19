@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: app-config
+    namespace: marketplace
+data:
+    AMQP_DSN_EVENTS: "amqp://guest:guest@rabbitmq-service:5672/app"
+    AMQP_DSN: "amqp://guest:guest@rabbitmq-service:5672/app"
+    DATABASE_WRITE_URL: "pgsql://guest:guest@postgres-service:5432/app"

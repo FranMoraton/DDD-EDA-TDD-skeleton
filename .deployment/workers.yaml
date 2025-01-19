@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: command-worker-deployment
+    namespace: marketplace
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: command-worker
+    template:
+        metadata:
+            labels:
+                app: command-worker
+        spec:
+            containers:
+                - name: command-worker
+                  image: docker.io/your-repo/your-php-image:latest
+                  imagePullPolicy: IfNotPresent
+                  envFrom:
+                      -   configMapRef:
+                              name: app-config
+                  command: ["entrypoint", "console", "messenger:consume", "commands", "--bus=messenger_command.bus", "--time-limit=60", "--limit=30", "--memory-limit=128M", "--no-interaction"]
+            restartPolicy: Always
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: event-worker-deployment
+    namespace: marketplace
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: event-worker
+    template:
+        metadata:
+            labels:
+                app: event-worker
+        spec:
+            containers:
+                - name: event-worker
+                  image: docker.io/your-repo/your-php-image:latest
+                  imagePullPolicy: IfNotPresent
+                  envFrom:
+                      -   configMapRef:
+                              name: app-config
+                  command: ["entrypoint", "console", "messenger:consume", "events", "--bus=messenger_event.bus", "--time-limit=60", "--limit=30", "--memory-limit=128M", "--no-interaction"]
+            restartPolicy: Always

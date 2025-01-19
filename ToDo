@@ -3,5 +3,5 @@
 ---> distributed tracing correlation/causation
 ---> add proper logging
 ---> ci/cd
----> k8s
+---> k8s fix k8s deploy to local
 ---> Datadog free tier

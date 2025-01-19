@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+    name: my-app-ingress
+    namespace: marketplace
+    annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+    rules:
+        - http:
+              paths:
+                  - path: /
+                    pathType: Prefix
+                    backend:
+                        service:
+                            name: nginx-service
+                            port:
+                                number: 80
+                  - path: /docs/swagger
+                    pathType: Prefix
+                    backend:
+                        service:
+                            name: swagger-service
+                            port:
+                                number: 8080
+                  - path: /docs/asyncapi
+                    pathType: Prefix
+                    backend:
+                        service:
+                            name: asyncapi-service
+                            port:
+                                number: 80

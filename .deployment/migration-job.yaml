@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+    name: migration-job
+    namespace: marketplace
+spec:
+    template:
+        spec:
+            containers:
+                - name: migration
+                  image: docker.io/your-repo/your-php-image:latest
+                  imagePullPolicy: IfNotPresent
+                  envFrom:
+                      -   configMapRef:
+                              name: app-config
+                  command: ["console", "app:environment:init"]
+            restartPolicy: OnFailure

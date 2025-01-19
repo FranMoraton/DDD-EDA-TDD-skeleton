@@ -86,7 +86,7 @@ services:
             context: .
             dockerfile: docker/php/Dockerfile
             target: prod
-        command: entrypoint console messenger:consume commands --bus=messenger_command.bus --time-limit=60 -m 1 --memory-limit=128M --no-interaction
+        command: entrypoint console messenger:consume commands --bus=messenger_command.bus --time-limit=60 --limit=30 --memory-limit=128M --no-interaction
         volumes:
             - .:/var/www
         depends_on:
@@ -102,7 +102,7 @@ services:
             context: .
             dockerfile: docker/php/Dockerfile
             target: prod
-        command: entrypoint console messenger:consume events --bus=messenger_event.bus --time-limit=60 -m 1 --memory-limit=128M --no-interaction
+        command: entrypoint console messenger:consume events --bus=messenger_event.bus --time-limit=60 --limit=30 --memory-limit=128M --no-interaction
         volumes:
             - .:/var/www
         depends_on:

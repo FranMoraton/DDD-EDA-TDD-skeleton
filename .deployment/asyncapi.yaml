@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: asyncapi-service
+    namespace: marketplace
+spec:
+    selector:
+        app: asyncapi
+    ports:
+        - protocol: TCP
+          port: 80
+          targetPort: 80
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: asyncapi-deployment
+    namespace: marketplace
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: asyncapi
+    template:
+        metadata:
+            labels:
+                app: asyncapi
+        spec:
+            containers:
+                - name: asyncapi
+                  image: docker.io/your-repo/your-asyncapi-image:latest
+                  imagePullPolicy: IfNotPresent
+                  volumeMounts:
+                      - name: docs
+                        mountPath: /app/docs
+            volumes:
+                - name: docs
+                  persistentVolumeClaim:
+                      claimName: docs-pvc

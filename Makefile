@@ -100,10 +100,10 @@ migrations: ## Initialize environment and execute migrations
 		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc './bin/console app:environment:init'
 
 consume-commands: ## Consume messages from the commands transport
-		docker compose exec -it -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} console messenger:consume commands --bus=messenger_command.bus --time-limit=60 -m 1 --memory-limit=128M --no-interaction
+		docker compose exec -it -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} console messenger:consume commands --bus=messenger_command.bus --time-limit=60 --limit=30 --memory-limit=128M --no-interaction
 
 consume-events: ## Consume messages from the events transport
-		docker compose exec -it -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} console messenger:consume events --bus=messenger_event.bus --time-limit=60 -m 1 --memory-limit=128M --no-interaction
+		docker compose exec -it -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} console messenger:consume events --bus=messenger_event.bus --time-limit=60 --limit=30 --memory-limit=128M --no-interaction
 
 # CUSTOM RUN COMMAND --------------------------------------------------------------------------------------------------
 run: erase ## Run using docker-compose.run.yml
@@ -118,3 +118,41 @@ run: erase ## Run using docker-compose.run.yml
 
 stop-run: ## Stop using docker-compose.run.yml
 		docker compose -f docker-compose.yml -f docker-compose.run.yml down -v
+
+run-minikube: ## Run using minikube
+	minikube start --driver=docker
+	minikube addons enable default-storageclass
+	minikube addons enable storage-provisioner
+	minikube addons enable ingress
+
+	eval $(minikube -p minikube docker-env)
+	docker build -t your-repo/your-php-image:latest -f docker/php/Dockerfile .
+	docker build -t your-repo/your-nginx-image:latest -f docker/nginx/Dockerfile .
+	docker build -t your-repo/your-asyncapi-image:latest -f docker/asyncapi/Dockerfile .
+	docker build -t your-repo/your-rabbimq-image:latest -f docker/rabbitmq/Dockerfile .
+
+	minikube image load your-repo/your-php-image:latest
+	minikube image load your-repo/your-nginx-image:latest
+	minikube image load your-repo/your-asyncapi-image:latest
+	minikube image load your-repo/your-rabbimq-image:latest
+
+	kubectl config use-context minikube
+
+	kubectl apply -f .deployment/namespace.yaml --context=minikube
+	kubectl apply -f .deployment/configmap.yaml --context=minikube
+	kubectl apply -f .deployment/ingress.yaml --context=minikube
+	kubectl apply -f .deployment/postgres.yaml --context=minikube
+	kubectl apply -f .deployment/rabbitmq.yaml --context=minikube
+	kubectl apply -f .deployment/cronjob.yaml --context=minikube
+	kubectl apply -f .deployment/workers.yaml --context=minikube
+	kubectl apply -f .deployment/deployment.yaml --context=minikube
+	kubectl apply -f .deployment/swagger.yaml --context=minikube
+	kubectl apply -f .deployment/asyncapi.yaml --context=minikube
+	kubectl apply -f .deployment/migration-job.yaml --context=minikube
+
+	minikube ip
+
+stop-run-minikube: ## Stop using minikube
+	minikube stop
+	minikube delete
+
