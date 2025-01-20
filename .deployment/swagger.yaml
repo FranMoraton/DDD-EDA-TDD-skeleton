@@ -10,6 +10,7 @@ spec:
         - protocol: TCP
           port: 8080
           targetPort: 8080
+    type: NodePort
 
 ---
 apiVersion: apps/v1
@@ -27,6 +28,14 @@ spec:
             labels:
                 app: swagger
         spec:
+            initContainers:
+                - name: swagger-init
+                  image: docker.io/your-repo/your-php-image:latest
+                  imagePullPolicy: IfNotPresent
+                  command: [ "sh", "-c", "cp -r docs/* /docs/" ]
+                  volumeMounts:
+                      - name: docs
+                        mountPath: /docs
             containers:
                 - name: swagger
                   image: swaggerapi/swagger-ui
@@ -40,16 +49,3 @@ spec:
                 - name: docs
                   persistentVolumeClaim:
                       claimName: docs-pvc
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-    name: docs-pvc
-    namespace: marketplace
-spec:
-    accessModes:
-        - ReadWriteOnce
-    resources:
-        requests:
-            storage: 1Gi

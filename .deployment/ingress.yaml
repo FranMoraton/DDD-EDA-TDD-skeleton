@@ -5,6 +5,8 @@ metadata:
     namespace: marketplace
     annotations:
         nginx.ingress.kubernetes.io/rewrite-target: /
+        nginx.ingress.kubernetes.io/enable-cors: 'true'
+
 spec:
     rules:
         - http:
@@ -30,3 +32,12 @@ spec:
                             name: asyncapi-service
                             port:
                                 number: 80
+
+                  - path: /rabbitmq/management
+                    pathType: Prefix
+                    backend:
+                        service:
+                            name: rabbitmq-service
+                            port:
+                                number: 15672
+

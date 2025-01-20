@@ -26,7 +26,6 @@ RUN chown -R www-data:www-data $PROJECT_DIR
 
 EXPOSE 9000
 
-
 FROM base AS development
 COPY docker/php/config/php.ini /usr/local/etc/php/php.ini
 COPY docker/php/config/opcache.ini /usr/local/etc/php/conf.d/opcache.ini

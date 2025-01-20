@@ -10,6 +10,7 @@ spec:
         - protocol: TCP
           port: 80
           targetPort: 80
+    type: NodePort
 
 ---
 apiVersion: apps/v1
@@ -34,50 +35,9 @@ spec:
                   envFrom:
                       -   configMapRef:
                               name: app-config
-                  volumeMounts:
-                      - name: project-dir
-                        mountPath: /var/www
                 - name: nginx
                   image: docker.io/your-repo/your-nginx-image:latest
                   imagePullPolicy: IfNotPresent
                   env:
                       - name: PHP_HOST
                         value: 127.0.0.1
-                  volumeMounts:
-                      - name: project-dir
-                        mountPath: /var/www
-                      - name: public-dir
-                        mountPath: /var/www/public
-            volumes:
-                - name: project-dir
-                  persistentVolumeClaim:
-                      claimName: project-pvc
-                - name: public-dir
-                  persistentVolumeClaim:
-                      claimName: public-pvc
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-    name: project-pvc
-    namespace: marketplace
-spec:
-    accessModes:
-        - ReadWriteOnce
-    resources:
-        requests:
-            storage: 1Gi
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-    name: public-pvc
-    namespace: marketplace
-spec:
-    accessModes:
-        - ReadWriteOnce
-    resources:
-        requests:
-            storage: 1Gi

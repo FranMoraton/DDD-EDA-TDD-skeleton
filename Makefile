@@ -125,7 +125,6 @@ run-minikube: ## Run using minikube
 	minikube addons enable storage-provisioner
 	minikube addons enable ingress
 
-	eval $(minikube -p minikube docker-env)
 	docker build -t your-repo/your-php-image:latest -f docker/php/Dockerfile .
 	docker build -t your-repo/your-nginx-image:latest -f docker/nginx/Dockerfile .
 	docker build -t your-repo/your-asyncapi-image:latest -f docker/asyncapi/Dockerfile .
@@ -150,7 +149,6 @@ run-minikube: ## Run using minikube
 	kubectl apply -f .deployment/asyncapi.yaml --context=minikube
 	kubectl apply -f .deployment/migration-job.yaml --context=minikube
 
-	eval $(minikube docker-env -u)
 	minikube ip
 
 stop-run-minikube: ## Stop using minikube

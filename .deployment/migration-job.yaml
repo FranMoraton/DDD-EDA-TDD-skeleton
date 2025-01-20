@@ -6,6 +6,15 @@ metadata:
 spec:
     template:
         spec:
+            initContainers:
+                - name: wait-for-postgres
+                  image: docker.io/your-repo/your-php-image:latest
+                  imagePullPolicy: IfNotPresent
+                  command: ['sh', '-c', 'until nc -z postgres-service 5432; do echo waiting for postgres; sleep 2; done;']
+                - name: wait-for-rabbitmq
+                  image: docker.io/your-repo/your-php-image:latest
+                  imagePullPolicy: IfNotPresent
+                  command: ['sh', '-c', 'until nc -z rabbitmq-service 5672; do echo waiting for rabbitmq; sleep 2; done;']
             containers:
                 - name: migration
                   image: docker.io/your-repo/your-php-image:latest

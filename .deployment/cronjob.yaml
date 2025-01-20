@@ -5,6 +5,8 @@ metadata:
     namespace: marketplace
 spec:
     schedule: "*/5 * * * *"
+    successfulJobsHistoryLimit: 3
+    failedJobsHistoryLimit: 1
     jobTemplate:
         spec:
             template:
