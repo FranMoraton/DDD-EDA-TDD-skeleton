@@ -4,6 +4,7 @@ metadata:
     name: my-app-ingress
     namespace: marketplace
     annotations:
+        nginx.ingress.kubernetes.io/add-base-url: "true"
         nginx.ingress.kubernetes.io/rewrite-target: /
         nginx.ingress.kubernetes.io/enable-cors: 'true'
 
@@ -40,4 +41,3 @@ spec:
                             name: rabbitmq-service
                             port:
                                 number: 15672
-
