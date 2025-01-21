@@ -32,10 +32,3 @@ spec:
                 - name: asyncapi
                   image: docker.io/your-repo/your-asyncapi-image:latest
                   imagePullPolicy: IfNotPresent
-                  volumeMounts:
-                      - name: docs
-                        mountPath: /app/docs
-            volumes:
-                - name: docs
-                  persistentVolumeClaim:
-                      claimName: docs-pvc

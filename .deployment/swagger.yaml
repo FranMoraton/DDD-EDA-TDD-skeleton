@@ -28,6 +28,9 @@ spec:
             labels:
                 app: swagger
         spec:
+            volumes:
+                -   name: docs
+                    emptyDir: { }
             initContainers:
                 - name: swagger-init
                   image: docker.io/your-repo/your-php-image:latest
@@ -45,7 +48,3 @@ spec:
                   volumeMounts:
                       - name: docs
                         mountPath: /docs
-            volumes:
-                - name: docs
-                  persistentVolumeClaim:
-                      claimName: docs-pvc
