@@ -1,4 +1,4 @@
-.PHONY: all help erase build cache-folders composer-install composer-update composer-require composer-require-dev start stop logs bash grumphp fix-cs tests behat migrations consume-commands consume-events run
+.PHONY: all help erase build cache-folders composer-install composer-update composer-require composer-require-dev start stop logs bash grumphp fix-cs tests behat migrations consume-commands consume-events run-minikube stop-minikube
 
 # CONFIG ---------------------------------------------------------------------------------------------------------------
 ifneq (,$(findstring xterm,${TERM}))
@@ -48,7 +48,7 @@ help: ## Display the available commands in this Makefile
 # BUILD COMMANDS -------------------------------------------------------------------------------------------------------
 init: erase cache-folders build composer-install start migrations ## Initialize the project (clean, build, install, migrate)
 
-erase: stop-run ## Remove Docker containers and volumes
+erase: ## Remove Docker containers and volumes
 		docker compose down -v
 
 build: ## Build and pull Docker images
@@ -105,20 +105,6 @@ consume-commands: ## Consume messages from the commands transport
 consume-events: ## Consume messages from the events transport
 		docker compose exec -it -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} console messenger:consume events --bus=messenger_event.bus --time-limit=60 --limit=30 --memory-limit=128M --no-interaction
 
-# CUSTOM RUN COMMAND --------------------------------------------------------------------------------------------------
-run: erase ## Run using docker-compose.run.yml
-		docker compose -f docker-compose.yml -f docker-compose.run.yml down -v && \
-		mkdir -p ~/.composer && chown ${UID}:${GID} ~/.composer && \
-		docker compose -f docker-compose.yml -f docker-compose.run.yml build && \
-		docker compose -f docker-compose.yml -f docker-compose.run.yml run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} composer install --verbose && \
-		docker compose -f docker-compose.yml -f docker-compose.run.yml up -d && \
-		docker compose -f docker-compose.yml -f docker-compose.run.yml run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc 'while ! nc -z ${DOCKER_DB_SERVICE} ${DOCKER_DB_PORT}; do echo "Waiting for DB service"; sleep 3; done;' && \
-		docker compose -f docker-compose.yml -f docker-compose.run.yml run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc 'while ! nc -z ${DOCKER_AMQP_SERVICE} ${DOCKER_AMQP_PORT}; do echo "Waiting for AMQP service"; sleep 3; done;' && \
-		docker compose -f docker-compose.yml -f docker-compose.run.yml run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} sh -lc './bin/console app:environment:init'
-
-stop-run: ## Stop using docker-compose.run.yml
-		docker compose -f docker-compose.yml -f docker-compose.run.yml down -v
-
 run-minikube: ## Run using minikube
 	minikube start --driver=docker
 	minikube addons enable default-storageclass
@@ -151,6 +137,6 @@ run-minikube: ## Run using minikube
 
 	minikube ip
 
-stop-run-minikube: ## Stop using minikube
+stop-minikube: ## Stop using minikube
 	minikube stop
 	minikube delete

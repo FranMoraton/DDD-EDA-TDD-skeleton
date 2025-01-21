@@ -18,10 +18,12 @@ This project is designed to simplify the creation of new applications following 
 - **Authentication and Authorization Module**: Provides a basic structure for handling user authentication and access control.
 - **Default Admin User**: A preconfigured admin user to simplify authentication during development.
 - **Cache of Queries**: Optimized query caching using a custom implementation that extends CacheQuery, enabling efficient and reusable cache strategies for database operations.
+- **Acceptance Tests**: Behat-based acceptance tests are integrated into the project to ensure that business requirements are met. Run the tests with make behat.
 - **API Documentation**:
     - **AsyncAPI** available at [http://localhost:8091](http://localhost:8091).
     - **OpenAPI** available at [http://localhost:8090](http://localhost:8090).
 
+- **Kubernetes Deployment Base**: A basic Kubernetes deployment setup is included to allow you to deploy the application to a Kubernetes cluster. It includes deployment, service, and ingress configurations to get your app running in a Kubernetes environment.
 ---
 
 ## Prerequisites
@@ -110,9 +112,17 @@ To see all available commands, run:
 make help
 ```
 
----
+### 8. Acceptance Tests with Behat
 
-### 8. Access the Application
+This project includes acceptance tests to validate business processes and features. To run the Behat tests, use the following command:
+
+```bash
+make behat
+```
+
+Behat will execute the scenarios defined in the features directory to ensure everything behaves as expected.
+
+### 9. Access the Application
    To access a Bearer Token for authentication,
    use the /users/v1/login endpoint with the following credentials for the default admin user:
 
@@ -123,9 +133,27 @@ make help
 }
 ```
 
-### 9. Access API Documentation
+### 10. Access API Documentation
    AsyncAPI documentation is available at http://localhost:8091.
    OpenAPI documentation is available at http://localhost:8090.
+
+### 11. Kubernetes Deployment (Local Minikube Setup)
+
+To deploy the application locally in a Kubernetes cluster, you can use Minikube. Here are the steps to set it up and run the application on your local machine.
+
+## Requirements:
+- [Minikube](https://minikube.sigs.k8s.io/docs/start)
+- [Kubernetes](https://kubernetes.io/)
+
+```bash
+make run-minikube
+```
+
+use minikube ip to know your local ip
+
+```bash
+minikube ip
+```
 
 ## Key Principles
 
