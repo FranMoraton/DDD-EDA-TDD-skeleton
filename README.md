@@ -155,6 +155,13 @@ use minikube ip to know your local ip
 minikube ip
 ```
 
+## /etc/hosts File (for Local Development):
+If you are deploying in a local environment, edit the /etc/hosts file to associate the URLs with the Minikube or cluster IP.
+
+```bash
+(minikube ip) app.example.com openapi.app.example.com asyncapi.app.example.com rabbitmq.app.example.com
+```
+
 ## Key Principles
 
 - **DDD**: Organizes code into clear, domain-aligned modules.

@@ -17,7 +17,8 @@ metadata:
 
 spec:
     rules:
-        - http:
+        - host: app.example.com
+          http:
               paths:
                   - path: /
                     pathType: Prefix
@@ -26,22 +27,30 @@ spec:
                             name: nginx-service
                             port:
                                 number: 80
-                  - path: /docs/swagger
+        - host: openapi.app.example.com
+          http:
+              paths:
+                  - path: /
                     pathType: Prefix
                     backend:
                         service:
                             name: swagger-service
                             port:
                                 number: 8080
-                  - path: /docs/asyncapi
+        - host: asyncapi.app.example.com
+          http:
+              paths:
+                  - path: /
                     pathType: Prefix
                     backend:
                         service:
                             name: asyncapi-service
                             port:
                                 number: 80
-
-                  - path: /rabbitmq/management
+        - host: rabbitmq.app.example.com
+          http:
+              paths:
+                  - path: /
                     pathType: Prefix
                     backend:
                         service:
