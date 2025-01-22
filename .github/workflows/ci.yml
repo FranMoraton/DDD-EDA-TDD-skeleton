@@ -27,32 +27,29 @@ jobs:
             - name: Checkout Code
               uses: actions/checkout@v3
 
+            - name: Create custom Docker network
+              run: docker network create my_custom_network
+
             - name: Build PHP Docker Image
               run: docker build -t php-app:latest --target=ci -f docker/php/Dockerfile .
 
             - name: Run Migrations
-              run: docker run --rm php-app:latest php bin/console app:environment:init
-              env:
-                  POSTGRES_HOST: db
-                  POSTGRES_PORT: 5432
+              run: docker run --rm --network my_custom_network  php-app:latest php bin/console app:environment:init
 
             - name: Run Composer Validation
-              run: docker run --rm php-app:latest composer validate --strict
+              run: docker run --rm --network my_custom_network  php-app:latest composer validate --strict
 
             - name: Run Composer Audit
-              run:  docker run --rm php-app:latest composer audit
+              run:  docker run --rm --network my_custom_network  php-app:latest composer audit
 
             - name: Run Unit Tests
-              run: docker run --rm php-app:latest phpunit --configuration phpunit.xml.dist --coverage-text --order=random
+              run: docker run --rm --network my_custom_network  php-app:latest phpunit --configuration phpunit.xml.dist --coverage-text --order=random
 
             - name: Run Acceptance Tests
-              run: docker run --rm php-app:latest behat --strict --stop-on-failure --format progress
-              env:
-                  POSTGRES_HOST: db
-                  POSTGRES_PORT: 5432
+              run: docker run --rm --network my_custom_network  php-app:latest behat --strict --stop-on-failure --format progress
 
             - name: Run PHPStan
-              run: docker run --rm php-app:latest phpstan analyse -l 8 src
+              run: docker run --rm --network my_custom_network  php-app:latest phpstan analyse -l 8 src
 
             - name: Run PHP Code Sniffer
-              run: docker run --rm php-app:latest phpcs --standard=phpcs.xml.dist
+              run: docker run --rm --network my_custom_network  php-app:latest phpcs --standard=phpcs.xml.dist
