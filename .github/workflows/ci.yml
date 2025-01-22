@@ -28,9 +28,7 @@ jobs:
               uses: actions/checkout@v3
 
             - name: Build PHP Docker Image
-              run: |
-                  sed -i 's|DATABASE_WRITE_URL=.*|DATABASE_WRITE_URL=pgsql://guest:guest@127.0.0.1:5432/app|' .env.dist && \
-                  docker build -t php-app:latest --target=ci -f docker/php/Dockerfile .
+              run: docker build -t php-app:latest --target=ci -f docker/php/Dockerfile .
 
             - name: Run Migrations
               run: docker run --rm php-app:latest php bin/console app:environment:init
