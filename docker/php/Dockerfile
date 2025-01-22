@@ -33,6 +33,12 @@ RUN apk add --no-cache git bash && \
     install-php-extensions xdebug-3.4.0 && \
     rm -rf /tmp/pear
 
+FROM development AS ci
+ENV APP_ENV=dev
+COPY ./ $PROJECT_DIR
+RUN composer install
+
+
 FROM base AS result
 ENV APP_ENV=prod
 COPY ./ $PROJECT_DIR
