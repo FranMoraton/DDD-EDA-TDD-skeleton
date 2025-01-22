@@ -1,0 +1,117 @@
+name: Testing Workflow
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        outputs:
+            php-image: php-app:latest
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v3
+
+            - name: Build PHP Docker Image
+              run: docker build -t php-app:development --target=development -f docker/php/Dockerfile .
+
+    unit-tests:
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v3
+
+            - name: Run Unit Tests
+              run: |
+                  docker run --rm \
+                    -v ${{ github.workspace }}:/var/www \
+                    php-app:latest \
+                    phpunit --configuration phpunit.xml.dist --coverage-text --order=random
+
+    composer-audit:
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v3
+
+            - name: Run Composer Audit
+              run: |
+                  docker run --rm \
+                    -v ${{ github.workspace }}:/var/www \
+                    php-app:latest \
+                    composer audit
+
+    acceptance-tests:
+        runs-on: ubuntu-latest
+        needs: build
+        services:
+            db:
+                image: postgres:15.7-alpine
+                ports:
+                    - 5432:5432
+                env:
+                    POSTGRES_USER: guest
+                    POSTGRES_PASSWORD: guest
+                options: >-
+                    --health-cmd="pg_isready -U guest"
+                    --health-interval=10s
+                    --health-timeout=5s
+                    --health-retries=5
+
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v3
+
+            - name: Wait for Dependencies
+              run: |
+                until pg_isready -h db -p 5432 -U guest; do
+                    echo "Waiting for PostgreSQL...";
+                    sleep 5;
+                done
+
+            - name: Run Migrations
+              run: |
+                  docker run --rm \
+                    -v ${{ github.workspace }}:/var/www \
+                    php-app:latest \
+                    php bin/console app:environment:init
+
+            - name: Run Acceptance Tests
+              run: |
+                  docker run --rm \
+                    -v ${{ github.workspace }}:/var/www \
+                    php-app:latest \
+                    behat --strict --stop-on-failure --format progress
+
+    phpstan:
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v3
+
+            - name: Run PHPStan
+              run: |
+                  docker run --rm \
+                    -v ${{ github.workspace }}:/var/www \
+                    php-app:latest \
+                    phpstan analyse -l 8 src
+
+    phpcs:
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v3
+
+            - name: Run PHP Code Sniffer
+              run: |
+                  docker run --rm \
+                    -v ${{ github.workspace }}:/var/www \
+                    php-app:latest \
+                    phpcs --standard=phpcs.xml.dist
