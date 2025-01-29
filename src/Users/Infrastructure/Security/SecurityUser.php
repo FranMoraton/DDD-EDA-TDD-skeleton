@@ -73,7 +73,7 @@ final class SecurityUser implements UserInterface, PasswordAuthenticatedUserInte
         return $this->password;
     }
 
-    public static function createFromPayload($username, array $payload)
+    public static function createFromPayload($username, array $payload): JWTUserInterface
     {
         return self::from(
             $payload['id'],

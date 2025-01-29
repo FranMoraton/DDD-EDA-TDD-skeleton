@@ -169,12 +169,43 @@ class CollectionValueObject implements \Iterator, \Countable, \JsonSerializable,
             return false;
         }
 
-        $arr1 = $this->items;
-        $arr2 = $other->items;
+        return $this->compareItems($this->items, $other->items);
+    }
 
-        \sort($arr1);
-        \sort($arr2);
+    /**
+     * @param array<TKey, TValue> $arr1
+     * @param array<TKey, TValue> $arr2
+     */
+    private function compareItems(array $arr1, array $arr2): bool
+    {
+        if (count($arr1) !== count($arr2)) {
+            return false;
+        }
 
-        return $arr1 == $arr2;
+        \usort($arr1, [$this, 'compare']);
+        \usort($arr2, [$this, 'compare']);
+
+        foreach ($arr1 as $key => $item1) {
+            $item2 = $arr2[$key];
+
+            if ($item1 instanceof self && $item2 instanceof self && false === $item1->equalTo($item2)) {
+                return false;
+            }
+
+            if (false === $item1 instanceof self && false === $item2 instanceof self && $item1 !== $item2) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param TValue $a
+     * @param TValue $b
+     */
+    private function compare($a, $b): int
+    {
+        return $a < $b ? -1 : 1;
     }
 }

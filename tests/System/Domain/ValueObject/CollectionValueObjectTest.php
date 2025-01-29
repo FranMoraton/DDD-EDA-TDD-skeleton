@@ -8,9 +8,9 @@ use App\System\Domain\ValueObject\CollectionValueObject;
 use App\System\Domain\ValueObject\Uuid;
 use PHPUnit\Framework\TestCase;
 
-final class CollectionValueObjectTest extends TestCase
+class CollectionValueObjectTest extends TestCase
 {
-    public function testGivenEmptyCollectionWhenAskToGetInfoThenReturnExpectedInfo()
+    public function testGivenEmptyCollectionWhenAskToGetInfoThenReturnExpectedInfo(): void
     {
         $collection = CollectionValueObject::from([]);
 
@@ -18,7 +18,7 @@ final class CollectionValueObjectTest extends TestCase
         $this->assertTrue($collection->isEmpty());
     }
 
-    public function testGivenCollectionWhenAskToGetInfoThenReturnExpectedInfo()
+    public function testGivenCollectionWhenAskToGetInfoThenReturnExpectedInfo(): void
     {
         $collection = CollectionValueObject::from([1, 2, 3, 4]);
 
@@ -26,7 +26,7 @@ final class CollectionValueObjectTest extends TestCase
         $this->assertFalse($collection->isEmpty());
     }
 
-    public function testGivenIntegerishCollectionWhenAskToSortThenReturnNewSortedCollection()
+    public function testGivenIntegerishCollectionWhenAskToSortThenReturnNewSortedCollection(): void
     {
         $collection = CollectionValueObject::from([5, 1, 4, 2, 3]);
         $sorted = $collection->sort(
@@ -39,7 +39,7 @@ final class CollectionValueObjectTest extends TestCase
         $this->assertEquals([1, 2, 3, 4, 5], $sorted->jsonSerialize());
     }
 
-    public function testGivenCollectionWhenAskToSortThenReturnNewSortedCollection()
+    public function testGivenCollectionWhenAskToSortThenReturnNewSortedCollection(): void
     {
         $collection = CollectionValueObject::from(['5a', '1', '4', '2', '3']);
         $sorted = $collection->sort(
@@ -55,7 +55,7 @@ final class CollectionValueObjectTest extends TestCase
         $this->assertEquals(['1', '2', '3', '4', '5a'], $sorted->jsonSerialize());
     }
 
-    public function testGivenCollectionWhenAskToFilterThenReturnExpectedInfo()
+    public function testGivenCollectionWhenAskToFilterThenReturnExpectedInfo(): void
     {
         $collection = CollectionValueObject::from([1, 2, 3, 4]);
         $newCollection = $collection->filter(
@@ -67,7 +67,7 @@ final class CollectionValueObjectTest extends TestCase
         $this->assertEquals([1, 3, 4], $newCollection->jsonSerialize());
     }
 
-    public function testGivenTwoIdenticalCollectionsWhenAskToCheckEqualityThenReturnTrue()
+    public function testGivenTwoIdenticalCollectionsWhenAskToCheckEqualityThenReturnTrue(): void
     {
         $collection = CollectionValueObject::from([1, 2, 3, 4]);
         $other = CollectionValueObject::from([1, 2, 3, 4]);
@@ -75,7 +75,7 @@ final class CollectionValueObjectTest extends TestCase
         $this->assertTrue($collection->equalTo($other));
     }
 
-    public function testGivenTwoDifferentCollectionsWhenAskToCheckEqualityThenReturnFalse()
+    public function testGivenTwoDifferentCollectionsWhenAskToCheckEqualityThenReturnFalse(): void
     {
         $collection = CollectionValueObject::from([1, 2, 3, 4]);
         $other = CollectionValueObject::from([5, 6, 7, 8]);
@@ -83,7 +83,7 @@ final class CollectionValueObjectTest extends TestCase
         $this->assertFalse($collection->equalTo($other));
     }
 
-    public function testGivenCollectionWhenAskToAddItemThenReturnNewCollection()
+    public function testGivenCollectionWhenAskToAddItemThenReturnNewCollection(): void
     {
         $collection = CollectionValueObjectTested::from([1, 2, 3, 4]);
         $newCollection = $collection->add(5);
@@ -92,7 +92,7 @@ final class CollectionValueObjectTest extends TestCase
         $this->assertEquals([1, 2, 3, 4, 5], $newCollection->jsonSerialize());
     }
 
-    public function testGivenCollectionWhenAskToRemoveItemThenReturnNewCollection()
+    public function testGivenCollectionWhenAskToRemoveItemThenReturnNewCollection(): void
     {
         $collection = CollectionValueObjectTested::from([1, 2, 3, 4]);
         $newCollection = $collection->remove(3);
@@ -101,38 +101,35 @@ final class CollectionValueObjectTest extends TestCase
         $this->assertEquals([1, 2, 4], $newCollection->jsonSerialize());
     }
 
-    public function testGivenAnEmptyCollectionWhenAskToObtainFirstItemThenReturnNull()
+    public function testGivenAnEmptyCollectionWhenAskToObtainFirstItemThenReturnNull(): void
     {
-        $collection = CollectionValueObjectTested::from([]);
+        $collection = CollectionValueObject::from([]);
         $item = $collection->first();
 
         $this->assertEquals(null, $item);
     }
 
-    public function testGivenAHashMapCollectionWhenAskToObtainFirstItemThenReturnFirstItem()
+    public function testGivenAHashMapCollectionWhenAskToObtainFirstItemThenReturnFirstItem(): void
     {
         $firstItem = 1;
-        $collection = CollectionValueObjectTested::from(['a' => $firstItem, 'b' => 2, 'c' => 3, 'd' => 4]);
+        $collection = CollectionValueObject::from(['a' => $firstItem, 'b' => 2, 'c' => 3, 'd' => 4]);
         $item = $collection->first();
 
         $this->assertEquals(['a' => $firstItem, 'b' => 2, 'c' => 3, 'd' => 4], $collection->jsonSerialize());
         $this->assertEquals($firstItem, $item);
     }
 
-    public function testGivenACollectionWhenAskToObtainFirstItemThenReturnFirstItem()
+    public function testGivenACollectionWhenAskToObtainFirstItemThenReturnFirstItem(): void
     {
         $firstItem = 1;
-        $collection = CollectionValueObjectTested::from([$firstItem, 2, 3, 4]);
+        $collection = CollectionValueObject::from([$firstItem, 2, 3, 4]);
         $item = $collection->first();
 
         $this->assertEquals([$firstItem, 2, 3, 4], $collection->jsonSerialize());
         $this->assertEquals($firstItem, $item);
-        $this->assertNotEquals(2, $item);
-        $this->assertNotEquals(3, $item);
-        $this->assertNotEquals(4, $item);
     }
 
-    public function testGivenTwoDifferentCollectionsWhenAskToHaveSameValuesThenReturnFalse()
+    public function testGivenTwoDifferentCollectionsWhenAskToHaveSameValuesThenReturnFalse(): void
     {
         $collection = CollectionValueObject::from([1, 2, 3, 4]);
         $other = CollectionValueObject::from([5, 6, 7, 8]);
@@ -140,7 +137,7 @@ final class CollectionValueObjectTest extends TestCase
         $this->assertFalse($collection->equalTo($other));
     }
 
-    public function testGivenTwoDifferentCollectionsWhenOneContainsTheOtherAndAskToHaveSameValuesThenReturnFalse()
+    public function testGivenTwoDifferentCollectionsWhenOneContainsTheOtherAndAskToHaveSameValuesThenReturnFalse(): void
     {
         $collection = CollectionValueObject::from([1, 2, 3, 4]);
         $other = CollectionValueObject::from([1, 2, 3, 4, 5]);
@@ -148,7 +145,7 @@ final class CollectionValueObjectTest extends TestCase
         $this->assertFalse($collection->equalTo($other));
     }
 
-    public function testGivenTwoUnorderedEqualsCollectionsWhenAskToHaveSameValuesThenReturnTrue()
+    public function testGivenTwoUnorderedEqualsCollectionsWhenAskToHaveSameValuesThenReturnTrue(): void
     {
         $collection = CollectionValueObject::from([1, 1, 3, 4]);
         $other = CollectionValueObject::from([4, 1, 3, 1]);
@@ -156,7 +153,7 @@ final class CollectionValueObjectTest extends TestCase
         $this->assertTrue($collection->equalTo($other));
     }
 
-    public function testGivenTwoOrderedEqualsCollectionsWhenAskToHaveSameValuesThenReturnTrue()
+    public function testGivenTwoOrderedEqualsCollectionsWhenAskToHaveSameValuesThenReturnTrue(): void
     {
         $collection = CollectionValueObject::from([1, 2, 3, 4]);
         $other = CollectionValueObject::from([1, 2, 3, 4]);
@@ -164,7 +161,7 @@ final class CollectionValueObjectTest extends TestCase
         $this->assertTrue($collection->equalTo($other));
     }
 
-    public function testGivenTwoOrderedEqualsHashedCollectionsWhenAskToHaveSameValuesThenReturnTrue()
+    public function testGivenTwoOrderedEqualsHashedCollectionsWhenAskToHaveSameValuesThenReturnTrue(): void
     {
         $collection = CollectionValueObject::from(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4]);
         $other = CollectionValueObject::from(['b' => 1, 'a' => 2, 'd' => 3, 'c' => 4]);
@@ -172,7 +169,7 @@ final class CollectionValueObjectTest extends TestCase
         $this->assertTrue($collection->equalTo($other));
     }
 
-    public function testGivenTwoUnorderedEqualsHashedCollectionsWhenAskToHaveSameValuesThenReturnTrue()
+    public function testGivenTwoUnorderedEqualsHashedCollectionsWhenAskToHaveSameValuesThenReturnTrue(): void
     {
         $collection = CollectionValueObject::from(['a' => 2, 'b' => 1, 'c' => 3, 'd' => 4]);
         $other = CollectionValueObject::from(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4]);
@@ -180,7 +177,7 @@ final class CollectionValueObjectTest extends TestCase
         $this->assertTrue($collection->equalTo($other));
     }
 
-    public function testGivenTwoUnorderedDifferentHashedCollectionsWhenAskToHaveSameValuesThenReturnFalse()
+    public function testGivenTwoUnorderedDifferentHashedCollectionsWhenAskToHaveSameValuesThenReturnFalse(): void
     {
         $collection = CollectionValueObject::from(['a' => 1, 'b' => 3, 'c' => 3, 'd' => 4]);
         $other = CollectionValueObject::from(['b' => 1, 'a' => 2, 'd' => 3, 'c' => 4]);
@@ -188,7 +185,7 @@ final class CollectionValueObjectTest extends TestCase
         $this->assertFalse($collection->equalTo($other));
     }
 
-    public function testGivenTwoUnorderedEqualsObjectCollectionsWhenAskToHaveSameValuesThenReturnFalse()
+    public function testGivenTwoUnorderedEqualsObjectCollectionsWhenAskToHaveSameValuesThenReturnFalse(): void
     {
         $uuid1 = new \stdClass();
         $uuid2 = new \stdClass();
@@ -206,7 +203,7 @@ final class CollectionValueObjectTest extends TestCase
         $this->assertTrue($collection->equalTo($other));
     }
 
-    public function testGivenTwoUnorderedDifferentObjectCollectionsWhenAskToHaveSameValuesThenReturnFalse()
+    public function testGivenTwoUnorderedDifferentObjectCollectionsWhenAskToHaveSameValuesThenReturnFalse(): void
     {
         $uuid1 = new \stdClass();
         $uuid2 = new \stdClass();
@@ -223,5 +220,68 @@ final class CollectionValueObjectTest extends TestCase
         $other = CollectionValueObject::from([$uuid1, $uuid3, $uuid4, $uuid2]);
 
         $this->assertFalse($collection->equalTo($other));
+    }
+
+    public function testGivenTwoIdenticalNestedCollectionsWhenAskToCheckEqualityThenReturnTrue(): void
+    {
+        $object1 = new \stdClass();
+        $object2 = new \stdClass();
+        $object3 = new \stdClass();
+
+        $nestedCollection1 = CollectionValueObject::from([1, 2, 3]);
+        $nestedCollection2 = CollectionValueObject::from([1, 2, 3]);
+        $nestedCollection3 = CollectionValueObject::from([0]);
+
+        $object1->collection = $nestedCollection1;
+        $object2->collection = $nestedCollection1;
+        $object3->collection = $nestedCollection1;
+
+
+        $collection1 = CollectionValueObject::from([$nestedCollection1, $nestedCollection2, $nestedCollection3]);
+        $collection2 = CollectionValueObject::from([$nestedCollection1, $nestedCollection2, $nestedCollection3]);
+
+        $this->assertTrue($collection1->equalTo($collection2));
+    }
+
+    public function testGivenTwoNestedCollectionsWithDifferentSizesWhenAskToCheckEqualityThenReturnFalse(): void
+    {
+        $object1 = new \stdClass();
+        $object2 = new \stdClass();
+        $object3 = new \stdClass();
+
+        $nestedCollection1 = CollectionValueObject::from([1, 2, 3]);
+        $nestedCollection2 = CollectionValueObject::from([2, 1, 3]);
+        $nestedCollection3 = CollectionValueObject::from([0]);
+
+        $object1->collection = $nestedCollection1;
+        $object2->collection = $nestedCollection1;
+        $object3->collection = $nestedCollection1;
+
+
+        $collection1 = CollectionValueObject::from([$nestedCollection1, $nestedCollection1, $nestedCollection3]);
+        $collection2 = CollectionValueObject::from([$nestedCollection3, $nestedCollection2, $nestedCollection3]);
+
+        $this->assertFalse($collection1->equalTo($collection2));
+    }
+
+    public function testGivenTwoNestedCollectionsWithSameElementsInDifferentOrderWhenAskToCheckEqualityThenReturnTrue(): void
+    {
+        $object1 = new \stdClass();
+        $object2 = new \stdClass();
+        $object3 = new \stdClass();
+
+        $nestedCollection1 = CollectionValueObject::from([1, 2, 3]);
+        $nestedCollection2 = CollectionValueObject::from([2, 1, 3]);
+        $nestedCollection3 = CollectionValueObject::from([0]);
+
+        $object1->collection = $nestedCollection1;
+        $object2->collection = $nestedCollection1;
+        $object3->collection = $nestedCollection1;
+
+
+        $collection1 = CollectionValueObject::from([$nestedCollection1, $nestedCollection1, $nestedCollection3]);
+        $collection2 = CollectionValueObject::from([$nestedCollection2, $nestedCollection2, $nestedCollection3]);
+
+        $this->assertTrue($collection1->equalTo($collection2));
     }
 }

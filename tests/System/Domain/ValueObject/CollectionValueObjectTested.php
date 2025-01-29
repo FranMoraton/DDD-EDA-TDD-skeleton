@@ -11,12 +11,12 @@ use App\System\Domain\ValueObject\CollectionValueObject;
  */
 final class CollectionValueObjectTested extends CollectionValueObject
 {
-    public function add($item)
+    public function add($item): self
     {
         return $this->addItem($item);
     }
 
-    public function remove($item)
+    public function remove($item): self
     {
         return $this->removeItem($item);
     }
