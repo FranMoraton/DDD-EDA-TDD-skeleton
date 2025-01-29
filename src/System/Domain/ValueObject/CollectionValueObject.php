@@ -169,31 +169,12 @@ class CollectionValueObject implements \Iterator, \Countable, \JsonSerializable,
             return false;
         }
 
-        $normalizedA = $this->normalizeObjects($this->items);
-        $normalizedB = $this->normalizeObjects($other->items);
+        $arr1 = $this->items;
+        $arr2 = $other->items;
 
-        return $normalizedA === $normalizedB;
-    }
+        \sort($arr1);
+        \sort($arr2);
 
-    private function normalizeObjects(array $objects): array
-    {
-        return array_map(fn($obj) => $this->jsonEncodeSorted($obj), $objects);
-    }
-
-    private function jsonEncodeSorted(mixed $data): string
-    {
-        if (\is_object($data)) {
-            $data = (array) $data;
-        }
-
-        if (\is_array($data)) {
-            \array_walk($data, function (&$value) {
-                $value = $this->jsonEncodeSorted($value);
-            });
-
-            \ksort($data);
-        }
-
-        return JsonSerializer::encode($data);
+        return $arr1 == $arr2;
     }
 }
