@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Tests\System\Infrastructure\Behat;
 
-use App\System\Infrastructure\Service\JsonSerializer;
+use App\System\Domain\Service\JsonSerializer;
 use App\Tests\System\Infrastructure\Guzzle\ClientMock;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;

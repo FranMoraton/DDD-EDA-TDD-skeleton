@@ -5,8 +5,7 @@ namespace App\Tests\Marketplace\Application\Command\Events\Register;
 use App\Marketplace\Application\Command\Events\Register\RegisterEventCommand;
 use App\Marketplace\Domain\Model\Event\ValueObject\SellMode;
 use App\Marketplace\Domain\Model\Event\ValueObject\Zone;
-use App\System\Domain\ValueObject\DateTimeValueObject;
-use App\System\Infrastructure\Service\JsonSerializer;
+use App\System\Domain\Service\JsonSerializer;
 use App\Tests\System\Infrastructure\Faker\FakerFactory;
 use App\Tests\System\Infrastructure\PhpUnit\EnumTestHelper;
 

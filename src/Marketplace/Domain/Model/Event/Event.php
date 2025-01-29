@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Marketplace\Domain\Model\Event;
 
-use App\Marketplace\Domain\Model\Event\ValueObject\Zone;
-use App\System\Domain\Model\Aggregate;
 use App\Marketplace\Domain\Model\Event\Event\EventWasCreated;
 use App\Marketplace\Domain\Model\Event\Event\EventWasUpdated;
 use App\Marketplace\Domain\Model\Event\ValueObject\Id;
-use App\Marketplace\Domain\Model\Event\ValueObject\Title;
-use App\Marketplace\Domain\Model\Event\ValueObject\SellMode;
 use App\Marketplace\Domain\Model\Event\ValueObject\OrganizerCompanyId;
+use App\Marketplace\Domain\Model\Event\ValueObject\SellMode;
+use App\Marketplace\Domain\Model\Event\ValueObject\Title;
+use App\Marketplace\Domain\Model\Event\ValueObject\Zone;
+use App\System\Domain\Model\Aggregate;
+use App\System\Domain\Service\JsonSerializer;
 use App\System\Domain\ValueObject\DateTimeValueObject;
-use App\System\Infrastructure\Service\JsonSerializer;
 
 class Event extends Aggregate
 {

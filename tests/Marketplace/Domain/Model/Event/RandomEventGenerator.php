@@ -7,7 +7,7 @@ namespace App\Tests\Marketplace\Domain\Model\Event;
 use App\Marketplace\Domain\Model\Event\Event;
 use App\Marketplace\Domain\Model\Event\ValueObject\SellMode;
 use App\Marketplace\Domain\Model\Event\ValueObject\Zone;
-use App\System\Infrastructure\Service\JsonSerializer;
+use App\System\Domain\Service\JsonSerializer;
 use App\Tests\System\Infrastructure\Faker\FakerFactory;
 
 final class RandomEventGenerator

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\System\Infrastructure\Service;
+namespace App\System\Domain\Service;
 
 final class JsonSerializer
 {

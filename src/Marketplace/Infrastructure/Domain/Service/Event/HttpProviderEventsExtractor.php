@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Marketplace\Infrastructure\Domain\Service\Event;
 
 use App\Marketplace\Domain\Service\Event\ProviderEventsExtractor\ProviderEventsExtractor;
-use App\System\Infrastructure\Service\JsonSerializer;
+use App\System\Domain\Service\JsonSerializer;
 use GuzzleHttp\Client;
 
 final readonly class HttpProviderEventsExtractor implements ProviderEventsExtractor

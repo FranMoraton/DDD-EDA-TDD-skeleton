@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\System\Infrastructure\Behat;
 
-use App\System\Infrastructure\Service\JsonSerializer;
+use App\System\Domain\Service\JsonSerializer;
 use App\Tests\System\Infrastructure\Faker\FakerFactory;
-use App\Users\Domain\Model\User\ValueObject\Role;
 use App\Users\Infrastructure\Security\SecurityUser;
 use Assert\Assert;
 use Behat\Behat\Context\Context;

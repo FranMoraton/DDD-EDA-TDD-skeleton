@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Tests\System\Infrastructure\Guzzle;
 
-use App\System\Infrastructure\Service\JsonSerializer;
+use App\System\Domain\Service\JsonSerializer;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Promise\PromiseInterface;

@@ -6,7 +6,7 @@ namespace App\Tests\Marketplace\Infrastructure\Domain\Model\Event;
 
 use App\Marketplace\Domain\Model\Event\EventRepository;
 use App\Marketplace\Infrastructure\Domain\Model\Event\DbalArrayEventMapper;
-use App\System\Infrastructure\Service\JsonSerializer;
+use App\System\Domain\Service\JsonSerializer;
 use App\Tests\System\Infrastructure\Behat\BehatContext;
 use Behat\Gherkin\Node\PyStringNode;
 
