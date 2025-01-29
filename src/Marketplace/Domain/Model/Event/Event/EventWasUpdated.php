@@ -6,6 +6,7 @@ use App\Marketplace\Domain\Model\Event\ValueObject\Id;
 use App\Marketplace\Domain\Model\Event\ValueObject\OrganizerCompanyId;
 use App\Marketplace\Domain\Model\Event\ValueObject\SellMode;
 use App\Marketplace\Domain\Model\Event\ValueObject\Title;
+use App\Marketplace\Domain\Model\Event\ValueObject\Zones;
 use App\System\Domain\Event\DomainEvent;
 use App\System\Domain\ValueObject\DateTimeValueObject;
 use App\System\Domain\ValueObject\Uuid;
@@ -40,7 +41,7 @@ class EventWasUpdated extends DomainEvent
         DateTimeValueObject $sellFrom,
         DateTimeValueObject $sellTo,
         bool $soldOut,
-        array $zones,
+        Zones $zones,
         DateTimeValueObject $requestTime,
         ?OrganizerCompanyId $organizerCompanyId,
         float $minPrice,
@@ -60,7 +61,7 @@ class EventWasUpdated extends DomainEvent
                 'sell_from' => $sellFrom->value(),
                 'sell_to' => $sellTo->value(),
                 'sold_out' => $soldOut,
-                'zones' => $zones,
+                'zones' => $zones->toArray(),
                 'request_time' => $requestTime->value(),
                 'organizer_company_id' => $organizerCompanyId,
                 'min_price' => $minPrice,

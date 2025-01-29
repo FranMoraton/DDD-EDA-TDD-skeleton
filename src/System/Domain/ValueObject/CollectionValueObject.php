@@ -172,6 +172,11 @@ class CollectionValueObject implements \Iterator, \Countable, \JsonSerializable,
         return $this->compareItems($this->items, $other->items);
     }
 
+    public function toArray(): array
+    {
+        return JsonSerializer::decodeArray(JsonSerializer::encode($this->items));
+    }
+
     /**
      * @param array<TKey, TValue> $arr1
      * @param array<TKey, TValue> $arr2

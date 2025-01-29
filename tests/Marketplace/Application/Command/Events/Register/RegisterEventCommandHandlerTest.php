@@ -106,7 +106,7 @@ class RegisterEventCommandHandlerTest extends TestCase
         self::assertEquals($command->sellFrom(), $event->sellFrom());
         self::assertEquals($command->sellTo(), $event->sellTo());
         self::assertEquals($command->soldOut(), $event->soldOut());
-        self::assertEquals(JsonSerializer::encode($command->zones()), JsonSerializer::encode($event->zones()));
+        self::assertEquals($command->zones(), $event->zones()->toArray());
         self::assertEquals($command->requestTime(), $event->requestTime());
         self::assertEquals($command->organizerCompanyId(), $event->organizerCompanyId()?->value());
 
@@ -122,7 +122,7 @@ class RegisterEventCommandHandlerTest extends TestCase
         self::assertEquals($event->sellFrom()->value(), $firstEvent->sellFrom());
         self::assertEquals($event->sellTo()->value(), $firstEvent->sellTo());
         self::assertEquals($event->soldOut(), $firstEvent->soldOut());
-        self::assertEquals($event->zones(), $firstEvent->zones());
+        self::assertEquals($event->zones()->toArray(), $firstEvent->zones());
         self::assertEquals($event->requestTime()->value(), $firstEvent->requestTime());
         self::assertEquals($event->organizerCompanyId(), $firstEvent->organizerCompanyId());
     }
@@ -255,7 +255,7 @@ class RegisterEventCommandHandlerTest extends TestCase
         self::assertEquals($event->sellFrom()->value(), $firstEvent->sellFrom());
         self::assertEquals($event->sellTo()->value(), $firstEvent->sellTo());
         self::assertEquals($event->soldOut(), $firstEvent->soldOut());
-        self::assertEquals($event->zones(), $firstEvent->zones());
+        self::assertEquals($event->zones()->toArray(), $firstEvent->zones());
         self::assertEquals($event->requestTime()->value(), $firstEvent->requestTime());
         self::assertEquals($event->organizerCompanyId(), $firstEvent->organizerCompanyId());
     }

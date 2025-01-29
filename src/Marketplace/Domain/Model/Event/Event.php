@@ -10,7 +10,7 @@ use App\Marketplace\Domain\Model\Event\ValueObject\Id;
 use App\Marketplace\Domain\Model\Event\ValueObject\OrganizerCompanyId;
 use App\Marketplace\Domain\Model\Event\ValueObject\SellMode;
 use App\Marketplace\Domain\Model\Event\ValueObject\Title;
-use App\Marketplace\Domain\Model\Event\ValueObject\Zone;
+use App\Marketplace\Domain\Model\Event\ValueObject\Zones;
 use App\System\Domain\Model\Aggregate;
 use App\System\Domain\Service\JsonSerializer;
 use App\System\Domain\ValueObject\DateTimeValueObject;
@@ -30,10 +30,7 @@ class Event extends Aggregate
         private readonly DateTimeValueObject $sellFrom,
         private readonly DateTimeValueObject $sellTo,
         private readonly bool $soldOut,
-        /**
-         * @var array<Zone>
-         */
-        private readonly array $zones,
+        private readonly Zones $zones,
         private readonly DateTimeValueObject $requestTime,
         private readonly ?OrganizerCompanyId $organizerCompanyId,
         private readonly float $minPrice,
@@ -59,11 +56,6 @@ class Event extends Aggregate
         float $minPrice,
         float $maxPrice,
     ): self {
-        $transformedZones = [];
-        foreach ($zones as $zone) {
-            $transformedZones[] = Zone::fromArray($zone);
-        }
-
         return new self(
             Id::from($id),
             $baseEventId,
@@ -75,7 +67,7 @@ class Event extends Aggregate
             DateTimeValueObject::from($sellFrom),
             DateTimeValueObject::from($sellTo),
             $soldOut,
-            $transformedZones,
+            Zones::fromArray($zones),
             DateTimeValueObject::from($requestTime),
             null !== $organizerCompanyId ? OrganizerCompanyId::from($organizerCompanyId) : null,
             $minPrice,
@@ -98,7 +90,7 @@ class Event extends Aggregate
         DateTimeValueObject $requestTime,
         ?string $organizerCompanyId
     ): self {
-        $transformedZones = self::transformZones($zones);
+        $transformedZones = Zones::fromArray($zones);
         [$minPrice, $maxPrice] = self::calculateMinMaxPrices($transformedZones);
 
         $event = new self(
@@ -164,7 +156,7 @@ class Event extends Aggregate
         $sellModeVo = SellMode::from($sellMode);
         $titleVo = Title::from($title);
 
-        $transformedZones = self::transformZones($zones);
+        $transformedZones = Zones::fromArray($zones);
         [$minPrice, $maxPrice] = self::calculateMinMaxPrices($transformedZones);
 
         $organizerCompanyIdVo = $organizerCompanyId ? OrganizerCompanyId::from($organizerCompanyId) : null;
@@ -225,11 +217,7 @@ class Event extends Aggregate
         return $event;
     }
 
-    /**
-     * @param array<Zone> $zones
-     * @return array<float>
-     */
-    private static function calculateMinMaxPrices(array $zones): array
+    private static function calculateMinMaxPrices(Zones $zones): array
     {
         $minPrice = null;
         $maxPrice = null;
@@ -247,20 +235,6 @@ class Event extends Aggregate
         }
 
         return [$minPrice ?? 0.0, $maxPrice ?? 0.0];
-    }
-
-    /**
-     * @return array<Zone>
-     */
-    private static function transformZones(array $zones): array
-    {
-        $transformedZones = [];
-
-        foreach ($zones as $zone) {
-            $transformedZones[] = Zone::fromArray($zone);
-        }
-
-        return $transformedZones;
     }
 
     public function jsonSerialize(): array
@@ -339,7 +313,7 @@ class Event extends Aggregate
         return $this->soldOut;
     }
 
-    public function zones(): array
+    public function zones(): Zones
     {
         return $this->zones;
     }
