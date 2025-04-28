@@ -20,12 +20,31 @@ services:
             context: .
             dockerfile: docker/php/Dockerfile
             target: development
+        environment:
+            - DD_AGENT_HOST=datadog
+            - DD_TRACE_AGENT_PORT=8126
+            - DD_ENV=prod
+            - DD_SERVICE=php
+            - DD_VERSION=1.0.0
         volumes:
             - .:/var/www
             - ~/.composer:/.composer
         networks:
             - bridge
-
+        depends_on:
+            - datadog
+    datadog:
+        image: gcr.io/datadoghq/agent:latest
+        environment:
+        - DD_API_KEY=your_datadog_api_key
+        - DD_ENV=prod
+        - DD_SERVICE=php
+        - DD_VERSION=1.0.0
+        ports:
+        - "8126:8126"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+    
     db:
         image: postgres:15.7-alpine
         ports:

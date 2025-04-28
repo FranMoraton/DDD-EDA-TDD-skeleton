@@ -21,6 +21,10 @@ COPY docker/php/config/php_prod.ini /usr/local/etc/php/
 COPY docker/php/config/opcache_prod.ini /usr/local/etc/php/conf.d/opcache.ini
 COPY docker/php/config/www.conf /usr/local/etc/php-fpm.d/www.conf
 
+RUN curl -LO https://github.com/DataDog/dd-trace-php/relases/latest/download/datadog-setup.php \
+    && php datadog-setup.php \
+    && rm datadog-setup.php
+    
 WORKDIR $PROJECT_DIR
 RUN chown -R www-data:www-data $PROJECT_DIR
 
