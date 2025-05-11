@@ -1,5 +1,5 @@
 <?php
-
+ 
 declare(strict_types=1);
 
 namespace App\System\Infrastructure\Symfony\Listener;
@@ -11,10 +11,15 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\System\Infrastructure\Dbal\TransactionLockFailedException;
+use Psr\Log\LoggerInterface;
+use Monolog\Attribute\WithMonologChannel;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\InsufficientAuthenticationException;
 
+#[WithMonologChannel('uncaught_exception')]
 final readonly class ExceptionListener
 {
-    public function __construct(private readonly string $env)
+    public function __construct(private readonly string $env, private readonly LoggerInterface $logger)
     {
     }
 
@@ -32,6 +37,11 @@ final readonly class ExceptionListener
             $exception instanceof AccessDeniedHttpException => $this->buildErrorResponse(
                 Response::HTTP_FORBIDDEN,
                 'AccessDenied',
+                $exception,
+            ),
+            $exception instanceof AuthenticationException => $this->buildErrorResponse(
+                Response::HTTP_UNAUTHORIZED,
+                'Unauthorized',
                 $exception,
             ),
             $exception instanceof NotFoundHttpException => $this->buildErrorResponse(
@@ -69,27 +79,26 @@ final readonly class ExceptionListener
 
     private function buildErrorResponse(int $statusCode, string $message, \Throwable $throwable): JsonResponse
     {
-        $content = match ($this->env) {
-            'prod', 'test' => [
-                'error' => [
-                    'code' => $statusCode,
-                    'message' => $message
-                ],
-                'data' => null
+        $content =[
+            'error' => [
+                'code' => $statusCode,
+                'message' => $message
             ],
-            default => [
-                'error' => [
-                    'code' => $statusCode,
-                    'message' => $message
-                ],
-                'data' => [
-                    'real' => $throwable->getMessage(),
-                    'file' => $throwable->getFile(),
-                    'line' => $throwable->getLine(),
-                    'trace' => $throwable->getTrace(),
-                ]
-            ]
-        };
+            'data' => [
+                'real' => $throwable->getMessage(),
+                'file' => $throwable->getFile(),
+                'line' => $throwable->getLine(),
+                'trace' => $throwable->getTraceAsString(),
+            ],
+        ];
+        $this->logger->error(
+            'uncaught_exception (' . $message . ')',
+            $content,
+        );
+
+        if (true === in_array($this->env, ['prod', 'test'])) {
+            $content['data'] = null;
+        }
 
         return new JsonResponse($content, $statusCode);
     }

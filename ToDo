@@ -1,5 +1,4 @@
 ---> behat fix checking user against bbdd when testing
 
 ---> distributed tracing correlation/causation
----> add proper logging
----> Datadog free tier
+---> Datadog free tier install agent in local k8s
