@@ -7,7 +7,6 @@ services:
         ports:
             - "8080:80"
         environment:
-            - FRANKENPHP_CONFIG=${FRANKENPHP_CONFIG}
             - DD_AGENT_HOST=datadog
             - DD_TRACE_AGENT_PORT=8126
             - DD_ENV=prod
