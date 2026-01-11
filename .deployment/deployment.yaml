@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-    name: nginx-service
+    name: app-service
     namespace: marketplace
 spec:
     selector:
-        app: php-nginx
+        app: app
     ports:
         - protocol: TCP
           port: 80
@@ -16,28 +16,24 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: php-nginx-deployment
+    name: app-deployment
     namespace: marketplace
 spec:
     replicas: 1
     selector:
         matchLabels:
-            app: php-nginx
+            app: app
     template:
         metadata:
             labels:
-                app: php-nginx
+                app: app
         spec:
             containers:
                 - name: php
                   image: docker.io/your-repo/your-php-image:latest
                   imagePullPolicy: IfNotPresent
+                  ports:
+                      - containerPort: 80
                   envFrom:
-                      -   configMapRef:
-                              name: app-config
-                - name: nginx
-                  image: docker.io/your-repo/your-nginx-image:latest
-                  imagePullPolicy: IfNotPresent
-                  env:
-                      - name: PHP_HOST
-                        value: 127.0.0.1
+                      - configMapRef:
+                            name: app-config

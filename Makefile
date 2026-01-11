@@ -89,7 +89,7 @@ fix-cs: ## Automatically fix code style issues using PSR-12
 		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} phpcbf --standard=PSR12 src tests
 
 tests: ## Run unit tests with PHPUnit
-		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} phpunit --configuration phpunit.xml.dist --coverage-text --order=random --colors=never
+		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} phpunit --configuration phpunit.dist.xml --coverage-text --order=random --colors=never
 
 behat: ## Run acceptance tests with behat
 		docker compose run --rm -u ${UID}:${GID} ${DOCKER_PHP_SERVICE} behat --strict --stop-on-failure --format progress
@@ -112,12 +112,10 @@ run-minikube: ## Run using minikube
 	minikube addons enable ingress
 
 	docker build -t your-repo/your-php-image:latest -f docker/php/Dockerfile .
-	docker build -t your-repo/your-nginx-image:latest -f docker/nginx/Dockerfile .
 	docker build -t your-repo/your-asyncapi-image:latest -f docker/asyncapi/Dockerfile .
 	docker build -t your-repo/your-rabbimq-image:latest -f docker/rabbitmq/Dockerfile .
 
 	minikube image load your-repo/your-php-image:latest
-	minikube image load your-repo/your-nginx-image:latest
 	minikube image load your-repo/your-asyncapi-image:latest
 	minikube image load your-repo/your-rabbimq-image:latest
 
