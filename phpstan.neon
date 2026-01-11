@@ -12,9 +12,9 @@ parameters:
     - %rootDir%/../../../tests/*
     - %rootDir%/../../../public/*
     - %rootDir%/../../../config/*
-    - %rootDir%/../../../src/System/Infrastructure/DBALRepository.php
-    - %rootDir%/../../../src/Users/Infrastructure/Security/SecurityUserProvider.php
-    - %rootDir%/../../../src/System/Infrastructure/Datadog/DatadogService.php
-    - %rootDir%/../../../src/System/Infrastructure/Symfony/DependencyInjection/Compiler/*
+    - src/System/Infrastructure/Dbal/DbalRepository.php
+    - src/Users/Infrastructure/Security/SecurityUserProvider.php
+    - src/System/Infrastructure/Symfony/DependencyInjection/Compiler/*
+    - src/System/Infrastructure/Datadog/*
   symfony:
-    container_xml_path: null
+    containerXmlPath: null

@@ -12,7 +12,6 @@ final class JsonSerializer
             value: $value,
             flags: \JSON_THROW_ON_ERROR,
         );
-        \assert(\is_string($result), 'Invalid Value');
 
         return $result;
     }

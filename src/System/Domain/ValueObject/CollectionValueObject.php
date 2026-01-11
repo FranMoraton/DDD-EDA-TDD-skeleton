@@ -26,7 +26,7 @@ class CollectionValueObject implements \Iterator, \Countable, \JsonSerializable,
 
     /**
      * @param array<TKey, TValue> $items
-     * @return static(CollectionValueObject<TKey, TValue>)
+     * @return static
      */
     public static function from(array $items): static
     {
@@ -75,7 +75,7 @@ class CollectionValueObject implements \Iterator, \Countable, \JsonSerializable,
 
     /**
      * @param callable(TValue): bool $func
-     * @return static(CollectionValueObject<TKey, TValue>)
+     * @return static
      */
     public function filter(callable $func): static
     {
@@ -84,7 +84,7 @@ class CollectionValueObject implements \Iterator, \Countable, \JsonSerializable,
 
     /**
      * @param callable(TValue): mixed $func
-     * @return static(CollectionValueObject<TKey, TValue>)
+     * @return static
      */
     public function map(callable $func): static
     {
@@ -93,7 +93,7 @@ class CollectionValueObject implements \Iterator, \Countable, \JsonSerializable,
 
     /**
      * @param callable(TValue, TValue): int $func
-     * @return static(CollectionValueObject<TKey, TValue>)
+     * @return static
      */
     public function sort(callable $func): static
     {
@@ -121,12 +121,12 @@ class CollectionValueObject implements \Iterator, \Countable, \JsonSerializable,
      */
     public function first()
     {
-        return $this->items[array_key_first($this->items)] ?? null;
+        return array_first($this->items);
     }
 
     /**
      * @param TValue $item
-     * @return static(CollectionValueObject<TKey, TValue>)
+     * @return static
      */
     protected function addItem($item): static
     {
@@ -138,7 +138,7 @@ class CollectionValueObject implements \Iterator, \Countable, \JsonSerializable,
 
     /**
      * @param TValue $item
-     * @return static(CollectionValueObject<TKey, TValue>)
+     * @return static
      */
     protected function removeItem($item): static
     {

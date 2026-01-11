@@ -17,9 +17,12 @@ abstract class DbalRepository
         self::UPDATED_AT_FIELD,
     ];
 
+    private readonly PostgresCriteriaTranslatorToDbal $criteriaTranslator;
+
     public function __construct(
         private readonly Connection $connection,
     ) {
+        $this->criteriaTranslator = new PostgresCriteriaTranslatorToDbal();
     }
 
     protected function connection(): Connection
@@ -121,24 +124,7 @@ abstract class DbalRepository
     protected function findByCriteria(Criteria $criteria): array
     {
         $qb = $this->connection->createQueryBuilder();
-        $qb->select('*')->from(static::tableName(), 't');
-
-        foreach ($criteria->filters() as $field => $filter) {
-            $qb->andWhere("t.$field {$filter['operator']} :$field")
-                ->setParameter((string) $field, $filter['value']);
-        }
-
-        if (null !== $criteria->limit()) {
-            $qb->setMaxResults($criteria->limit());
-        }
-
-        if (null !== $criteria->offset()) {
-            $qb->setFirstResult($criteria->offset());
-        }
-
-        if ($order = $criteria->order()) {
-            $qb->orderBy('t.' . $order['field'], $order['direction']);
-        }
+        $this->criteriaTranslator->buildSelectQuery($qb, $criteria, static::tableName());
 
         return $this->mapCollection($qb->executeQuery()->fetchAllAssociative());
     }
@@ -146,13 +132,7 @@ abstract class DbalRepository
     public function countByCriteria(Criteria $criteria): int
     {
         $qb = $this->connection->createQueryBuilder();
-        $qb->select('COUNT(*) as total_count')
-            ->from(static::tableName(), 't');
-
-        foreach ($criteria->filters() as $field => $filter) {
-            $qb->andWhere("t.$field {$filter['operator']} :$field")
-                ->setParameter((string) $field, $filter['value']);
-        }
+        $this->criteriaTranslator->buildCountQuery($qb, $criteria, static::tableName());
 
         $result = $qb->executeQuery()->fetchAssociative();
 

@@ -28,4 +28,4 @@ default:
             kernel:
                 class: App\Kernel
                 environment: test
-                debug: false
+                debug: true

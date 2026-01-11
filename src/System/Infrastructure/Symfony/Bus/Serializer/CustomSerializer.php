@@ -110,7 +110,7 @@ final class CustomSerializer implements SerializerInterface
         $redeliveryStamp = $envelope->last(RedeliveryStamp::class);
 
         if (null !== $redeliveryStamp) {
-            $headers['X-Retry-Count'] = $redeliveryStamp->getRetryCount();
+            $headers['X-Retry-Count'] = (string) $redeliveryStamp->getRetryCount();
             $headers['X-Redelivered-At'] = $redeliveryStamp->getRedeliveredAt()->format(\DateTimeInterface::ATOM);
         }
 

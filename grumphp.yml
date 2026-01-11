@@ -21,7 +21,7 @@ grumphp:
             stop_on_failure: true
             format: pretty
         phpversion:
-            project: '8.4'
+            project: '8.5'
         securitychecker_composeraudit:
             format: plain
             run_always: true

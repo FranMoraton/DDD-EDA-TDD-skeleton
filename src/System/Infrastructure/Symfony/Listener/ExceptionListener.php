@@ -91,10 +91,13 @@ final readonly class ExceptionListener
                 'trace' => $throwable->getTraceAsString(),
             ],
         ];
-        $this->logger->error(
-            'uncaught_exception (' . $message . ')',
-            $content,
-        );
+        
+        if ($this->env !== 'test') {
+            $this->logger->error(
+                'uncaught_exception (' . $message . ')',
+                $content,
+            );            
+        }
 
         if (true === in_array($this->env, ['prod', 'test'])) {
             $content['data'] = null;

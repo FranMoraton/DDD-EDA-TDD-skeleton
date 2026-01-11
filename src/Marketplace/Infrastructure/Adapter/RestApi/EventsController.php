@@ -41,12 +41,7 @@ final class EventsController extends BusController
     public function search(Request $request): JsonResponse
     {
         $result = $this->publishQuery(
-            SearchQuery::create(
-                $request->query->get('starts_at'),
-                $request->query->get('ends_at'),
-                $request->query->get('items_per_page'),
-                $request->query->get('page'),
-            ),
+            SearchQuery::create($request->query->all())
         );
 
         return new JsonResponse($result, Response::HTTP_OK);

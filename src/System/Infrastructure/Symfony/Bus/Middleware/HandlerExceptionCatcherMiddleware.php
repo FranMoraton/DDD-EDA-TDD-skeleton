@@ -16,7 +16,8 @@ final readonly class HandlerExceptionCatcherMiddleware implements MiddlewareInte
         try {
             return $stack->next()->handle($envelope, $stack);
         } catch (HandlerFailedException $exception) {
-            throw $exception->getWrappedExceptions()[array_key_first($exception->getWrappedExceptions())];
+            \assert(count($exception->getWrappedExceptions()) > 0);
+            throw array_first($exception->getWrappedExceptions());
         }
     }
 }

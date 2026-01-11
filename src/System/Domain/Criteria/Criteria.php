@@ -15,9 +15,14 @@ abstract class Criteria
 
     abstract protected function allowedFields(): array;
 
+    private const array VALUELESS_OPERATORS = [
+        Operator::IS_NULL,
+        Operator::IS_NOT_NULL,
+    ];
+
     public function withFilter(
         string $field,
-        int|bool|string|float|\DateTimeImmutable $value,
+        int|bool|string|float|\DateTimeImmutable|array $value,
         Operator $operator
     ): self {
         $allowedFields = $this->allowedFields();
@@ -26,9 +31,19 @@ abstract class Criteria
             throw new \InvalidArgumentException("The field '$field' is not allowed.");
         }
 
-        $type = $allowedFields[$field];
+        // Skip type validation for valueless operators (IS_NULL, IS_NOT_NULL)
+        if (!in_array($operator, self::VALUELESS_OPERATORS, true)) {
+            $type = $allowedFields[$field];
 
-        $this->assertValueType($value, $type, $field);
+            if ($operator === Operator::IN) {
+                $this->assertInFilterValue($value, $type, $field);
+            } else {
+                if (is_array($value)) {
+                    throw new \InvalidArgumentException("Array values are only allowed with IN operator.");
+                }
+                $this->assertValueType($value, $type, $field);
+            }
+        }
 
         $this->filters[$field] = [
             'value' => $value,
@@ -52,12 +67,14 @@ abstract class Criteria
 
     public function withOrder(string $field, Direction $direction): self
     {
-        if (false === \array_key_exists($field, $this->allowedFields())) {
+        $allowedFields = $this->allowedFields();
+        $orderField = $this->normalizeFieldForOrder($field);
+
+        if (false === \array_key_exists($field, $allowedFields) && false === $this->isSimpleColumn($field)) {
             throw new \InvalidArgumentException("The field '$field' is not allowed.");
         }
 
-
-        $this->orderBy = $field;
+        $this->orderBy = $orderField;
         $this->direction = $direction;
 
         return $this;
@@ -103,5 +120,48 @@ abstract class Criteria
             $actualType = gettype($value);
             throw new \InvalidArgumentException("The field '$field' must be of type '$type', '$actualType' was given.");
         }
+    }
+
+    protected function assertInFilterValue(mixed $values, string $type, string $field): void
+    {
+        if (!is_array($values)) {
+            throw new \InvalidArgumentException("IN operator requires an array value.");
+        }
+
+        if (empty($values)) {
+            throw new \InvalidArgumentException("The values array for IN filter cannot be empty.");
+        }
+
+        foreach ($values as $value) {
+            $this->assertValueType($value, $type, $field);
+        }
+    }
+
+    public function calculatePaginationOffSet(int $page, int $itemsPerPage): int
+    {
+        \assert($page > 0);
+        \assert($itemsPerPage > 0);
+
+        return ($page - 1) * $itemsPerPage;
+    }
+
+    private function isSimpleColumn(string $field): bool
+    {
+        return !str_contains($field, '.') && !str_contains($field, '[]');
+    }
+
+    private function normalizeFieldForOrder(string $field): string
+    {
+        return str_replace('[]', '', $field);
+    }
+
+    public function getFieldType(string $field): ?string
+    {
+        return $this->allowedFields()[$field] ?? null;
+    }
+
+    public function isFieldAllowed(string $field): bool
+    {
+        return array_key_exists($field, $this->allowedFields());
     }
 }

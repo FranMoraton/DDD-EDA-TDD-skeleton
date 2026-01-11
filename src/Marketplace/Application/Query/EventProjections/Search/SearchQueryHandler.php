@@ -6,6 +6,7 @@ namespace App\Marketplace\Application\Query\EventProjections\Search;
 
 use App\Marketplace\Domain\Model\EventProjection\Criteria\BySearchCriteria;
 use App\Marketplace\Domain\Model\EventProjection\EventProjectionRepository;
+use App\System\Application\Query\SearchResponse;
 
 final readonly class SearchQueryHandler
 {
@@ -13,25 +14,23 @@ final readonly class SearchQueryHandler
     {
     }
 
-    public function __invoke(SearchQuery $query): array
+    public function __invoke(SearchQuery $query): SearchResponse
     {
-        $data = $this->eventProjectionRepository->search(
-            BySearchCriteria::execute(
-                $query->startsAt(),
-                $query->endsAt(),
-                $query->itemsPerPage(),
-                $query->page(),
-            ),
+        $paginatedCriteria = BySearchCriteria::execute(
+            $query->itemsPerPage(),
+            $query->page(),
+            $query->filters(),
         );
 
-        return $this->transformResponse($data);
-    }
+        $countCriteria = BySearchCriteria::execute(
+            null,
+            null,
+            $query->filters(),
+        );
 
-    private function transformResponse(array $data): array
-    {
-        return [
-            'data' => ['events' => $data],
-            'error' => null,
-        ];
+        $items = $this->eventProjectionRepository->search($paginatedCriteria);
+        $total = $this->eventProjectionRepository->count($countCriteria);
+
+        return SearchResponse::create($items, $total, $query->page(), $query->itemsPerPage());
     }
 }

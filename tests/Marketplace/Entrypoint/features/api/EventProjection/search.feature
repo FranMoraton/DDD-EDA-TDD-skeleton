@@ -39,31 +39,32 @@ Feature: search events
         And the JSON response should be:
         """
         {
-            "data": {
-                "events": [
+            "items":[
                     {
-                        "id": "e56bf1de-2838-4755-8dd1-08d754e9f232",
-                        "title": "Camela en concierto",
-                        "start_date": "2021-06-30",
-                        "start_time": "21:00:00",
-                        "end_date": "2021-06-30",
-                        "end_time": "22:00:00",
-                        "min_price": 0,
-                        "max_price": 30
+                        "id":"e56bf1de-2838-4755-8dd1-08d754e9f232",
+                        "title":"Camela en concierto",
+                        "start_date":"2021-06-30",
+                        "start_time":"21:00:00",
+                        "end_date":"2021-06-30",
+                        "end_time":"22:00:00",
+                        "min_price":0,
+                        "max_price":30
                     },
                     {
-                        "id": "eb0c5dc8-1c41-4f15-96d6-3fc5da053863",
-                        "title": "Los morancos",
-                        "start_date": "2021-06-30",
-                        "start_time": "21:00:00",
-                        "end_date": "2021-06-30",
-                        "end_time": "22:00:00",
-                        "min_price": 0,
-                        "max_price": 30
+                        "id":"eb0c5dc8-1c41-4f15-96d6-3fc5da053863",
+                        "title":"Los morancos",
+                        "start_date":"2021-06-30",
+                        "start_time":"21:00:00",
+                        "end_date":"2021-06-30",
+                        "end_time":"22:00:00",
+                        "min_price":0,
+                        "max_price":30
                     }
-                ]
-            },
-            "error": null
+                ],
+                "total":2,
+                "page":null,
+                "items_per_page":null,
+                "total_pages":0
         }
         """
 
@@ -101,26 +102,27 @@ Feature: search events
             }
         ]
         """
-        When I send a "GET" request to "/search?starts_at=2021-06-30T21:00:00Z&ends_at=2021-06-30T22:00:00Z&items_per_page=1"
+        When I send a "GET" request to "/search?starts_at=GREATER_THAN_OR_EQUALS::2021-06-30T21:00:00Z&ends_at=LESS_THAN_OR_EQUALS::2021-06-30T22:00:00Z&items_per_page=1&page=1"
         Then the response status should be 200
         And the JSON response should be:
         """
         {
-            "data": {
-                "events": [
-                    {
-                        "id": "e56bf1de-2838-4755-8dd1-08d754e9f232",
-                        "title": "Camela en concierto",
-                        "start_date": "2021-06-30",
-                        "start_time": "21:00:00",
-                        "end_date": "2021-06-30",
-                        "end_time": "22:00:00",
-                        "min_price": 0,
-                        "max_price": 30
-                    }
-                ]
-            },
-            "error": null
+            "items": [
+                {
+                    "id": "e56bf1de-2838-4755-8dd1-08d754e9f232",
+                    "title": "Camela en concierto",
+                    "start_date": "2021-06-30",
+                    "start_time": "21:00:00",
+                    "end_date": "2021-06-30",
+                    "end_time": "22:00:00",
+                    "min_price": 0,
+                    "max_price": 30
+                }
+            ],
+            "total": 2,
+            "page": 1,
+            "items_per_page": 1,
+            "total_pages": 2
         }
         """
 
@@ -158,36 +160,37 @@ Feature: search events
             }
         ]
         """
-        When I send a "GET" request to "/search?starts_at=2021-06-30T21:00:00Z&ends_at=2021-06-30T22:00:00Z&page=1"
+        When I send a "GET" request to "/search?starts_at=GREATER_THAN_OR_EQUALS::2021-06-30T21:00:00Z&ends_at=LESS_THAN_OR_EQUALS::2021-06-30T22:00:00Z"
         Then the response status should be 200
         And the JSON response should be:
         """
         {
-            "data": {
-                "events": [
-                    {
-                        "id": "e56bf1de-2838-4755-8dd1-08d754e9f232",
-                        "title": "Camela en concierto",
-                        "start_date": "2021-06-30",
-                        "start_time": "21:00:00",
-                        "end_date": "2021-06-30",
-                        "end_time": "22:00:00",
-                        "min_price": 0,
-                        "max_price": 30
-                    },
-                    {
-                        "id": "eb0c5dc8-1c41-4f15-96d6-3fc5da053863",
-                        "title": "Los morancos",
-                        "start_date": "2021-06-30",
-                        "start_time": "21:00:00",
-                        "end_date": "2021-06-30",
-                        "end_time": "22:00:00",
-                        "min_price": 0,
-                        "max_price": 30
-                    }
-                ]
-            },
-            "error": null
+            "items": [
+                {
+                    "id": "e56bf1de-2838-4755-8dd1-08d754e9f232",
+                    "title": "Camela en concierto",
+                    "start_date": "2021-06-30",
+                    "start_time": "21:00:00",
+                    "end_date": "2021-06-30",
+                    "end_time": "22:00:00",
+                    "min_price": 0,
+                    "max_price": 30
+                },
+                {
+                    "id": "eb0c5dc8-1c41-4f15-96d6-3fc5da053863",
+                    "title": "Los morancos",
+                    "start_date": "2021-06-30",
+                    "start_time": "21:00:00",
+                    "end_date": "2021-06-30",
+                    "end_time": "22:00:00",
+                    "min_price": 0,
+                    "max_price": 30
+                }
+            ],
+            "total": 2,
+            "page": null,
+            "items_per_page": null,
+            "total_pages": 0
         }
         """
 

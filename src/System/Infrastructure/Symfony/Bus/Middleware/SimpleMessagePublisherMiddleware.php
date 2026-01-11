@@ -21,7 +21,7 @@ final readonly class SimpleMessagePublisherMiddleware implements MiddlewareInter
         $resultStack = $stack->next()->handle($envelope, $stack);
         $commandsResult = $this->extractHandledStamp($resultStack);
 
-        if ((\is_countable($commandsResult) && 0 === \count($commandsResult))) {
+        if (0 === \count($commandsResult)) {
             return $resultStack;
         }
 

@@ -13,4 +13,7 @@ enum Operator: string
     case GREATER_THAN_OR_EQUALS = '>=';
     case LESS_THAN_OR_EQUALS = '<=';
     case LIKE = 'LIKE';
+    case IN = 'IN';
+    case IS_NULL = 'IS NULL';
+    case IS_NOT_NULL = 'IS NOT NULL';
 }

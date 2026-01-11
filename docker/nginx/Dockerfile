@@ -1,4 +1,4 @@
-FROM nginx:1.24-alpine AS base
+FROM nginx:1.28-alpine AS base
 
 RUN rm /etc/nginx/conf.d/default.conf
 COPY  docker/nginx/config/nginx.conf /etc/nginx/nginx.conf

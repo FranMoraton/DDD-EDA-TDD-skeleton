@@ -14,36 +14,13 @@ final class SearchQuery extends CacheQuery
     private const string NAME = 'company.marketplace.1.query.event_projection.search';
     private const int EXPIRATION_TIME = 30;
 
-    private DateTimeValueObject $startsAt;
-    private DateTimeValueObject $endsAt;
     private ?int $itemsPerPage;
     private ?int $page;
+    private array $filters;
 
-    public static function create(
-        mixed $startsAt,
-        mixed $endsAt,
-        mixed $itemsPerPage,
-        mixed $page,
-    ): self {
-        return self::fromPayload(
-            Uuid::v4(),
-            [
-                'starts_at' => $startsAt,
-                'ends_at' => $endsAt,
-                'items_per_page' => $itemsPerPage,
-                'page' => $page,
-            ],
-        );
-    }
-
-    public function startsAt(): DateTimeValueObject
+    public static function create(array $queryParams): self
     {
-        return $this->startsAt;
-    }
-
-    public function endsAt(): DateTimeValueObject
-    {
-        return $this->endsAt;
+        return self::fromPayload(Uuid::v4(), $queryParams);
     }
 
     public function itemsPerPage(): ?int
@@ -54,6 +31,16 @@ final class SearchQuery extends CacheQuery
     public function page(): ?int
     {
         return $this->page;
+    }
+
+    public function filters(): array
+    {
+        return $this->filters;
+    }
+
+    public function expirationTime(): int
+    {
+        return self::EXPIRATION_TIME;
     }
 
     public static function messageName(): string
@@ -67,27 +54,20 @@ final class SearchQuery extends CacheQuery
 
         Assert::lazy()->tryAll()
             ->that($payload, 'payload')->isArray()
-            ->keyExists('starts_at')
-            ->keyExists('ends_at')
-            ->keyExists('items_per_page')
-            ->keyExists('page')
             ->verifyNow();
+
+        $itemsPerPage = $payload['items_per_page'] ?? null;
+        $page = $payload['page'] ?? null;
 
         Assert::lazy()
-            ->that($payload['starts_at'], 'starts_at')->date('Y-m-d\TH:i:s\Z')
-            ->that($payload['ends_at'], 'ends_at')->date('Y-m-d\TH:i:s\Z')
-            ->that($payload['items_per_page'], 'items_per_page')->nullOr()->integerish()->greaterThan(0)
-            ->that($payload['page'], 'page')->nullOr()->integerish()->greaterThan(0)
+            ->that($itemsPerPage, 'items_per_page')->nullOr()->integerish()->greaterThan(0)
+            ->that($page, 'page')->nullOr()->integerish()->greaterThan(0)
             ->verifyNow();
 
-        $this->startsAt = DateTimeValueObject::from($payload['starts_at']);
-        $this->endsAt = DateTimeValueObject::from($payload['ends_at']);
-        $this->itemsPerPage = null !== $payload['items_per_page'] ? (int) $payload['items_per_page'] : null;
-        $this->page = null !== $payload['page'] ? (int) $payload['page'] : null;
-    }
+        $this->itemsPerPage = null !== $itemsPerPage ? (int) $itemsPerPage : null;
+        $this->page = null !== $page ? (int) $page : null;
 
-    public function expirationTime(): int
-    {
-        return self::EXPIRATION_TIME;
+        unset($payload['items_per_page'], $payload['page']);
+        $this->filters = $payload;
     }
 }
