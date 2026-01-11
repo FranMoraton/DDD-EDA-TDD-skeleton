@@ -56,7 +56,7 @@ jobs:
               run:  docker run --rm --network ${{ env.NETWORK_ID }}  php-app:latest composer audit
 
             - name: Run Unit Tests
-              run: docker run --rm --network ${{ env.NETWORK_ID }}  php-app:latest phpunit --configuration phpunit.xml.dist --coverage-text --order=random
+              run: docker run --rm --network ${{ env.NETWORK_ID }}  php-app:latest phpunit --configuration phpunit.dist.xml --coverage-text --order=random
 
             - name: Run Acceptance Tests
               run: docker run --rm --network ${{ env.NETWORK_ID }}  php-app:latest behat --strict --stop-on-failure --format progress
@@ -65,4 +65,4 @@ jobs:
               run: docker run --rm --network ${{ env.NETWORK_ID }}  php-app:latest phpstan analyse -l 8 src
 
             - name: Run PHP Code Sniffer
-              run: docker run --rm --network ${{ env.NETWORK_ID }}  php-app:latest phpcs --standard=phpcs.dist.xml
+              run: docker run --rm --network ${{ env.NETWORK_ID }}  php-app:latest phpcs --standard=phpcs.xml.dist
