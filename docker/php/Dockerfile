@@ -1,29 +1,26 @@
-FROM php:8.5-fpm-alpine3.23 AS base
+FROM dunglas/frankenphp:1-php8.5-alpine AS base
 
 ENV DATADOG_TRACE_VERSION=1.14.1
 
 ENV PROJECT_DIR=/var/www
 ENV PATH=$PROJECT_DIR/bin:$PROJECT_DIR/vendor/bin:$PATH
+ENV SERVER_NAME=:80
+ENV DOCUMENT_ROOT=$PROJECT_DIR/public
 
-ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-RUN chmod +x /usr/local/bin/install-php-extensions
-
-RUN apk add --no-cache openssl-dev \
-        libgcc \
-    && install-php-extensions \
+# The install-php-extensions script is available in the image
+RUN install-php-extensions \
         pdo_pgsql  \
         opcache \
         intl \
         zip \
         xml \
         redis \
-        amqp-2.2.0 \
-        @composer-2.9.3 \
-    && rm -rf /tmp/pear
+        amqp-2.2.0
 
-COPY docker/php/config/php_prod.ini /usr/local/etc/php/
+COPY --from=composer:2.9.3 /usr/bin/composer /usr/bin/composer
+
+COPY docker/php/config/php_prod.ini /usr/local/etc/php/php.ini
 COPY docker/php/config/opcache_prod.ini /usr/local/etc/php/conf.d/opcache.ini
-COPY docker/php/config/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 RUN curl -LO https://github.com/DataDog/dd-trace-php/releases/download/${DATADOG_TRACE_VERSION}/datadog-setup.php \
 	&& php datadog-setup.php --php-bin=all
@@ -31,20 +28,16 @@ RUN curl -LO https://github.com/DataDog/dd-trace-php/releases/download/${DATADOG
 WORKDIR $PROJECT_DIR
 RUN chown -R www-data:www-data $PROJECT_DIR
 
-EXPOSE 9000
-
 FROM base AS development
 COPY docker/php/config/php.ini /usr/local/etc/php/php.ini
 COPY docker/php/config/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 RUN apk add --no-cache git bash && \
-    install-php-extensions xdebug-3.5.0 && \
-    rm -rf /tmp/pear
+    install-php-extensions xdebug-3.5.0
 
 FROM development AS ci
 ENV APP_ENV=dev
 COPY ./ $PROJECT_DIR
 RUN composer install
-
 
 FROM base AS result
 ENV APP_ENV=prod

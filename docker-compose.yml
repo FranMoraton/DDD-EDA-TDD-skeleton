@@ -1,26 +1,13 @@
 services:
-    nginx:
-        build:
-            context: .
-            dockerfile: docker/nginx/Dockerfile
-            target: local
-        volumes:
-            - ./public:/var/www/public
-        environment:
-            PHP_HOST: php
-        ports:
-            - 8080:80
-        depends_on:
-            - php
-        networks:
-            - bridge
-
     php:
         build:
             context: .
             dockerfile: docker/php/Dockerfile
             target: development
+        ports:
+            - "8080:80"
         environment:
+            - FRANKENPHP_CONFIG=${FRANKENPHP_CONFIG}
             - DD_AGENT_HOST=datadog
             - DD_TRACE_AGENT_PORT=8126
             - DD_ENV=prod
@@ -36,15 +23,15 @@ services:
     datadog:
         image: gcr.io/datadoghq/agent:latest
         environment:
-        - DD_API_KEY=your_datadog_api_key
-        - DD_ENV=prod
-        - DD_SERVICE=php
-        - DD_VERSION=1.0.0
+            - DD_API_KEY=your_datadog_api_key
+            - DD_ENV=prod
+            - DD_SERVICE=php
+            - DD_VERSION=1.0.0
         ports:
-        - "8126:8126"
+            - "8126:8126"
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock:ro
-    
+
     db:
         image: postgres:15.7-alpine
         ports:
