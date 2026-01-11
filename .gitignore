@@ -4,6 +4,7 @@ vendor/*
 .env
 .env.*
 .env*
+!.env.dist
 
 .idea
 
